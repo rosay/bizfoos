@@ -6,12 +6,12 @@ app.controller('PlayerController', ['$scope', '$http', 'screenService', function
 	};
 
 	// Gets player data
-	$http({method: 'GET', url: 'FakeData/players.json'}).
+	$http({method: 'POST', url: 'http://localhost:3000/api/players'}).
 		success(function (data, status, headers, config) {
 			$scope.players = data;
 		}).
 		error(function (data, status, headers, config) {
-			console.log("Could not get players!");
+			console.log("No players showed up! Status: " + status);
 		});
 
 	$scope.title = "Player list";
@@ -24,6 +24,5 @@ app.controller('PlayerController', ['$scope', '$http', 'screenService', function
 	$scope.$on('screenChange', function(e, newScreen) {
 		$scope.showScreen = getCurrentScreen() == "player";
 	});
-
 }]);
 
