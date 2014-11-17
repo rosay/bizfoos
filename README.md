@@ -8,81 +8,51 @@ This is a foosball app designed to track:
   - Series stats
   - Who knows what else!
 
-### Installation
-
-You need Gulp installed globally:
-
-```sh
-$ npm i -g gulp
-```
-
-```sh
-$ git clone [git-repo-url] dillinger
-$ cd dillinger
-$ npm i -d
-$ mkdir -p public/files/{md,html,pdf}
-$ gulp build --prod
-$ NODE_ENV=production node app
-```
-
 ### Technologies
-
-Dillinger is currently extended with the following plugins
-
+Bizfoos app made possible by
 * [node.js]
 * [Twitter Bootstrap]
-* [express]
+* [express.js]
 * [AngularJS]
 * [Gulp]
 * [MongoDB]
 
-Readmes, how to use them in your own application can be found here:
+### Development Installation
+[Download and install MongoDB]
 
-* plugins/dropbox/README.md
-* plugins/github/README.md
-* plugins/googledrive/README.md
-* plugins/onedrive/README.md
+Get the repository and install needed front and backend packages
+```bash
+$ git clone https://github.com/rosay/bizfoos.git bizfoos
+$ cd bizfoos
+$ npm i -d
+$ bower install
+```
 
 ### Development
-
-Want to contribute? Great!
-
-Dillinger uses Gulp + Webpack for fast developing.
-Make a change in your file and instantanously see your updates!
-
-Open your favorite Terminal and run these commands.
-
+Open a Terminal
 First Tab:
-```sh
-$ node app
+```bash
+$ sudo mongod # Start mongo server
 ```
 
 Second Tab:
-```sh
-$ gulp watch
+```bash
+$ mongo localhost:27017/bizfoosTestDb data_generators/players.js	# Generate player data
+$ node server.js 													# Start node server
 ```
 
-(optional) Third:
-```sh
-$ karma start
-```
-
-### Todo's
- - Write Tests
- - Rethink Github Save
- - Add Code Comments
- - Add Night Mode
+Open your browser and point to http://localhost:3000
 
 License
 ----
 
 MIT
 
-
-**Free Software, Hell Yeah!**
+**
 [node.js]:http://nodejs.org
 [Twitter Bootstrap]:http://twitter.github.com/bootstrap/
 [express]:http://expressjs.com
 [AngularJS]:http://angularjs.org
 [Gulp]:http://gulpjs.com
 [MongoDB]:http://mongodb.org
+[Download and install MongoDB]:https://www.mongodb.org/downloads
