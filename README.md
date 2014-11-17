@@ -12,19 +12,24 @@ This is a foosball app designed to track:
 Bizfoos app made possible by
 * [node.js]
 * [Twitter Bootstrap]
-* [express.js]
+* [Express]
 * [AngularJS]
 * [Gulp]
 * [MongoDB]
 
 ### Development Installation
-[Download and install MongoDB]
+Download and install [Mongo] and [Node Package Manager]
+
+```bash
+# Install bower (if not already installed)
+$ npm install -g bower
+```
 
 Get the repository and install needed front and backend packages
 ```bash
 $ git clone https://github.com/rosay/bizfoos.git bizfoos
 $ cd bizfoos
-$ npm i -d
+$ npm install
 $ bower install
 ```
 
@@ -32,13 +37,16 @@ $ bower install
 Open a Terminal
 First Tab:
 ```bash
-$ sudo mongod # Start mongo server
+# Start mongo server
+$ sudo mongod
 ```
 
 Second Tab:
 ```bash
-$ mongo localhost:27017/bizfoosTestDb data_generators/players.js	# Generate player data
-$ node server.js 													# Start node server
+# Generate player data
+$ mongo localhost:27017/bizfoosDevDb data_generators/players.js
+# Start node server
+$ node server.js
 ```
 
 Open your browser and point to http://localhost:3000
@@ -51,8 +59,9 @@ MIT
 **
 [node.js]:http://nodejs.org
 [Twitter Bootstrap]:http://twitter.github.com/bootstrap/
-[express]:http://expressjs.com
+[Express]:http://expressjs.com
 [AngularJS]:http://angularjs.org
 [Gulp]:http://gulpjs.com
 [MongoDB]:http://mongodb.org
-[Download and install MongoDB]:https://www.mongodb.org/downloads
+[Mongo]:https://www.mongodb.org/downloads
+[Node Package Manager]:https://www.npmjs.org/doc/cli/npm-install.html

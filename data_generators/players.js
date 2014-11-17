@@ -1,7 +1,7 @@
 /**
  * Created by cody on 11/16/14.
  */
-// Run from shell: mongo localhost:27017/bizfoosTestDb data_generators/players.js
+// Run from shell: mongo localhost:27017/bizfoosDevDb data_generators/players.js
 
 // Clear out current players
 db.players.remove({});

@@ -5,7 +5,7 @@ var mongoose	= require('mongoose');
 var http		= require('http');
 
 // configuration ===============================================================
-mongoose.connect("mongodb://localhost:27017/bizfoosTestDb"); // Connect to the db
+mongoose.connect("mongodb://localhost:27017/bizfoosDevDb"); // Connect to the db
 app.use(express.static(__dirname + '/src'));
 
 // routes ======================================================================
