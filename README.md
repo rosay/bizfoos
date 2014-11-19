@@ -44,7 +44,7 @@ $ sudo mongod
 Second Tab:
 ```bash
 # Generate player data
-$ mongo localhost:27017/bizfoosDevDb data_generators/players.js
+$ mongo localhost:27017/bizfoosDevDb data_generators/all-data.js
 # Start node server
 $ node server.js
 ```
@@ -56,7 +56,6 @@ License
 
 MIT
 
-**
 [node.js]:http://nodejs.org
 [Twitter Bootstrap]:http://twitter.github.com/bootstrap/
 [Express]:http://expressjs.com
