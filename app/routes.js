@@ -1,4 +1,4 @@
-var Player = require('./models/player');
+var Player = require('./models/Player');
 
 module.exports = function(app) {
 	// Routes
@@ -27,6 +27,6 @@ module.exports = function(app) {
 	});
 
 	app.get('*', function(req, res) {
-		res.sendFile('/src/index.html'); // load the single view file (angular will handle the page changes on the front-end)
+		res.sendFile('src/index.html'); // load the single view file (angular will handle the page changes on the front-end)
 	});
 };
