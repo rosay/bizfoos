@@ -3,9 +3,12 @@
  Run this from your shell: mongo localhost:27017/bizfoosDevDb data_generators/all-data.js
  */
 
-// === Players ======================================================================
-// Clear out current players collection
+// === Clean up ======================================================================
 db.players.remove({});
+db.games.remove({});
+db.scores.remove({});
+
+// === Players ======================================================================
 
 // Load with defaults
 db.players.insert({ name: "Marky Mark" });
@@ -20,9 +23,6 @@ db.players.insert({ name: "Dan" });
 db.players.insert({ name: "Cody" });
 
 // === Games ======================================================================
-// Clear out current games collection
-db.games.remove({});
-
 // Generate some random games
 for (var i = 0; i < 20; i++) {
 	var game = [];
@@ -34,7 +34,7 @@ for (var i = 0; i < 20; i++) {
 
 		isInGame = game.some(function(el) {
 			//print("is el === to player? " + el.toString() + " === " + player._id.toString());
-			return el.toString() == player._id.toString();
+			return el.toString() === player._id.toString();
 		});
 
 		//print("Is in game? " + isInGame);
@@ -67,16 +67,29 @@ for (var i = 0; i < 20; i++) {
 		TeamOneFinalScore: teamOneFinalScore,
 		TeamTwoFinalScore: teamTwoFinalScore
 	});
+
+	//print("Game: " + i);
 }
 
 // === Scores ======================================================================
-db.scores.remove({});
 var games = db.games.find().toArray();
 
 games.forEach(function(game) {
 	// Get game score for each team
 	var teamOneScore = game.TeamOneFinalScore;
 	var teamTwoScore = game.TeamTwoFinalScore;
+
+	// TODO make this work
+	var now = new Date();
+	var thirtyDaysAgo = new Date(new Date().getTime() - 30*24*60*60*1000);
+	var maxGameLength = (10*60*1000); // 10 mins
+	var minGameLength = (5*60*1000); // 5 mins
+
+	// A random DateTime between now and thirty days ago.
+	var startGame = new Date(thirtyDaysAgo.getTime() + Math.random() * (now.getTime() - thirtyDaysAgo.getTime()));
+	// A random time between startGame and 10 mins after Start game (min game length 5 mins)
+	var endGame = new Date(startGame.getTime() + (Math.floor(Math.random() * (maxGameLength - minGameLength)) + minGameLength));
+	// end TODO
 
 	// Assign scores to each player per team
 	for(var i = 1; i <= teamOneScore; i++) {
