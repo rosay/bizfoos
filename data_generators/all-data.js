@@ -79,32 +79,39 @@ games.forEach(function(game) {
 	var teamOneScore = game.TeamOneFinalScore;
 	var teamTwoScore = game.TeamTwoFinalScore;
 
-	// TODO make this work
+	// Get game begin and end time
+	var scoreTime;
 	var now = new Date();
 	var thirtyDaysAgo = new Date(new Date().getTime() - 30*24*60*60*1000);
-	var maxGameLength = (10*60*1000); // 10 mins
-	var minGameLength = (5*60*1000); // 5 mins
+	var maxGameLength = (10*60*1000);	// 10 mins
+	var minGameLength = (5*60*1000);	// 5 mins
 
-	// A random DateTime between now and thirty days ago.
+	// A random DateTime between now and thirty days ago
 	var startGame = new Date(thirtyDaysAgo.getTime() + Math.random() * (now.getTime() - thirtyDaysAgo.getTime()));
+
 	// A random time between startGame and 10 mins after Start game (min game length 5 mins)
 	var endGame = new Date(startGame.getTime() + (Math.floor(Math.random() * (maxGameLength - minGameLength)) + minGameLength));
-	// end TODO
 
 	// Assign scores to each player per team
 	for(var i = 1; i <= teamOneScore; i++) {
+
+		scoreTime = new Date(startGame.getTime() + Math.random() * (endGame.getTime() - startGame.getTime()));
+
 		db.scores.insert({
 			player_Id: Math.random() > .5 ? game.TeamOneOffense : game.TeamOneDefense,
 			game_Id: game._id,
-			ScoreTime: new Date()
+			ScoreTime: scoreTime
 		})
 	}
 
 	for(var i = 1; i <= teamTwoScore; i++) {
+
+		scoreTime = new Date(startGame.getTime() + Math.random() * (endGame.getTime() - startGame.getTime()));
+
 		db.scores.insert({
 			player_Id: Math.random() > .5 ? game.TeamTwoOffense : game.TeamTwoDefense,
 			game_Id: game._id,
-			ScoreTime: new Date()
+			ScoreTime: scoreTime
 		})
 	}
 });

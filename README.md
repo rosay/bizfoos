@@ -37,8 +37,10 @@ $ bower install
 Open a Terminal
 First Tab:
 ```bash
-# Start mongo server
-$ sudo mongod
+# Create the directory if it doesn't exist.
+$ mkdir /usr/local/mongodb-data
+# Run the mongo server
+$ mongod --dbpath /usr/local/mongodb-data
 ```
 
 Second Tab:
