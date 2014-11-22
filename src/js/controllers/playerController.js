@@ -1,4 +1,4 @@
-app.controller('PlayerController', ['$scope', '$http', 'screenService', function($scope, $http, screenService) {
+app.controller('PlayerController', ['$scope', '$http', 'screenService', 'gameService', function($scope, $http, screenService, gameService) {
 	"use strict";
 
 	var getCurrentScreen = function () {
@@ -24,5 +24,11 @@ app.controller('PlayerController', ['$scope', '$http', 'screenService', function
 	$scope.$on('screenChange', function(e, newScreen) {
 		$scope.showScreen = getCurrentScreen() == "player";
 	});
+	
+	gameService.insertPlayer("Kevin");
+	gameService.insertPlayer("Cody");
+	gameService.insertPlayer("Dan");
+	gameService.insertPlayer("Adam");
+	console.log(gameService.getPlayers());
 }]);
 
