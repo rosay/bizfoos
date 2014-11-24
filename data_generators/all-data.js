@@ -3,51 +3,93 @@
  Run this from your shell: mongo localhost:27017/bizfoosDevDb data_generators/all-data.js
  */
 
-// === Clean up ======================================================================
+// === Debug settings ========================================================================
+
+// === Clear out all data ======================================================================
 db.players.remove({});
 db.games.remove({});
-db.scores.remove({});
+
+// === Set variables ===========================================================================
+var numberOfGames = 10;
+
+var p1 = { "_id" : ObjectId("546ea25f602cb9ca83b290f6"), "name" : "Marky Mark" };
+var p2 = { "_id" : ObjectId("546ea25f602cb9ca83b290f7"), "name" : "Mcbeev" };
+var p3 = { "_id" : ObjectId("546ea25f602cb9ca83b290f8"), "name" : "Batman" };
+var p4 = { "_id" : ObjectId("546ea25f602cb9ca83b290f9"), "name" : "CVB" };
+var p5 = { "_id" : ObjectId("546ea25f602cb9ca83b290fa"), "name" : "Al" };
+var p6 = { "_id" : ObjectId("546ea25f602cb9ca83b290fb"), "name" : "Dustin" };
+var p7 = { "_id" : ObjectId("546ea25f602cb9ca83b290fc"), "name" : "Kevin" };
+var p8 = { "_id" : ObjectId("546ea25f602cb9ca83b290fd"), "name" : "Blair" };
+var p9 = { "_id" : ObjectId("546ea25f602cb9ca83b290fe"), "name" : "Dan" };
+var p10 = { "_id" : ObjectId("546ea25f602cb9ca83b290ff"), "name" : "Cody" };
 
 // === Players ======================================================================
 
 // Load with defaults
-db.players.insert({ name: "Marky Mark" });
-db.players.insert({ name: "Mcbeev" });
-db.players.insert({ name: "Batman" });
-db.players.insert({ name: "CVB" });
-db.players.insert({ name: "Al" });
-db.players.insert({ name: "Dustin" });
-db.players.insert({ name: "Kevin" });
-db.players.insert({ name: "Blair" });
-db.players.insert({ name: "Dan" });
-db.players.insert({ name: "Cody" });
+db.players.insert(p1);
+db.players.insert(p2);
+db.players.insert(p3);
+db.players.insert(p4);
+db.players.insert(p5);
+db.players.insert(p6);
+db.players.insert(p7);
+db.players.insert(p8);
+db.players.insert(p9);
+db.players.insert(p10);
 
-// === Games ======================================================================
-// Generate some random games
-for (var i = 0; i < 20; i++) {
-	var game = [];
+// === Game Rosters ======================================================================
+var rosters = [];
 
-	while (game.length < 4) {
+// Generate a list of rosters
+for (var i = 0; i < numberOfGames; i++) {
+	var roster = [];
+	var teamAndPosition = 0;
+
+	// Load up the roster
+	while (roster.length < 4) {
 		var player = db.players.find().skip(Math.floor(Math.random() * 10)).limit(1).toArray()[0];
 
 		var isInGame = false;
 
-		isInGame = game.some(function(el) {
+		isInGame = roster.some(function(existingPlayer) {
 			//print("is el === to player? " + el.toString() + " === " + player._id.toString());
-			return el.toString() === player._id.toString();
+			return existingPlayer.player_id.toString() === player._id.toString();
 		});
 
-		//print("Is in game? " + isInGame);
 		if (!isInGame) {
-			//print("unique player: " + player.name);
-			game.push(player._id);
-
-		} else {
-			//print("not unique: " + player.name)
+			// Assign team and position
+			switch (teamAndPosition) {
+				case 0:
+					print(player.name + " on team 1 playing offense");
+					roster.push({ player_id: player._id, team: 1, position: "offense" });
+					break;
+				case 1:
+					print(player.name + " on team 1 playing defense");
+					roster.push({ player_id: player._id, team: 1, position: "defense" });
+					break;
+				case 2:
+					print(player.name + " on team 2 playing offense");
+					roster.push({ player_id: player._id, team: 2, position: "offense" });
+					break;
+				case 3:
+					print(player.name + " on team 2 playing defense");
+					roster.push({ player_id: player._id, team: 2, position: "defense" });
+					break;
+			}
+			teamAndPosition++;
 		}
 	}
+	// END Load up the roster
+	rosters.push(roster);
+	print("Finished game " + i);
+}
 
-	// Set scores
+// === Scores ======================================================================
+var scores = [];
+for (var i = 0; i < numberOfGames; i++) {
+	var score = [];
+
+	// Create some random final scores to work with
 	var teamOneFinalScore = 0;
 	var teamTwoFinalScore = 0;
 
@@ -58,26 +100,6 @@ for (var i = 0; i < 20; i++) {
 		teamOneFinalScore = Math.floor(Math.random() * 5);
 		teamTwoFinalScore = 5;
 	}
-
-	db.games.insert({
-		TeamOneOffense: game[0],
-		TeamOneDefense: game[1],
-		TeamTwoOffense: game[2],
-		TeamTwoDefense: game[3],
-		TeamOneFinalScore: teamOneFinalScore,
-		TeamTwoFinalScore: teamTwoFinalScore
-	});
-
-	//print("Game: " + i);
-}
-
-// === Scores ======================================================================
-var games = db.games.find().toArray();
-
-games.forEach(function(game) {
-	// Get game score for each team
-	var teamOneScore = game.TeamOneFinalScore;
-	var teamTwoScore = game.TeamTwoFinalScore;
 
 	// Get game begin and end time
 	var scoreTime;
@@ -93,25 +115,30 @@ games.forEach(function(game) {
 	var endGame = new Date(startGame.getTime() + (Math.floor(Math.random() * (maxGameLength - minGameLength)) + minGameLength));
 
 	// Assign scores to each player per team
-	for(var i = 1; i <= teamOneScore; i++) {
-
+	for(var j = 1; j <= teamOneFinalScore; j++) {
 		scoreTime = new Date(startGame.getTime() + Math.random() * (endGame.getTime() - startGame.getTime()));
 
-		db.scores.insert({
-			player_Id: Math.random() > .5 ? game.TeamOneOffense : game.TeamOneDefense,
-			game_Id: game._id,
+		score.push({
+			player_id: Math.random() > .5 ? rosters[i][0].player_id : rosters[i][1].player_id,
 			ScoreTime: scoreTime
 		})
 	}
 
-	for(var i = 1; i <= teamTwoScore; i++) {
-
+	for(var k = 1; k <= teamTwoFinalScore; k++) {
 		scoreTime = new Date(startGame.getTime() + Math.random() * (endGame.getTime() - startGame.getTime()));
 
-		db.scores.insert({
-			player_Id: Math.random() > .5 ? game.TeamTwoOffense : game.TeamTwoDefense,
-			game_Id: game._id,
+		score.push({
+			player_id: Math.random() > .5 ? rosters[i][2].player_id : rosters[i][3].player_id,
 			ScoreTime: scoreTime
-		})
+		});
 	}
-});
+	printjson(score);
+	scores.push(score);
+}
+
+
+// All done with games... load em up!
+for (var i = 0; i < numberOfGames; i++) {
+	print("Game 1 roster: " + rosters[i]);
+	db.games.insert({roster: rosters[i], scores: scores[i]});
+}
