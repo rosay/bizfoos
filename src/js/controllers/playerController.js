@@ -24,11 +24,15 @@ app.controller('PlayerController', ['$scope', '$http', 'screenService', 'gameSer
 	$scope.$on('screenChange', function(e, newScreen) {
 		$scope.showScreen = getCurrentScreen() == "player";
 	});
-	
-	gameService.insertPlayer("Kevin");
-	gameService.insertPlayer("Cody");
-	gameService.insertPlayer("Dan");
-	gameService.insertPlayer("Adam");
-	console.log(gameService.getPlayers());
+
+	$scope.addPlayer = function (playerName) {
+		gameService.insertPlayer(playerName);
+		console.log(gameService.getPlayers());
+	};
+
+
+
+
+
 }]);
 
