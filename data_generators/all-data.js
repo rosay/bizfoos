@@ -12,16 +12,16 @@ db.games.remove({});
 // === Set variables ===========================================================================
 var numberOfGames = 10;
 
-var p1 = { "_id" : ObjectId("546ea25f602cb9ca83b290f6"), "name" : "Marky Mark" };
-var p2 = { "_id" : ObjectId("546ea25f602cb9ca83b290f7"), "name" : "Mcbeev" };
-var p3 = { "_id" : ObjectId("546ea25f602cb9ca83b290f8"), "name" : "Batman" };
-var p4 = { "_id" : ObjectId("546ea25f602cb9ca83b290f9"), "name" : "CVB" };
-var p5 = { "_id" : ObjectId("546ea25f602cb9ca83b290fa"), "name" : "Al" };
-var p6 = { "_id" : ObjectId("546ea25f602cb9ca83b290fb"), "name" : "Dustin" };
-var p7 = { "_id" : ObjectId("546ea25f602cb9ca83b290fc"), "name" : "Kevin" };
-var p8 = { "_id" : ObjectId("546ea25f602cb9ca83b290fd"), "name" : "Blair" };
-var p9 = { "_id" : ObjectId("546ea25f602cb9ca83b290fe"), "name" : "Dan" };
-var p10 = { "_id" : ObjectId("546ea25f602cb9ca83b290ff"), "name" : "Cody" };
+db.players.insert({ _id: "mark@bizstream.com", name: "Marky Mark" });
+db.players.insert({ _id: "mcbeev@bizstream.com", name: "Mcbeev" });
+db.players.insert({ _id: "sterling@bizstream.com", name: "Batman" });
+db.players.insert({ _id: "cory@bizstream.com", name: "CVB" });
+db.players.insert({ _id: "albert@bizstream.com", name: "Al" });
+db.players.insert({ _id: "dustin@bizstream.com", name: "Dustin" });
+db.players.insert({ _id: "kevin@bizstream.com", name: "Kevin" });
+db.players.insert({ _id: "blair@bizstream.com", name: "Blair" });
+db.players.insert({ _id: "dan@bizstream.com", name: "Dan" });
+db.players.insert({ _id: "cody@bizstream.com", name: "Cody" });
 
 // === Players ======================================================================
 
