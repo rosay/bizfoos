@@ -12,14 +12,14 @@ Bizfoos app made possible by using
 * [MongoDB]
 
 ### Install needed packages
-1. Download and install [Mongo] and [node.js]
+Download and install [Mongo] and [node.js]
 
-2. Install bower (if needed)
+Install bower (if needed)
 ```bash
 $ npm install -g bower
 ```
 
-3. Get the repository and install needed front and backend packages
+Get the repository and install needed front and backend packages
 ```bash
 $ git clone https://github.com/rosay/bizfoos.git bizfoos
 $ cd bizfoos
@@ -28,17 +28,17 @@ $ bower install
 ```
 
 ### Development Environment Setup
-1. The site requires mongod and node to be running. Run the start_mongo_node.sh.
+The site requires mongod and node to be running. Run the start_mongo_node.sh.
 ```bash
 $ bash start_mongo_node.sh
 ```
 
-2. (Optional) Run this if it's your first time running the project or you want to clear out all existing data and repopulate
+(Optional) Run this if it's your first time running the project or you want to clear out all existing data and repopulate
 ```bash
 $ bash dev-data/reset_data.sh
 ```
 
-3. Open your browser and point to http://localhost:3000
+Open your browser and point to http://localhost:3000
 
 License
 ----
