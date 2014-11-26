@@ -1,15 +1,9 @@
 # Bizfoos
 
-This readme is about 10% complete. I just wanted to stub something out.
-
-This is a foosball app designed to track:
-  - Player stats
-  - Team stats
-  - Series stats
-  - Who knows what else!
+#####This is a foosball app designed to track: player and team stats
 
 ### Technologies
-Bizfoos app made possible by
+Bizfoos app made possible by using
 * [node.js]
 * [Twitter Bootstrap]
 * [Express]
@@ -17,15 +11,15 @@ Bizfoos app made possible by
 * [Gulp]
 * [MongoDB]
 
-### Development Installation
-Download and install [Mongo] and [Node Package Manager]
+### Install needed packages
+1. Download and install [Mongo] and [node.js]
 
+2. Install bower (if needed)
 ```bash
-# Install bower (if not already installed)
 $ npm install -g bower
 ```
 
-Get the repository and install needed front and backend packages
+3. Get the repository and install needed front and backend packages
 ```bash
 $ git clone https://github.com/rosay/bizfoos.git bizfoos
 $ cd bizfoos
@@ -33,25 +27,18 @@ $ npm install
 $ bower install
 ```
 
-### Development
-Open a Terminal
-First Tab:
+### Development Environment Setup
+1. The site requires mongod and node to be running. Run the start_mongo_node.sh.
 ```bash
-# Create the directory if it doesn't exist.
-$ mkdir /usr/local/mongodb-data
-# Run the mongo server
-$ mongod --dbpath /usr/local/mongodb-data
+$ bash start_mongo_node.sh
 ```
 
-Second Tab:
+2. (Optional) Run this if it's your first time running the project or you want to clear out all existing data and repopulate
 ```bash
-# Generate player data
-$ mongo localhost:27017/bizfoosDevDb data_generators/all-data.js
-# Start node server
-$ node server.js
+$ bash dev-data/reset_data.sh
 ```
 
-Open your browser and point to http://localhost:3000
+3. Open your browser and point to http://localhost:3000
 
 License
 ----
@@ -65,4 +52,3 @@ MIT
 [Gulp]:http://gulpjs.com
 [MongoDB]:http://mongodb.org
 [Mongo]:https://www.mongodb.org/downloads
-[Node Package Manager]:https://www.npmjs.org/doc/cli/npm-install.html

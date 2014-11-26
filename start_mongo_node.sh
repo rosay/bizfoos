@@ -1,6 +1,6 @@
 #!/bin/sh
 
-MONGODBDIR="/tmp/mongo-db/"
+MONGODBDIR="tmp/mongo-db/"
 if [ ! -d "$MONGODBDIR" ]; then
   mkdir -p $MONGODBDIR
   echo "Directory $MONGODBDIR created."
