@@ -15,9 +15,9 @@
 <div>
 	<div ng-controller="PlayerController" ng-show="showScreen">
 		<h2>{{ title }}</h2>
-		<div ng-repeat="player in players">
-			<button type="button" class="btn btn-primary">{{ player.name }}</button>
-		</div>
+
+			<button ng-repeat="player in players" type="button" class="btn btn-primary" ng-click="addPlayer(player.name)">{{ player.name }}</button>
+
 
 		<button type="button" class="btn btn-danger" ng-click="changeScreen('game')">Change to game screen</button>
 	</div>
@@ -33,6 +33,7 @@
 
 <script src="js/app.js"></script>
 <script src="js/services/screenService.js"></script>
+<script src="js/services/gameService.js"></script>
 <script src="js/controllers/playerController.js"></script>
 <script src="js/controllers/gameController.js"></script>
 </body>
