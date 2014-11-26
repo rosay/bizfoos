@@ -8,16 +8,16 @@
 db.players.remove({});
 
 // Load with defaults
-db.players.insert({ name: "Marky Mark" });
-db.players.insert({ name: "Mcbeev" });
-db.players.insert({ name: "Batman" });
-db.players.insert({ name: "CVB" });
-db.players.insert({ name: "Al" });
-db.players.insert({ name: "Dustin" });
-db.players.insert({ name: "Kevin" });
-db.players.insert({ name: "Blair" });
-db.players.insert({ name: "Dan" });
-db.players.insert({ name: "Cody" });
+db.players.insert({ _id: "mark@bizstream.com", name: "Marky Mark" });
+db.players.insert({ _id: "mcbeev@bizstream.com", name: "Mcbeev" });
+db.players.insert({ _id: "sterling@bizstream.com", name: "Batman" });
+db.players.insert({ _id: "cory@bizstream.com", name: "CVB" });
+db.players.insert({ _id: "albert@bizstream.com", name: "Al" });
+db.players.insert({ _id: "dustin@bizstream.com", name: "Dustin" });
+db.players.insert({ _id: "kevin@bizstream.com", name: "Kevin" });
+db.players.insert({ _id: "blair@bizstream.com", name: "Blair" });
+db.players.insert({ _id: "dan@bizstream.com", name: "Dan" });
+db.players.insert({ _id: "cody@bizstream.com", name: "Cody" });
 
 // === Games ======================================================================
 // Clear out current games collection
