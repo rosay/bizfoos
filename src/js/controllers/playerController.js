@@ -16,6 +16,7 @@ app.controller('PlayerController', ['$scope', '$http', 'screenService', 'gameSer
 
 	$scope.title = "Player list";
 	$scope.showScreen = getCurrentScreen() == "player";
+	$scope.selectedPlayers = [];
 
 	$scope.changeScreen = function (screenName) {
 		screenService.setCurrentScreen(screenName);
@@ -27,6 +28,7 @@ app.controller('PlayerController', ['$scope', '$http', 'screenService', 'gameSer
 
 	$scope.addPlayer = function (playerName) {
 		gameService.insertPlayer(playerName);
+		$scope.selectedPlayers = gameService.getPlayers();
 		console.log(gameService.getPlayers());
 	};
 

@@ -14,6 +14,8 @@ app.factory('gameService', ['$rootScope', function ($rootScope) {
 		if (!isInGame &&  players.length < 4) {
 			players.push(playerId);
 		}
+		
+		
 	};  
 
 	var deletePlayer = function (playerId) {
