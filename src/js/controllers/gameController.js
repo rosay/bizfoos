@@ -1,4 +1,4 @@
-app.controller('GameController', ['$scope', function($scope, screenService) {
+app.controller('GameController', ['$scope', function($scope) {
 	"use strict";
 
 	$scope.title = "Game screen";

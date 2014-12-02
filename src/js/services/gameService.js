@@ -4,7 +4,7 @@ app.factory('gameService', ['$rootScope', function ($rootScope) {
 
 	// store players in the game
 	var players = [];
-	
+
 	var insertPlayer = function (playerId) {
 
 		var isInGame = players.some(function(player){
@@ -14,7 +14,7 @@ app.factory('gameService', ['$rootScope', function ($rootScope) {
 		if (!isInGame &&  players.length < 4) {
 			players.push(playerId);
 		}
-	};  
+	};
 
 	var deletePlayer = function (playerId) {
 		var playerIndex = players.indexOf(playerId);
@@ -24,7 +24,7 @@ app.factory('gameService', ['$rootScope', function ($rootScope) {
 	var getPlayers = function () {
 		return players;
 	};
-	
+
 	return {
 		insertPlayer: insertPlayer,
 		getPlayers: getPlayers,

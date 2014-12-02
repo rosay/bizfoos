@@ -1,0 +1,71 @@
+body {
+	background: url('../img/bizfoos-bg.jpg') no-repeat center;
+	background-size: cover;
+	font-family: 'Source Sans Pro', sans-serif;
+}
+
+
+.player-sidebar {
+	background-color: rgba(255,255,255, 0.9);
+	border-radius: 6px;
+	-webkit-box-shadow: 1px 1px 22px 2px rgba(0,0,0,0.45);
+-moz-box-shadow: 1px 1px 22px 2px rgba(0,0,0,0.45);
+box-shadow: 1px 1px 22px 2px rgba(0,0,0,0.45);
+
+}
+
+.player-sidebar h2 {
+	color: white;
+	background:#35cb71;
+	-webkit-border-top-left-radius: 6px;
+-webkit-border-top-right-radius: 6px;
+-moz-border-radius-topleft: 6px;
+-moz-border-radius-topright: 6px;
+border-top-left-radius: 6px;
+border-top-right-radius: 6px;
+padding-top: 10px;
+padding-left: 15px;
+padding-bottom: 10px;
+font-family: 'Source Sans Pro', sans-serif;
+font-weight: 600;
+}
+
+.player-sidebar ul {
+	padding: 10px;
+}
+
+
+.player-sidebar ul li {
+	padding-bottom: 20px;
+	list-style: none;
+	
+}
+
+.player-sidebar ul li button {
+	width: 100%;
+	border-radius: 6px;
+	background:#35cb71;
+	color: white;
+	font-size: 2.143em;
+	border: 2px solid #2dad60;
+}
+
+.player-sidebar ul li button img {
+	float: left;
+	border-radius: 6px;
+	border:1px solid #2dad60;
+	width: 47px;
+	height: 47px;
+}
+
+.player-sidebar ul li button span {
+	position: absolute;
+	height: 100%;
+	width: 57px;
+	top:0;
+	left:0;
+}
+
+
+
+
