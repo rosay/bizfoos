@@ -12,29 +12,16 @@
 	<!-- endbuild -->
 </head>
 <body>
-<div>
-	<div ng-controller="PlayerController" ng-show="showScreen">
-		<h2>{{ title }}</h2>
-
-			<button ng-repeat="player in players" type="button" class="btn btn-primary" ng-click="addPlayer(player.name)">{{ player.name }}</button>
-
-
-		<button type="button" class="btn btn-danger" ng-click="changeScreen('game')">Change to game screen</button>
-	</div>
-
-	<div ng-controller="GameController" ng-show="showScreen">
-		<h1>{{ title }}</h1>
-
-		<button type="button" class="btn btn-danger" ng-click="changeScreen('player')">Change to player screen</button>
-	</div>
-</div>
+<a class="btn btn-info" href="#/leaderboard">Leaderboard</a>
+<div ng-view></div>
 <script src="components/lodash/dist/lodash.min.js"></script>
 <script src="components/angular/angular.js"></script>
+<script src="components/angular-route/angular-route.js"></script>
 
 <script src="js/app.js"></script>
-<script src="js/services/screenService.js"></script>
 <script src="js/services/gameService.js"></script>
 <script src="js/controllers/playerController.js"></script>
 <script src="js/controllers/gameController.js"></script>
+<script src="js/controllers/leaderboardController.js"></script>
 </body>
 </html>

@@ -1,9 +1,5 @@
-app.controller('PlayerController', ['$scope', '$http', 'screenService', 'gameService', function($scope, $http, screenService, gameService) {
+app.controller('PlayerController', ['$scope', '$http', 'gameService', function($scope, $http, gameService) {
 	"use strict";
-
-	var getCurrentScreen = function () {
-		return screenService.getCurrentScreen();
-	};
 
 	// Gets player data
 	$http({method: 'POST', url: 'http://localhost:3000/api/players'}).
@@ -15,24 +11,10 @@ app.controller('PlayerController', ['$scope', '$http', 'screenService', 'gameSer
 		});
 
 	$scope.title = "Player list";
-	$scope.showScreen = getCurrentScreen() == "player";
-
-	$scope.changeScreen = function (screenName) {
-		screenService.setCurrentScreen(screenName);
-	};
-
-	$scope.$on('screenChange', function(e, newScreen) {
-		$scope.showScreen = getCurrentScreen() == "player";
-	});
 
 	$scope.addPlayer = function (playerName) {
 		gameService.insertPlayer(playerName);
 		console.log(gameService.getPlayers());
 	};
-
-
-
-
-
 }]);
 

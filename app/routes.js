@@ -12,8 +12,15 @@ module.exports = function(app) {
 		});
 	});
 
-	app.get('/api/', function (req, res) {
-		res.send('Hello World!');
+	app.post('/api/lb/topplayers', function (req, res) {
+
+		Player.find(function(err, players) {
+			if (err) {
+				res.send(err);
+			}
+
+			res.json(players);
+		});
 	});
 
 	// accept PUT request at /user
