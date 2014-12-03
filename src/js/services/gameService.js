@@ -42,7 +42,9 @@ app.factory('gameService', ['$rootScope', function ($rootScope) {
 
 	var removeLastScore = function () {
 		if (scores.length) {
-			scores.splice(scores.length - 1, 1);
+			return scores.splice(scores.length - 1, 1);
+		} else {
+			return [];
 		}
 	};
 

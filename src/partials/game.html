@@ -1,11 +1,16 @@
 <div class="row">
 	<h1>{{ title }}</h1>
-	<h1>{{ totalScore }}</h1>
+	<h2 ng-show="gameOver">GG!</h2>
+	<h1>Team 1 Score: {{ scores[1] }}</h1>
+	<h1>Team 2 Score: {{ scores[2] }}</h1>
 	<ul>
 		<li ng-repeat="player in players">
-			<button type="button" class="player-button" ng-click="addScore(player._id)">
+			<button type="button" class="player-button" ng-click="addScore(player._id, player.team)">
 				<span class="img-bg"></span>
-				<img src="{{ player.pic }}" />{{ player.name }}
+				<img src="{{ player.pic }}" />
+				{{ player.name }}
+				<span>{{ player.team }}</span>
+				<span>{{ player.position }}</span>
 			</button>
 		</li>
 	</ul>
