@@ -7,15 +7,18 @@
 			$routeProvider.
 					when('/player', {
 						templateUrl: 'partials/player.html',
-						controller: 'PlayerController'
+						controller: 'PlayerController',
+						controllerAs: 'player'
 					}).
 					when('/game', {
 						templateUrl: 'partials/game.html',
-						controller: 'GameController'
+						controller: 'GameController',
+						controllerAs: 'game'
 					}).
 					when('/leaderboard', {
 						templateUrl: 'partials/leaderboard.html',
-						controller: 'LeaderboardController'
+						controller: 'LeaderboardController',
+						controllerAs: 'leaderboard'
 					}).
 					otherwise({
 						redirectTo: '/player'

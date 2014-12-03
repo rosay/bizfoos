@@ -1,6 +1,8 @@
 app.controller('PlayerController', ['$scope', '$http', 'gameService', function($scope, $http, gameService) {
 	"use strict";
 
+	var viewmodel = this;
+
 	// Gets player data
 	$http({method: 'POST', url: 'http://localhost:3000/api/players'}).
 			success(function (data, status, headers, config) {
@@ -17,7 +19,7 @@ app.controller('PlayerController', ['$scope', '$http', 'gameService', function($
 	// Setup controller
 	$scope.players = [];
 	$scope.selectedPlayers = [];
-	$scope.title = "Player list";
+	viewmodel.title = "Player list";
 
 	$scope.addPlayerToGame = function (playerId) {
 		// Get the player object from the array of players
