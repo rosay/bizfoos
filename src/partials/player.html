@@ -15,16 +15,28 @@
 
 	</div><!-- end player-col -->
 
-	<div class="col-lg-6 col-md-6 col-sm-4 col-xs-12 game-summary">
+	<div class="col-lg-8 col-md-8 col-sm-6 col-xs-12 game-summary">
 		<h2>Game Summary</h2>
-		<ul>
-			<li ng-repeat="player in selectedPlayers">
-				<button type="button" class="player-button" ng-click="removePlayerFromGame(player._id)">
-					<span class="img-bg"></span>
-					<img src="{{ player.pic }}" />{{ player.name }}
-				</button>
-			</li>
-		</ul>
+		<div class="row">
+			<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 players-in">
+				<ul>
+					<li ng-repeat="player in selectedPlayers">
+						<button type="button" class="player-button" ng-click="removePlayerFromGame(player._id)">
+							<span class="img-bg"></span>
+							<img src="{{ player.pic }}" />{{ player.name }}
+						</button>
+					</li>
+				</ul>
+			</div><!-- end players-in -->
+			
+			<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 start-button">
+				<div class="start-wrap">
+				<a ng-disabled="selectedPlayers.length !== 4" class="btn btn-start" href="#/game">Play!</a>
+				<a ng-disabled="selectedPlayers.length < 1" class="btn btn-reset" href="#">Reset</a>
+				</div><!-- end start wrap -->
+			</div><!-- end start-button -->
+		</div><!-- end sub-row -->
+		
 	</div><!-- end game summary -->
-	<a ng-disabled="selectedPlayers.length !== 4" class="btn btn-danger" href="#/game">Start game!</a>
+	
 </div><!-- end player-screen -->
