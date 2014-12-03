@@ -4,6 +4,7 @@ app.factory('gameService', ['$rootScope', function ($rootScope) {
 
 	// store players in the game
 	var players = [];
+	var scores = [];
 
 	var insertPlayer = function (newPlayer) {
 
@@ -33,9 +34,28 @@ app.factory('gameService', ['$rootScope', function ($rootScope) {
 		return players;
 	};
 
+	var addScore = function (playerId) {
+		var newScore = { player_id: playerId, ScoreTime: new Date() };
+
+		scores.push(newScore);
+	};
+
+	var removeLastScore = function () {
+		if (scores.length) {
+			scores.splice(scores.length - 1, 1);
+		}
+	};
+
+	var getScores = function() {
+		return scores;
+	};
+
 	return {
 		insertPlayer: insertPlayer,
+		deletePlayer: deletePlayer,
 		getPlayers: getPlayers,
-		deletePlayer: deletePlayer
+		addScore: addScore,
+		removeLastScore: removeLastScore,
+		getScores: getScores
 	};
 }]);

@@ -38,7 +38,7 @@ font-weight: 600;
 .player-sidebar ul li {
 	padding-bottom: 20px;
 	list-style: none;
-	
+
 }
 
 .player-sidebar ul li button {
@@ -64,6 +64,10 @@ font-weight: 600;
 	width: 57px;
 	top:0;
 	left:0;
+}
+
+.player-button[disabled="disabled"] {
+	background-color: gray;
 }
 
 

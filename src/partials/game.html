@@ -1,6 +1,15 @@
 <div class="row">
 	<h1>{{ title }}</h1>
-
+	<h1>{{ totalScore }}</h1>
+	<ul>
+		<li ng-repeat="player in players">
+			<button type="button" class="player-button" ng-click="addScore(player._id)">
+				<span class="img-bg"></span>
+				<img src="{{ player.pic }}" />{{ player.name }}
+			</button>
+		</li>
+	</ul>
+	<button type="button" class="btn btn-danger" ng-click="removeLastScore()">Remove Last Score</button>
 	<a class="btn btn-danger" href="#/player">Go to the player screen</a>
 </div><!-- end game-screen -->
 
