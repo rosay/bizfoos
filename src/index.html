@@ -8,11 +8,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- build:css -->
     <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700' rel='stylesheet' type='text/css'>
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
 	<link rel="stylesheet" href="components/bootstrap/dist/css/bootstrap.min.css"/>
 	<link rel="stylesheet" href="css/main.css"/>
 	<!-- endbuild -->
 </head>
 <body>
+<header>
+<div class="container">
+	<div class="row">
+		<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 logo-box">
+		<img src="../img/bizfoos-logo.png" />
+		</div><!-- end logo-box -->
+		
+		<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 leader-link">
+		<p><a href="#/leaderboard"><i class="fa fa-trophy"></i>Leaderboard</a></p>
+		</div><!-- end leader-link -->
+		
+	</div><!-- end row -->
+</div><!-- end header container -->
+</header>
 <div class="container">
 	<div ng-view></div>
 	<a class="btn btn-info" href="#/leaderboard">Leaderboard</a>
