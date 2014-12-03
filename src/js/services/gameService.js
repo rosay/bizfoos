@@ -5,20 +5,28 @@ app.factory('gameService', ['$rootScope', function ($rootScope) {
 	// store players in the game
 	var players = [];
 
-	var insertPlayer = function (playerId) {
+	var insertPlayer = function (newPlayer) {
 
 		var isInGame = players.some(function(player){
-			return playerId === player;
+			return newPlayer._id === player._id;
 		});
 
 		if (!isInGame &&  players.length < 4) {
-			players.push(playerId);
+			players.push(newPlayer);
+
+			return true;
 		}
+
+		return false;
 	};
 
 	var deletePlayer = function (playerId) {
-		var playerIndex = players.indexOf(playerId);
-		players.splice(playerIndex, 1);
+		// Get the player object from the array of players
+		var playerIndex = _.findIndex(players, {"_id" : playerId});
+
+		var deletedPlayer = players.splice(playerIndex, 1)[0];
+
+		return deletedPlayer;
 	};
 
 	var getPlayers = function () {
