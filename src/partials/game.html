@@ -11,12 +11,12 @@
 	<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 t1-score">
 	<!--<h2 ng-show="gameOver">GG!</h2>-->
 
-	<h1>Team 1</h1>
+	<h1>{{ ctrl.teamNames["teamOne"][0] }} & {{ ctrl.teamNames["teamOne"][1] }}</h1>
 	<p class="score-count">{{ scores[1] }}</p>
 	</div><!-- end t1-score -->
 
 	<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 t2-score">
-	<h1>Team 2</h1>
+		<h1>{{ ctrl.teamNames["teamTwo"][0] }} & {{ ctrl.teamNames["teamTwo"][1] }}</h1>
 	<p class="score-count">{{ scores[2] }}</p>
 	</div><!-- end t2-score -->
 

@@ -7,7 +7,8 @@ app.controller('GameController', ['gameService', 'rosterService', function(gameS
 	vm.scores = { 1: 0, 2: 0 };
 	vm.gameOver = false;
 	vm.players = rosterService.getRoster();
-
+	vm.teamNames = rosterService.getTeamNames();
+	
 	vm.addScore = function(playerId) {
 		gameService.addScore(playerId);
 		vm.scores[1] = gameService.getScoresCount(1);
