@@ -4,6 +4,10 @@ app.factory('playerService', ['$http', function playerService ($http) {
 	playerService.players = [];
 	playerService.bullpenCount = 0;
 
+	var getPlayerIndex = function(playerId) {
+		return _.findIndex(playerService.players, {"_id": playerId});
+	};
+
 	playerService.getBullpenCount = function () {
 		return playerService.bullpenCount;
 	};
@@ -24,14 +28,16 @@ app.factory('playerService', ['$http', function playerService ($http) {
 
 	playerService.addPlayerToBullpen = function (playerId) {
 		if (playerService.bullpenCount < 4) {
-			var playerIndex = _.findIndex(playerService.players, {"_id" : playerId});
+			var playerIndex = getPlayerIndex(playerId);
+
 			playerService.players[playerIndex].inBullpen = true;
 			playerService.bullpenCount += 1;
 		}
 	};
 
 	playerService.removePlayerFromBullpen = function (playerId) {
-		var playerIndex = _.findIndex(playerService.players, {"_id" : playerId});
+		var playerIndex = getPlayerIndex(playerId);
+
 		playerService.players[playerIndex].inBullpen = false;
 		playerService.bullpenCount -= 1;
 	};

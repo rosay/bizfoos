@@ -13,12 +13,12 @@
 					when('/game', {
 						templateUrl: 'partials/game.html',
 						controller: 'GameController',
-						controllerAs: 'game'
+						controllerAs: 'ctrl'
 					}).
 					when('/leaderboard', {
 						templateUrl: 'partials/leaderboard.html',
 						controller: 'LeaderboardController',
-						controllerAs: 'leaderboard'
+						controllerAs: 'ctrl'
 					}).
 					otherwise({
 						redirectTo: '/player'

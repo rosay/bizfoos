@@ -1,4 +1,4 @@
-app.controller('PlayerController', ['gameService', 'playerService', 'rosterService', function (gameService, playerService, rosterService) {
+app.controller('PlayerController', ['gameService', 'playerService', function (gameService, playerService) {
 	"use strict";
 
 	var vm = this;
