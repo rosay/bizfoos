@@ -1,35 +1,33 @@
 // Responsible handling the current screen
-app.factory('gameService', ['playerService', function (playerService) {
+app.factory('gameService', ['rosterService', function gameService (rosterService) {
 	"use strict";
 
 	var scores = [];
 
-	var getPlayers = function () {
-		return players;
-	};
-
 	var addScore = function (playerId) {
-		var newScore = { player_id: playerId, ScoreTime: new Date() };
+		var team = rosterService.getTeamByPlayerId(playerId);
+		var scoreCount = getScoresCount(team);
 
-		scores.push(newScore);
+		if (scoreCount < 5) {
+			var score = { player_id: playerId, team: team, ScoreTime: new Date() };
+			scores.push(score);
+		}
 	};
 
 	var removeLastScore = function () {
 		if (scores.length) {
-			return scores.splice(scores.length - 1, 1);
-		} else {
-			return [];
+			scores.splice(scores.length - 1, 1);
 		}
 	};
 
-	var getScores = function() {
-		return scores;
+	var getScoresCount = function(teamNum) {
+		var teamScores = _.where(scores, { team: teamNum });
+		return teamScores.length;
 	};
 
 	return {
-		getPlayers: getPlayers,
 		addScore: addScore,
 		removeLastScore: removeLastScore,
-		getScores: getScores
+		getScoresCount: getScoresCount
 	};
 }]);
