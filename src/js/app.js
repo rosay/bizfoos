@@ -8,7 +8,7 @@
 					when('/player', {
 						templateUrl: 'partials/player.html',
 						controller: 'PlayerController',
-						controllerAs: 'player'
+						controllerAs: 'ctrl'
 					}).
 					when('/game', {
 						templateUrl: 'partials/game.html',

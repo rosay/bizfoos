@@ -2,7 +2,7 @@ var Player = require('./models/Player');
 
 module.exports = function(app) {
 	// Routes
-	app.post('/api/players', function (req, res) {
+	app.get('/api/players', function (req, res) {
 
 		Player.find(function(err, players) {
 			if (err) {

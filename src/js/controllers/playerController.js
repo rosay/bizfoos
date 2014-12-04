@@ -1,51 +1,27 @@
-app.controller('PlayerController', ['$scope', '$http', 'gameService', function($scope, $http, gameService) {
+app.controller('PlayerController', ['gameService', 'playerService', 'rosterService', function (gameService, playerService, rosterService) {
 	"use strict";
 
-	var viewmodel = this;
-
-	// Gets player data
-	$http({method: 'POST', url: 'http://localhost:3000/api/players'}).
-			success(function (data, status, headers, config) {
-				for (var i = 0; i < data.length; i++) {
-					data[i].enabled = true;
-				}
-
-				$scope.players = data;
-			}).
-			error(function (data, status, headers, config) {
-				console.log("No players showed up! Status: " + status);
-			});
+	var vm = this;
 
 	// Setup controller
-	$scope.players = [];
-	$scope.selectedPlayers = [];
-	viewmodel.title = "Player list";
+	vm.playerHeader = "Player list";
+	vm.bullpenHeader = "Bullpen";
+	vm.players = [];
+	vm.bullpenCount = 0;
 
-	$scope.addPlayerToGame = function (playerId) {
-		// Get the player object from the array of players
-		var playerIndex = _.findIndex($scope.players, {"_id" : playerId});
-		var player = $scope.players[playerIndex];
+	playerService.getPlayers()
+		.then(function() {
+			vm.players = playerService.players;
+		});
 
-		// Pass the player object to the game service.
-		// If game service is able to successfully insert the player, it will return true.
-		var insertSuccessful = gameService.insertPlayer(player);
-
-		// Remove the player from the choice of players
-		if (insertSuccessful) {
-			$scope.players[playerIndex].enabled = false;
-			$scope.selectedPlayers = gameService.getPlayers();
-		}
+	vm.addPlayerToBullpen = function (playerId) {
+		playerService.addPlayerToBullpen(playerId);
+		vm.bullpenCount = playerService.getBullpenCount();
 	};
 
-	$scope.removePlayerFromGame = function (playerId) {
-		gameService.deletePlayer(playerId);
-
-		// Remove the player from the choice of players
-		var playerIndex = _.findIndex($scope.players, {"_id" : playerId});
-		$scope.players[playerIndex].enabled = true;
-
-		// Refresh the selectedPlayers list
-		$scope.selectedPlayers = gameService.getPlayers();
+	vm.removePlayerFromBullpen = function (playerId) {
+		playerService.removePlayerFromBullpen(playerId);
+		vm.bullpenCount = playerService.getBullpenCount();
 	};
 }]);
 

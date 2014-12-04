@@ -22,21 +22,7 @@ app.controller('GameController', ['$scope', 'gameService', function($scope, game
 		return array;
 	};
 
-	var getTeamByPlayer = function(playerId) {
-		var playerIndex = _.findIndex($scope.players, {"_id" : playerId});
-		var player = $scope.players[playerIndex];
 
-		return player.team;
-	};
-
-	var gamePlayers = shufflePlayers(gameService.getPlayers());
-
-	var teamsAndPositions = [
-		{ team: 1, position: "offense" },
-		{ team: 1, position: "defense" },
-		{ team: 2, position: "offense" },
-		{ team: 2, position: "defense" }
-	];
 
 	$scope.players = _.merge(gamePlayers, teamsAndPositions);
 	$scope.title = "Game screen";

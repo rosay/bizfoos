@@ -2,10 +2,10 @@
 	<div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 player-col">
 
 		<div class="player-sidebar">
-			<h2>{{ player.title }}</h2>
+			<h2>{{ ctrl.playerHeader }}</h2>
 			<ul>
-				<li ng-repeat="player in players">
-					<button ng-disabled="player.enabled == false" type="button" class="player-button" ng-click="addPlayerToGame(player._id)">
+				<li ng-repeat="player in ctrl.players">
+					<button ng-disabled="player.inBullpen == true" type="button" class="player-button" ng-click="ctrl.addPlayerToBullpen(player._id)">
 						<span class="img-bg"></span>
 						<img src="{{ player.pic }}" />{{ player.name }}
 					</button>
@@ -16,27 +16,27 @@
 	</div><!-- end player-col -->
 
 	<div class="col-lg-8 col-md-8 col-sm-6 col-xs-12 game-summary">
-		<h2>Game Summary</h2>
+		<h2>{{ ctrl.bullpenHeader }}</h2>
 		<div class="row">
 			<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 players-in">
 				<ul>
-					<li ng-repeat="player in selectedPlayers">
-						<button type="button" class="player-button" ng-click="removePlayerFromGame(player._id)">
+					<li ng-repeat="player in ctrl.players | filter : { inBullpen: true }">
+						<button type="button" class="player-button" ng-click="ctrl.removePlayerFromBullpen(player._id)">
 							<span class="img-bg"></span>
 							<img src="{{ player.pic }}" />{{ player.name }}
 						</button>
 					</li>
 				</ul>
 			</div><!-- end players-in -->
-			
+
 			<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 start-button">
 				<div class="start-wrap">
-				<a ng-disabled="selectedPlayers.length !== 4" class="btn btn-start" href="#/game">Play!</a>
-				<a ng-disabled="selectedPlayers.length < 1" class="btn btn-reset" href="#">Reset</a>
+				<a ng-disabled="ctrl.bullpenCount !== 4" class="btn btn-start" href="#/game">Play!</a>
+				<a ng-disabled="ctrl.bullpenCount < 1" class="btn btn-reset" href="#">Reset</a>
 				</div><!-- end start wrap -->
 			</div><!-- end start-button -->
 		</div><!-- end sub-row -->
-		
+
 	</div><!-- end game summary -->
-	
+
 </div><!-- end player-screen -->
