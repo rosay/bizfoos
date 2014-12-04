@@ -63,6 +63,8 @@ padding-left: 15px;
 padding-bottom: 10px;
 font-family: 'Source Sans Pro', sans-serif;
 font-weight: 600;
+text-align: center;
+border-bottom: 2px solid #2dad60;
 }
 
 .player-sidebar ul {
@@ -104,6 +106,10 @@ font-weight: 600;
 
 /* --- GAME SUMMARY PANEL --- */
 
+.game-col {
+	margin-bottom: 10px;
+}
+
 .game-summary {
 	background-color: rgba(255,255,255, 0.9);
 	border-radius: 6px;
@@ -113,7 +119,7 @@ box-shadow: 1px 1px 22px 2px rgba(0,0,0,0.45);
 padding-left: 0px;
 padding-right: 0px;
 margin-top: 20px;
-min-height: 377px;
+min-height: 380px;
 }
 
 .game-summary h2 {
@@ -131,6 +137,8 @@ padding-left: 15px;
 padding-bottom: 10px;
 font-family: 'Source Sans Pro', sans-serif;
 font-weight: 600;
+text-align: center;
+border-bottom: 2px solid #2dad60;
 }
 
 .game-summary ul {
@@ -225,5 +233,195 @@ margin-top: 20px;
 }
 
 
+/* --- LEADERBOARD PANEL [SINGLE] --- */
 
 
+.lboard-single {
+	background-color: rgba(255,255,255, 0.9);
+	border-radius: 6px;
+	-webkit-box-shadow: 1px 1px 22px 2px rgba(0,0,0,0.45);
+-moz-box-shadow: 1px 1px 22px 2px rgba(0,0,0,0.45);
+box-shadow: 1px 1px 22px 2px rgba(0,0,0,0.45);
+padding-left: 0px;
+padding-right: 0px;
+margin-top: 20px;
+min-height: 377px;
+padding-bottom: 15px;
+}
+
+.lboard-single h2 {
+	margin: 0px;
+	color: white;
+	background:#35cb71;
+	-webkit-border-top-left-radius: 6px;
+-webkit-border-top-right-radius: 6px;
+-moz-border-radius-topleft: 6px;
+-moz-border-radius-topright: 6px;
+border-top-left-radius: 6px;
+border-top-right-radius: 6px;
+padding-top: 10px;
+padding-left: 15px;
+padding-bottom: 10px;
+font-family: 'Source Sans Pro', sans-serif;
+font-weight: 600;
+text-align: center;
+border-bottom: 2px solid #2dad60;
+}
+
+.lboard-single h3 {
+	font-family: 'Source Sans Pro', sans-serif;
+font-weight: 600;
+text-align: right;
+padding-right: 15px;
+color: #35cb71;
+font-size: 1.286em;
+}
+
+.lboard-single h3 a {
+	color: #35cb71;
+}
+
+.lboard-single h3 i {
+	padding-left: 10px;
+	color: #35cb71;
+}
+
+.lboard-single table {
+	font-family: 'Source Sans Pro', sans-serif;
+	font-weight: 600;
+	font-size: 1.143em;
+	list-style: none;
+	
+}
+
+.table-striped {
+	
+	
+}
+
+.table-striped th {
+	font-size: 1.229em;
+}
+
+.table-striped>tbody>tr:nth-child(odd) {
+	color: #32b365;
+	background: transparent;
+}
+
+.table-striped>tbody>tr:nth-child(even) {
+	color: white;
+	background: #32b365;
+}
+
+.leader-col-1 {
+	
+}
+
+/* --- LEADERBOARD PANEL [DOUBLE- TEAMS] --- */
+
+
+.lboard-double {
+	background-color: rgba(255,255,255, 0.9);
+	border-radius: 6px;
+	-webkit-box-shadow: 1px 1px 22px 2px rgba(0,0,0,0.45);
+-moz-box-shadow: 1px 1px 22px 2px rgba(0,0,0,0.45);
+box-shadow: 1px 1px 22px 2px rgba(0,0,0,0.45);
+padding-left: 0px;
+padding-right: 0px;
+margin-top: 20px;
+min-height: 377px;
+padding-bottom: 15px;
+}
+
+.lboard-double h2 {
+	margin: 0px;
+	color: white;
+	background:#35cb71;
+	-webkit-border-top-left-radius: 6px;
+-webkit-border-top-right-radius: 6px;
+-moz-border-radius-topleft: 6px;
+-moz-border-radius-topright: 6px;
+border-top-left-radius: 6px;
+border-top-right-radius: 6px;
+padding-top: 10px;
+padding-left: 15px;
+padding-bottom: 10px;
+font-family: 'Source Sans Pro', sans-serif;
+font-weight: 600;
+text-align: center;
+border-bottom: 2px solid #2dad60;
+}
+
+.lboard-double h3 {
+	font-family: 'Source Sans Pro', sans-serif;
+font-weight: 600;
+text-align: right;
+padding-right: 15px;
+color: #35cb71;
+font-size: 1.286em;
+}
+
+.lboard-double h3 a {
+	color: #35cb71;
+}
+
+.lboard-double h3 i {
+	padding-left: 10px;
+	color: #35cb71;
+}
+
+.lboard-double table {
+	font-family: 'Source Sans Pro', sans-serif;
+	font-weight: 600;
+	font-size: 1.143em;
+	list-style: none;
+	
+}
+
+.leader-col-2 {
+	
+}
+
+
+/* ~#~#~#~#~#~#~#~#~#~#~#~#~#~#~#~# GAME SCREEN STYLES ~#~#~#~#~#~#~#~#~#~#~#~#~#~#~#~# */
+
+
+.score-row h1 {
+	font-family: 'Source Sans Pro', sans-serif;
+	font-weight: 600;
+	font-size: 2.386em;
+	text-align: center;
+	color: white;
+}
+
+.score-count {
+	
+	font-size: 10em;
+	
+	color: white;
+	text-align: center;
+	font-family: 'Source Sans Pro', sans-serif;
+	font-weight: 700;
+}
+
+.t1-score {
+	background: rgba(55,175,103, 0.41);
+	min-height: 200px;
+	padding: 0;
+}
+
+.t2-score {
+	background: rgba(205,72,72, 0.41);
+	min-height: 200px;
+	padding: 0;
+}
+
+/* ----- GAME BOARD STUFF ---- */
+
+.game-board {
+	background-color: rgba(255,255,255, 0.9);
+}
+
+.game-board ul li {
+	list-style: none;
+}
