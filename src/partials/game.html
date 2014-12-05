@@ -24,8 +24,9 @@
 
 	<div class="game-board">
 	<div class="row">
+	<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 t1-half" ng-repeat="player in ctrl.players | filter : { team : 1 }">
 	<ul>
-		<li ng-repeat="player in ctrl.players | filter : { team : 1 }">
+		<li >
 			<button type="button" class="player-button" ng-click="ctrl.addScore(player._id)">
 				<span class="img-bg"></span>
 				<img src="{{ player.pic }}" />
@@ -35,11 +36,13 @@
 			</button>
 		</li>
 	</ul>
+	</div><!-- end t1-half -->
 	</div><!-- end top player row -->
 	
 	<div class="row">
+	<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 t2-half" ng-repeat="player in ctrl.players | filter : { team : 1 }">
 	<ul>
-		<li ng-repeat="player in ctrl.players | filter : { team : 2 }">
+		<li>
 			<button type="button" class="player-button" ng-click="ctrl.addScore(player._id)">
 				<span class="img-bg"></span>
 				<img src="{{ player.pic }}" />
@@ -49,6 +52,7 @@
 			</button>
 		</li>
 	</ul>
+	</div><!-- end t2-half -->
 	</div><!-- end bottom player row -->
 	
 	<button type="button" class="btn btn-danger" ng-click="ctrl.removeLastScore()">Remove Last Score</button>
