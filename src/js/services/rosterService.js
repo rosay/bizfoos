@@ -53,9 +53,14 @@ app.factory('rosterService', ['playerService', function rosterService (playerSer
 		return 0;
 	};
 
+	var getTeamNames = function() {
+		return { teamOne: [roster[0].name, roster[1].name], teamTwo: [roster[2].name, roster[3].name] }
+	};
+
 	return {
 		getTeamByPlayerId: getTeamByPlayerId,
-		getRoster: getRoster
+		getRoster: getRoster,
+		getTeamNames: getTeamNames
 
 	};
 }]);
