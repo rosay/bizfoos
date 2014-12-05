@@ -3,8 +3,6 @@
 <div class="row">
 	<h1>{{ title }}</h1>
 	<h2 ng-show="ctrl.gameOver">GG!</h2>
-	<h1>Team 1 Score: {{ ctrl.scores[1] }}</h1>
-	<h1>Team 2 Score: {{ ctrl.scores[2] }}</h1>
 
 
 	<div class="row score-row">
@@ -12,17 +10,18 @@
 	<!--<h2 ng-show="gameOver">GG!</h2>-->
 
 	<h1>Team 1</h1>
-	<p class="score-count">{{ scores[1] }}</p>
+	<p class="score-count">{{ ctrl.scores[1] }}</p>
 	</div><!-- end t1-score -->
 
 	<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 t2-score">
 	<h1>Team 2</h1>
-	<p class="score-count">{{ scores[2] }}</p>
+	<p class="score-count">{{ ctrl.scores[2] }}</p>
 	</div><!-- end t2-score -->
 
 	</div><!-- end score row -->
 
 	<div class="game-board">
+	<div class="row">
 	<ul>
 		<li ng-repeat="player in ctrl.players | filter : { team : 1 }">
 			<button type="button" class="player-button" ng-click="ctrl.addScore(player._id)">
@@ -34,6 +33,9 @@
 			</button>
 		</li>
 	</ul>
+	</div><!-- end top player row -->
+	
+	<div class="row">
 	<ul>
 		<li ng-repeat="player in ctrl.players | filter : { team : 2 }">
 			<button type="button" class="player-button" ng-click="ctrl.addScore(player._id)">
@@ -45,6 +47,8 @@
 			</button>
 		</li>
 	</ul>
+	</div><!-- end bottom player row -->
+	
 	<button type="button" class="btn btn-danger" ng-click="ctrl.removeLastScore()">Remove Last Score</button>
 	<a class="btn btn-danger" href="#/player">Go to the player screen</a>
 	</div><!-- end game-board -->
