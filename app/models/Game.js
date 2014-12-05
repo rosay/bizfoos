@@ -1,11 +1,9 @@
 var mongoose = require('mongoose');
 
 module.exports = mongoose.model('Game', {
-	TeamOneOffense : String,
-	TeamOneDefense : String,
-	TeamTwoOffense : String,
-	TeamTwoDefense : String,
-	TeamOneFinalScore: Number,
-	TeamTwoFinalScore: Number
-
+	roster: Array,
+	scores: Array,
+	startTime: Date,
+	endTime: Date,
+	winningTeam: Number
 });
