@@ -1,4 +1,5 @@
 var Player = require('./models/Player');
+var Game = require('./models/Game');
 
 module.exports = function(app) {
 	// Routes
@@ -21,6 +22,26 @@ module.exports = function(app) {
 
 			res.json(players);
 		});
+	});
+
+	app.post('/api/game/save', function(req, res) {
+
+		var game = new Game(req.body);
+
+		game.save(function(err) {
+			if (err) {
+				// If it failed, return error
+				res.status(500).send(err);
+			}
+			else {
+				// We're good!
+				res.status(201).send("Game created successfully");
+			}
+		});
+		//Game.create(req.body);
+
+		//res.send("Hello, world!1");
+
 	});
 
 	// accept PUT request at /user
