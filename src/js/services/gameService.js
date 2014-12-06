@@ -1,9 +1,8 @@
 // Responsible handling the current screen
-app.factory('gameService', ['rosterService', '$timeout', '$http', function gameService (rosterService, $timeout, $http) {
+app.factory('gameService', ['rosterService', 'playerService', '$timeout', '$http', '$location', function gameService (rosterService, playerService, $timeout, $http, $location) {
 	"use strict";
 
 	var scores = [];
-	//var game = {};
 	var startTime;
 	var endTime;
 	var winningTeam;
@@ -74,12 +73,21 @@ app.factory('gameService', ['rosterService', '$timeout', '$http', function gameS
 				});
 	};
 
+	var isGameReady = function () {
+		var bullpen = _.where(playerService.players, { 'inBullpen': true });
+
+		if (bullpen.length !== 4) {
+			$location.path( "/players" );
+		}
+	};
+
 	return {
 		addScore: addScore,
 		removeLastScore: removeLastScore,
 		getScoresCount: getScoresCount,
 		isGameOver: isGameOver,
 		setStartTime: setStartTime,
-		postGame: postGame
+		postGame: postGame,
+		isGameReady: isGameReady
 	};
 }]);

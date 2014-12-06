@@ -3,6 +3,8 @@ app.controller('GameController', ['gameService', 'rosterService', function(gameS
 
 	var vm = this;
 
+	gameService.isGameReady();
+
 	vm.title = "Let's play!";
 	vm.scores = { 1: 0, 2: 0 };
 	vm.gameOver = false;

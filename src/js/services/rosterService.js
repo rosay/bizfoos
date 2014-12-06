@@ -1,7 +1,7 @@
 app.factory('rosterService', ['playerService', function rosterService (playerService) {
 
 	// store players in the game
-	// Array of objects: { player_id: "mark@bizstream.com" team: 1, position: "offense" }
+	// Array of objects: { player_id: "guy@bizstream.com" team: 1, position: "offense" }
 	var roster = [];
 
 	// Teams and positions get merged with roster
@@ -33,9 +33,11 @@ app.factory('rosterService', ['playerService', function rosterService (playerSer
 	};
 
 	var getRoster = function () {
-		if (roster.length === 0) {
+		var bullpen = _.where(playerService.players, { 'inBullpen': true });
+
+		if (bullpen.length) {
 			// Combine
-			roster = _.where(playerService.players, { 'inBullpen': true }) ;
+			roster = bullpen;
 			_.merge(shuffle(roster), teamsAndPositions);
 		}
 
@@ -54,7 +56,9 @@ app.factory('rosterService', ['playerService', function rosterService (playerSer
 	};
 
 	var getTeamNames = function() {
-		return { teamOne: [roster[0].name, roster[1].name], teamTwo: [roster[2].name, roster[3].name] }
+		if (roster.length) {
+			return { teamOne: [roster[0].name, roster[1].name], teamTwo: [roster[2].name, roster[3].name] }
+		}
 	};
 
 	return {
