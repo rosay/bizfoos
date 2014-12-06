@@ -9,14 +9,11 @@ app.factory('gameService', ['rosterService', 'playerService', '$timeout', '$http
 
 	var addScore = function (playerId) {
 		var team = rosterService.getTeamByPlayerId(playerId);
-		var scoreCount = getScoresCount(team);
 
-		if (scoreCount < 5) {
+		if (!isGameOver()) {
 			var score = { player_id: playerId, team: team, scoreTime: new Date() };
 			scores.push(score);
-		}
-
-		if (isGameOver()) {
+		} else {
 			setEndTime();
 		}
 	};
@@ -57,19 +54,14 @@ app.factory('gameService', ['rosterService', 'playerService', '$timeout', '$http
 	};
 
 	var postGame = function () {
+		var game = buildGameModel();
 
-		if (Object.keys(game).length === 0) {
-			buildGameModel();
-		}
-
-		return $http.post('/api/game/save', game).
+		return $http.post('/api/game/save', { "gameData": game }).
 				success(function(data, status, headers, config) {
-					// this callback will be called asynchronously
-					// when the response is available
+					return status;
 				}).
 				error(function(data, status, headers, config) {
-					// called asynchronously if an error occurs
-					// or server returns response with an error status.
+					return status;
 				});
 	};
 

@@ -28,11 +28,14 @@ app.controller('GameController', ['gameService', 'rosterService', function(gameS
 	};
 
 	vm.postGame = function() {
-		gameService.postGame().then(function(result) {
-			if (result.status != 201) {
+		gameService.postGame().then(
+			function(result) {
+				console.log("Game saved");
+			},
+			function(status) {
 				console.log("Game didn't save!");
 			}
-		});
+		);
 	}
 }]);
 
