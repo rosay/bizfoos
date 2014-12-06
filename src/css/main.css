@@ -385,6 +385,22 @@ font-size: 1.286em;
 
 /* ~#~#~#~#~#~#~#~#~#~#~#~#~#~#~#~# GAME SCREEN STYLES ~#~#~#~#~#~#~#~#~#~#~#~#~#~#~#~# */
 
+.score-row {
+	
+}
+
+.game-over {
+	font-family: 'Source Sans Pro', sans-serif;
+	font-weight: 600;
+	color: #35cb71;
+	background: white;
+	margin-bottom: 20px;
+	text-align: center;
+}
+
+.go-wrap {
+	background-color: white;
+}
 
 .score-row h1 {
 	font-family: 'Source Sans Pro', sans-serif;
@@ -418,10 +434,77 @@ font-size: 1.286em;
 
 /* ----- GAME BOARD STUFF ---- */
 
+.game-screen-wrap {
+	overflow: hidden;
+}
+
 .game-board {
 	background-color: rgba(255,255,255, 0.9);
 }
 
 .game-board ul li {
 	list-style: none;
+}
+
+.team-player {
+	display: inline-block;
+	margin: 0 auto;
+}
+
+.team-player button {
+	border-radius: 6px;
+	background:#35cb71;
+	color: white;
+	font-size: 2.143em;
+	border: 2px solid #2dad60;
+	min-width: 250px;
+	
+}
+
+.team-player button img {
+	float: left;
+	border-radius: 6px;
+	border:1px solid #2dad60;
+	width: 75px;
+	height: 75px;
+	margin-right: 10px;
+}
+
+.team-player {
+	width: 100%;
+	text-align: center;
+}
+
+.t1-row {
+	padding-top: 30px;
+}
+
+.name-pos {
+	padding-top: 15px;
+display: inline-block;
+}
+
+
+.t1-half, .t2-half {
+	padding-top: 15px;
+	padding-bottom: 15px;
+}
+
+.table {
+	margin: 0 auto;
+}
+
+.table-wrap {
+	padding-top: 15px;
+	padding-bottom: 15px;
+}
+
+.table img {
+	display: block;
+	margin: 0 auto;
+}
+
+.pname {
+	margin-top: 15px;
+	display: inline-block;
 }
