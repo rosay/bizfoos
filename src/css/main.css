@@ -434,6 +434,29 @@ font-size: 1.286em;
 
 /* ----- GAME BOARD STUFF ---- */
 
+.col-centered {
+	margin: 0 auto;
+	float: none;
+	text-align: center;
+}
+
+.remove-wrap {
+	background-color: white;
+	padding-top: 15px;
+	padding-bottom: 15px;
+	border-bottom: 4px solid #35cb71;
+	border-top: 4px solid #35cb71;
+}
+
+.remove-button {
+	float: left;
+	
+}
+
+.play-screen {
+	float: right;
+}
+
 .game-screen-wrap {
 	overflow: hidden;
 }

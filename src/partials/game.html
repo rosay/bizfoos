@@ -26,6 +26,14 @@
 	</div><!-- end score row -->
 
 	<div class="game-board">
+		<div class="remove-wrap">
+			<div class="container">
+				<div class="col-lg-5 col-md-5 col-sm-8 col-xs-12 col-centered">
+				<button type="button" class="btn btn-danger remove-button" ng-click="ctrl.removeLastScore()">Remove Last Score</button>
+				<a class="btn btn-info play-screen" href="/">Go to the player screen</a>
+				</div>
+			</div><!-- end container -->
+		</div><!-- end remove wrap -->
 	<div class="container">
 	<div class="row t1-row">
 	<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 t1-half" ng-repeat="player in ctrl.players | filter : { team : 1 }">
@@ -65,8 +73,8 @@
 	</div><!-- end t2-half -->
 	</div><!-- end bottom player row -->
 
-	<button type="button" class="btn btn-danger" ng-click="ctrl.removeLastScore()">Remove Last Score</button>
-	<a class="btn btn-danger" href="#/player">Go to the player screen</a>
+	
+	
 	</div><!-- end container -->
 	</div><!-- end game-board -->
 
