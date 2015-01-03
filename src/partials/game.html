@@ -1,12 +1,17 @@
+<div class="game-screen-wrap">
 <div class="row">
-	<h1>{{ title }}</h1>
-	<h2 ng-show="ctrl.gameOver">GG!</h2>
-
+	<!--<h1>{{ title }}</h1>-->
+	
+	<div class="go-wrap">
+	<div class="container">
+	<h2 class="game-over"ng-show="ctrl.gameOver">Good game!</h2>
+	</div>
+	</div>
 
 	<div class="row score-row">
 	<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 t1-score">
 	<!--<h2 ng-show="gameOver">GG!</h2>-->
-
+	
 
 	<h1>{{ ctrl.teamNames["teamOne"][0] }} & {{ ctrl.teamNames["teamOne"][1] }}</h1>
 	<p class="score-count">{{ ctrl.scores[1] }}</p>
@@ -21,39 +26,50 @@
 	</div><!-- end score row -->
 
 	<div class="game-board">
-	<div class="row">
-	<ul>
-		<li ng-repeat="player in ctrl.players | filter : { team : 1 }">
+	<div class="container">
+	<div class="row t1-row">
+	<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 t1-half" ng-repeat="player in ctrl.players | filter : { team : 1 }">
+	<div class="team-player">
+		
 			<button type="button" class="player-button" ng-click="ctrl.addScore(player._id)">
 				<span class="img-bg"></span>
 				<img src="{{ player.pic }}" />
-				{{ player.name }}
-				<span>{{ player.team }}</span>
-				<span>{{ player.position }}</span>
+				<span class="pname">{{ player.name }}</span>
+				
+				
 			</button>
-		</li>
-	</ul>
+		
+	</div><!-- end team-player -->
+	</div><!-- end t1-half -->
 	</div><!-- end top player row -->
+	
+	<div class="row">
+		<div class="col-lg-12 col-md-12 table-wrap">
+		<div class="table"><img src="/img/foosball-table.png" /></div>
+		</div>
+	</div><!-- end table row -->
 
 	<div class="row">
-	<ul>
-		<li ng-repeat="player in ctrl.players | filter : { team : 2 }">
+	<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 t2-half" ng-repeat="player in ctrl.players | filter : { team : 2 }">
+	<div class="team-player">
+		
 			<button type="button" class="player-button" ng-click="ctrl.addScore(player._id)">
 				<span class="img-bg"></span>
 				<img src="{{ player.pic }}" />
-				{{ player.name }}
-				<span>{{ player.team }}</span>
-				<span>{{ player.position }}</span>
+				<span class="pname">{{ player.name }}</span>
+				
+				
 			</button>
-		</li>
-	</ul>
+		
+	</div><!-- end team-player -->
+	</div><!-- end t2-half -->
 	</div><!-- end bottom player row -->
-	<button type="button" class="btn btn-danger" ng-click="ctrl.postGame()">POST GAME</button>
+
 	<button type="button" class="btn btn-danger" ng-click="ctrl.removeLastScore()">Remove Last Score</button>
 	<a class="btn btn-danger" href="#/player">Go to the player screen</a>
-
+	</div><!-- end container -->
 	</div><!-- end game-board -->
 
 </div><!-- end game-screen -->
-
+</div><!-- end game-screen-wrap -->
 

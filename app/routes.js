@@ -29,6 +29,10 @@ module.exports = function(app) {
 		var game = new Game(req.body.gameData);
 
 		if (game != null && game.roster.length === 4 && game.scores.length >= 5) {
+
+			game.dateCreated = new Date();
+			game.dateModified = new Date();
+
 			game.save(function(err) {
 				if (err) {
 					// If it failed, return error

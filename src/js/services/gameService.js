@@ -5,7 +5,6 @@ app.factory('gameService', ['rosterService', 'playerService', '$timeout', '$http
 	var scores = [];
 	var startTime;
 	var endTime;
-	var winningTeam;
 
 	var addScore = function (playerId) {
 		var team = rosterService.getTeamByPlayerId(playerId);
@@ -13,8 +12,12 @@ app.factory('gameService', ['rosterService', 'playerService', '$timeout', '$http
 		if (!isGameOver()) {
 			var score = { player_id: playerId, team: team, scoreTime: new Date() };
 			scores.push(score);
-		} else {
-			setEndTime();
+
+			// Did that last score just end the game?
+			if (isGameOver()) {
+				setEndTime();
+				postGame();
+			}
 		}
 	};
 
@@ -43,12 +46,26 @@ app.factory('gameService', ['rosterService', 'playerService', '$timeout', '$http
 
 	var buildGameModel = function() {
 		var game = {};
+		game.roster = [];
+		var roster = rosterService.getRoster();
 
-		game.roster = rosterService.getRoster();
+		for (var i = 0; i < roster.length; i++) {
+			game.roster[i] = {};
+			game.roster[i].player_id = roster[i]._id;
+			game.roster[i].position = roster[i].position;
+			game.roster[i].team = roster[i].team;
+		}
+
 		game.scores = scores;
 		game.startTime = startTime;
 		game.endTime = endTime;
-		game.winningTeam = winningTeam;
+
+		if (getScoresCount(1) === 5) {
+			game.winningTeam = 1;
+		} else {
+			game.winningTeam = 2;
+		}
+
 
 		return game;
 	};
@@ -79,7 +96,6 @@ app.factory('gameService', ['rosterService', 'playerService', '$timeout', '$http
 		getScoresCount: getScoresCount,
 		isGameOver: isGameOver,
 		setStartTime: setStartTime,
-		postGame: postGame,
 		isGameReady: isGameReady
 	};
 }]);

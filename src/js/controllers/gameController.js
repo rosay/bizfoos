@@ -26,16 +26,5 @@ app.controller('GameController', ['gameService', 'rosterService', function(gameS
 		vm.scores[2] = gameService.getScoresCount(2);
 		vm.gameOver = gameService.isGameOver();
 	};
-
-	vm.postGame = function() {
-		gameService.postGame().then(
-			function(result) {
-				console.log("Game saved");
-			},
-			function(status) {
-				console.log("Game didn't save!");
-			}
-		);
-	}
 }]);
 
