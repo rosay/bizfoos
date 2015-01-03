@@ -1,10 +1,20 @@
+/**
+ * Handles everything to do with the players who are playing in the current game.
+ */
 app.factory('rosterService', ['playerService', function rosterService (playerService) {
+	"use strict";
 
-	// store players in the game
-	// Array of objects: { player_id: "guy@bizstream.com" team: 1, position: "offense" }
+	/**
+	 * Stores players in the game.
+	 * Array of objects: { player_id: "guy@bizstream.com" team: 1, position: "offense" }
+	 * @type {Array}
+	 */
 	var roster = [];
 
-	// Teams and positions get merged with roster
+	/**
+	 *  Teams and positions get merged with roster.
+	 * @type [{team: number, position: string}]
+	 */
 	var teamsAndPositions = [
 		{ team: 1, position: "offense" },
 		{ team: 1, position: "defense" },
@@ -12,7 +22,12 @@ app.factory('rosterService', ['playerService', function rosterService (playerSer
 		{ team: 2, position: "defense" }
 	];
 
-	// Used to put players on random teams and positions
+	/**
+	 * Takes an array, shuffles it's entries and returns it.
+	 * Used to put players on random teams and positions.
+	 * @param array
+	 * @returns {Array}
+	 */
 	var shuffle = function (array) {
 		var currentIndex = array.length, temporaryValue, randomIndex;
 
@@ -32,6 +47,10 @@ app.factory('rosterService', ['playerService', function rosterService (playerSer
 		return array;
 	};
 
+	/**
+	 * Used to get the all the players who are in the game.
+	 * @returns {Array}
+	 */
 	var getRoster = function () {
 		var bullpen = _.where(playerService.players, { 'inBullpen': true });
 
@@ -44,6 +63,11 @@ app.factory('rosterService', ['playerService', function rosterService (playerSer
 		return roster;
 	};
 
+	/**
+	 * Finds a player in the roster and returns they're team number. Returns 0 if player is not found in roster.
+	 * @param playerId
+	 * @returns {Number}
+	 */
 	var getTeamByPlayerId = function(playerId) {
 		if (roster.length) {
 			var playerIndex = _.findIndex(roster, {"_id" : playerId});
@@ -55,6 +79,10 @@ app.factory('rosterService', ['playerService', function rosterService (playerSer
 		return 0;
 	};
 
+	/**
+	 * Returns the names of players in roster by team.
+	 * @returns {{teamOne: *[], teamTwo: *[]}}
+	 */
 	var getTeamNames = function() {
 		if (roster.length) {
 			return { teamOne: [roster[0].name, roster[1].name], teamTwo: [roster[2].name, roster[3].name] }
@@ -65,6 +93,5 @@ app.factory('rosterService', ['playerService', function rosterService (playerSer
 		getTeamByPlayerId: getTeamByPlayerId,
 		getRoster: getRoster,
 		getTeamNames: getTeamNames
-
 	};
 }]);

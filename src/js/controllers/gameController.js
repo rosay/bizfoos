@@ -3,7 +3,7 @@ app.controller('GameController', ['gameService', 'rosterService', function(gameS
 
 	var vm = this;
 
-	gameService.isGameReady();
+	gameService.checkGameReady();
 
 	vm.title = "Let's play!";
 	vm.scores = { 1: 0, 2: 0 };

@@ -1,11 +1,17 @@
-// Responsible handling the current screen
+/**
+* Handles everything to do with the current game being played.
+*/
 app.factory('gameService', ['rosterService', 'playerService', '$timeout', '$http', '$location', function gameService (rosterService, playerService, $timeout, $http, $location) {
 	"use strict";
 
-	var scores = [];
-	var startTime;
-	var endTime;
+	var scores = [];	// Holds all scores for the game.
+	var startTime;		// Game start time.
+	var endTime;		// Game end time.
 
+	/**
+	 * Add a score
+	 * @param playerId
+	 */
 	var addScore = function (playerId) {
 		var team = rosterService.getTeamByPlayerId(playerId);
 
@@ -21,29 +27,51 @@ app.factory('gameService', ['rosterService', 'playerService', '$timeout', '$http
 		}
 	};
 
+	/**
+	 * Deletes the last score.
+	 */
 	var removeLastScore = function () {
 		if (scores.length) {
 			scores.splice(scores.length - 1, 1);
 		}
 	};
 
+	/**
+	 * Get scores by team
+	 * @param teamNum
+	 * @returns {Number}
+	 */
 	var getScoresCount = function(teamNum) {
 		var teamScores = _.where(scores, { team: teamNum });
 		return teamScores.length;
 	};
 
+	/**
+	 * Determines if the game is over or not.
+	 * @returns {boolean}
+	 */
 	var isGameOver = function() {
 		return getScoresCount(1) === 5 || getScoresCount(2) === 5;
 	};
 
+	/**
+	 * Set the start of game time.
+	 */
 	var setStartTime = function() {
 		startTime = new Date();
 	};
 
+	/**
+	 * Set the end of game time.
+	 */
 	var setEndTime = function() {
 		endTime = new Date();
 	};
 
+	/**
+	 * Clean up the game data before sending it to the server.
+	 * @returns {{}}
+	 */
 	var buildGameModel = function() {
 		var game = {};
 		game.roster = [];
@@ -70,6 +98,10 @@ app.factory('gameService', ['rosterService', 'playerService', '$timeout', '$http
 		return game;
 	};
 
+	/**
+	 * Sends game to server for saving.
+	 * @returns {*}
+	 */
 	var postGame = function () {
 		var game = buildGameModel();
 
@@ -82,7 +114,10 @@ app.factory('gameService', ['rosterService', 'playerService', '$timeout', '$http
 				});
 	};
 
-	var isGameReady = function () {
+	/**
+	 * Sends player back to players screen if the game is not ready.
+	 */
+	var checkGameReady = function () {
 		var bullpen = _.where(playerService.players, { 'inBullpen': true });
 
 		if (bullpen.length !== 4) {
@@ -96,6 +131,6 @@ app.factory('gameService', ['rosterService', 'playerService', '$timeout', '$http
 		getScoresCount: getScoresCount,
 		isGameOver: isGameOver,
 		setStartTime: setStartTime,
-		isGameReady: isGameReady
+		checkGameReady: checkGameReady
 	};
 }]);
