@@ -8,7 +8,7 @@ var bodyParser 	= require('body-parser');
 app.use( bodyParser.json() );       // to support JSON-encoded bodies
 
 // configuration ===============================================================
-mongoose.connect("mongodb://localhost:27017/bizfoosDevDb"); // Connect to the db
+mongoose.connect("mongodb://localhost:27017/bizfoos"); // Connect to the db
 app.use(express.static(__dirname + '/src'));
 
 // routes ======================================================================
