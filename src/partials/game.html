@@ -43,19 +43,24 @@
 		</div><!-- end remove wrap -->
 	<div class="container">
 	<div class="row t1-row">
-	<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 t1-half" ng-repeat="player in ctrl.players | filter : { team : 1 }">
-	<div class="team-player">
-		
-			<button type="button" class="player-button" ng-click="ctrl.addScore(player._id)">
-				<span class="img-bg"></span>
-				<img src="{{ player.pic }}" />
-				<span class="pname">{{ player.name }}</span>
-				
-				
-			</button>
-		
-	</div><!-- end team-player -->
-	</div><!-- end t1-half -->
+		<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 t1-half">
+			<div class="team-player">
+				<button type="button" class="player-button" ng-click="ctrl.addScore(ctrl.players[1]._id)">
+					<span class="img-bg"></span>
+					<img src="{{ ctrl.players[1].pic }}" />
+					<span class="pname">{{ ctrl.players[1].name }}</span>
+				</button>
+			</div><!-- end team-player -->
+		</div><!-- end t1-half -->
+		<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 t1-half">
+			<div class="team-player">
+				<button type="button" class="player-button" ng-click="ctrl.addScore(ctrl.players[0]._id)">
+					<span class="img-bg"></span>
+					<img src="{{ ctrl.players[0].pic }}" />
+					<span class="pname">{{ ctrl.players[0].name }}</span>
+				</button>
+			</div><!-- end team-player -->
+		</div><!-- end t1-half -->
 	</div><!-- end top player row -->
 	
 	<div class="row">
@@ -65,21 +70,24 @@
 	</div><!-- end table row -->
 
 	<div class="row">
-	<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 t2-half" ng-repeat="player in ctrl.players | filter : { team : 2 }">
-	<div class="team-player">
-		
-			<button type="button" class="player-button" ng-click="ctrl.addScore(player._id)">
-			    <span class="drop-circle"></span>
-				<span class="img-bg"></span>
-				<img src="{{ player.pic }}" />
-				
-				<span class="pname">{{ player.name }}</span>
-				
-				
-			</button>
-		
-	</div><!-- end team-player -->
-	</div><!-- end t2-half -->
+		<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 t1-half">
+			<div class="team-player">
+				<button type="button" class="player-button" ng-click="ctrl.addScore(ctrl.players[2]._id)">
+					<span class="img-bg"></span>
+					<img src="{{ ctrl.players[2].pic }}" />
+					<span class="pname">{{ ctrl.players[2].name }}</span>
+				</button>
+			</div><!-- end team-player -->
+		</div><!-- end t1-half -->
+		<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 t1-half">
+			<div class="team-player">
+				<button type="button" class="player-button" ng-click="ctrl.addScore(ctrl.players[3]._id)">
+					<span class="img-bg"></span>
+					<img src="{{ ctrl.players[3].pic }}" />
+					<span class="pname">{{ ctrl.players[3].name }}</span>
+				</button>
+			</div><!-- end team-player -->
+		</div><!-- end t2-half -->
 	</div><!-- end bottom player row -->
 
 	

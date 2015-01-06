@@ -8,6 +8,8 @@ app.controller('GameController', ['gameService', 'rosterService', function(gameS
 	vm.title = "Let's play!";
 	vm.scores = { 1: 0, 2: 0 };
 	vm.gameOver = false;
+
+	rosterService.createRoster();
 	vm.players = rosterService.getRoster();
 	vm.teamNames = rosterService.getTeamNames();
 
