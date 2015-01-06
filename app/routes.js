@@ -26,22 +26,26 @@ module.exports = function(app) {
 
 	app.post('/api/game/save', function(req, res) {
 
-		var game = new Game(req.body);
+		var game = new Game(req.body.gameData);
 
-		game.save(function(err) {
-			if (err) {
-				// If it failed, return error
-				res.status(500).send(err);
-			}
-			else {
-				// We're good!
-				res.status(201).send("Game created successfully");
-			}
-		});
-		//Game.create(req.body);
+		if (game != null && game.roster.length === 4 && game.scores.length >= 5) {
 
-		//res.send("Hello, world!1");
+			game.dateCreated = new Date();
+			game.dateModified = new Date();
 
+			game.save(function(err) {
+				if (err) {
+					// If it failed, return error
+					res.status(500).send(err);
+				}
+				else {
+					// We're good!
+					res.status(201).send("Game created successfully");
+				}
+			});
+		} else {
+			res.status(500).send(err);
+		}
 	});
 
 	// accept PUT request at /user

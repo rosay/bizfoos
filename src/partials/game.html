@@ -28,8 +28,13 @@
 	<div class="game-board">
 		<div class="remove-wrap">
 			<div class="container">
+
 				<div class="col-lg-8 col-md-8 col-sm-10 col-xs-12 col-centered">
 				<button type="button" class="btn btn-danger remove-button" ng-click="ctrl.removeLastScore()">Remove Last Score</button>
+
+				<div class="col-lg-5 col-md-5 col-sm-8 col-xs-12 col-centered">
+				<button type="button" class="btn btn-danger remove-button" ng-disabled="ctrl.gameOver" ng-click="ctrl.removeLastScore()">Remove Last Score</button>
+
 				<a class="btn btn-info play-screen" href="/">Go to the player screen</a>
 				<a class="btn btn-lg btn-success winner-button">Winners</a>
 				<a class="btn btn-lg btn-warning rematch-button">Rematch</a>

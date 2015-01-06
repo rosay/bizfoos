@@ -1,7 +1,10 @@
 (function() {
     "use strict";
+
+	// App setup
 	window.app = angular.module('app', ['ngRoute']);
 
+	// Configure the app's routes
 	window.app.config(['$routeProvider',
 		function($routeProvider) {
 			$routeProvider.
@@ -23,8 +26,6 @@
 					otherwise({
 						redirectTo: '/player'
 					});
-
-
 		}
 	])
 }());

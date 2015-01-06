@@ -5,5 +5,7 @@ module.exports = mongoose.model('Game', {
 	scores: Array,
 	startTime: Date,
 	endTime: Date,
+	dateCreated: Date,
+	dateModified: Date,
 	winningTeam: Number
 });
