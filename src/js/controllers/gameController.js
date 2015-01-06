@@ -1,4 +1,4 @@
-app.controller('GameController', ['gameService', 'rosterService', function(gameService, rosterService) {
+app.controller('GameController', ['gameService', 'rosterService', 'playerService', '$location', function(gameService, rosterService, playerService, $location) {
 	"use strict";
 
 	var vm = this;
@@ -26,5 +26,24 @@ app.controller('GameController', ['gameService', 'rosterService', function(gameS
 		vm.scores[2] = gameService.getScoresCount(2);
 		vm.gameOver = gameService.isGameOver();
 	};
+
+	vm.startNewGame = function() {
+		playerService.clearBullpen();
+		rosterService.clearRoster();
+		gameService.clearScores();
+		$location.path('/player');
+	};
+
+	vm.winnersStay = function() {
+		// clear out losing team
+		// send to players screen
+		// bootstrap winners of last game
+	};
+
+	vm.keepPlayersNewGame = function() {
+		// swap positions
+		// start new game
+	};
+
 }]);
 

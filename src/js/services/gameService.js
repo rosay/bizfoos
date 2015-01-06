@@ -125,12 +125,17 @@ app.factory('gameService', ['rosterService', 'playerService', '$timeout', '$http
 		}
 	};
 
+	var clearScores = function () {
+		scores.length = 0;
+	};
+
 	return {
 		addScore: addScore,
 		removeLastScore: removeLastScore,
 		getScoresCount: getScoresCount,
 		isGameOver: isGameOver,
 		setStartTime: setStartTime,
-		checkGameReady: checkGameReady
+		checkGameReady: checkGameReady,
+		clearScores: clearScores
 	};
 }]);

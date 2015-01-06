@@ -75,5 +75,16 @@ app.factory('playerService', ['$http', function playerService ($http) {
 		playerService.bullpenCount -= 1;
 	};
 
+	/**
+	 * Clears the bullpen out completely
+	 */
+	playerService.clearBullpen = function () {
+		var allInBullpen = _.filter(playerService.players, { "inBullpen": true });
+
+		for (var i = 0; i < allInBullpen.length; i++) {
+			playerService.removePlayerFromBullpen(allInBullpen[i]._id);
+		}
+	};
+
 	return playerService;
 }]);

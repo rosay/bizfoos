@@ -29,8 +29,8 @@
 		<div class="remove-wrap">
 			<div class="container">
 				<div class="col-lg-5 col-md-5 col-sm-8 col-xs-12 col-centered">
-				<button type="button" class="btn btn-danger remove-button" ng-disabled="ctrl.gameOver" ng-click="ctrl.removeLastScore()">Remove Last Score</button>
-				<a class="btn btn-info play-screen" href="/">Go to the player screen</a>
+				<button type="button" class="btn btn-danger remove-button" ng-disabled="ctrl.gameOver || (ctrl.scores[1] === 0 && ctrl.scores[2] === 0)" ng-click="ctrl.removeLastScore()">Remove Last Score</button>
+				<button type="button" class="btn btn-info play-screen" ng-disabled="!ctrl.gameOver" ng-click="ctrl.startNewGame()">Start Fresh Game</button>
 				</div>
 			</div><!-- end container -->
 		</div><!-- end remove wrap -->

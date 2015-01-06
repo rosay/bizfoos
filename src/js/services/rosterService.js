@@ -68,7 +68,7 @@ app.factory('rosterService', ['playerService', function rosterService (playerSer
 	 * @param playerId
 	 * @returns {Number}
 	 */
-	var getTeamByPlayerId = function(playerId) {
+	var getTeamByPlayerId = function (playerId) {
 		if (roster.length) {
 			var playerIndex = _.findIndex(roster, {"_id" : playerId});
 			var player = roster[playerIndex];
@@ -83,15 +83,20 @@ app.factory('rosterService', ['playerService', function rosterService (playerSer
 	 * Returns the names of players in roster by team.
 	 * @returns {{teamOne: *[], teamTwo: *[]}}
 	 */
-	var getTeamNames = function() {
+	var getTeamNames = function () {
 		if (roster.length) {
 			return { teamOne: [roster[0].name, roster[1].name], teamTwo: [roster[2].name, roster[3].name] }
 		}
 	};
 
+	var clearRoster = function () {
+		roster.length = 0;
+	};
+
 	return {
 		getTeamByPlayerId: getTeamByPlayerId,
 		getRoster: getRoster,
-		getTeamNames: getTeamNames
+		getTeamNames: getTeamNames,
+		clearRoster: clearRoster
 	};
 }]);
