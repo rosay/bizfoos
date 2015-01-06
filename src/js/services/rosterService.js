@@ -48,10 +48,17 @@ app.factory('rosterService', ['playerService', function rosterService (playerSer
 	};
 
 	/**
-	 * Used to get the all the players who are in the game.
+	 * Get all the players who are in the game.
 	 * @returns {Array}
 	 */
 	var getRoster = function () {
+		return roster;
+	};
+
+	/**
+	 * Creates the roster from the bullpen
+	 */
+	var createRoster = function () {
 		var bullpen = _.where(playerService.players, { 'inBullpen': true });
 
 		if (bullpen.length) {
@@ -59,8 +66,6 @@ app.factory('rosterService', ['playerService', function rosterService (playerSer
 			roster = bullpen;
 			_.merge(shuffle(roster), teamsAndPositions);
 		}
-
-		return roster;
 	};
 
 	/**
@@ -92,6 +97,7 @@ app.factory('rosterService', ['playerService', function rosterService (playerSer
 	return {
 		getTeamByPlayerId: getTeamByPlayerId,
 		getRoster: getRoster,
-		getTeamNames: getTeamNames
+		getTeamNames: getTeamNames,
+		createRoster: createRoster
 	};
 }]);
