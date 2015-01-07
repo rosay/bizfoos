@@ -450,12 +450,28 @@ font-size: 1.286em;
 
 .remove-button {
 	float: left;
-	
+	margin-top: 5px;
 }
 
 .play-screen {
 	float: right;
+	margin-top: 5px;
 }
+
+.drop-circle {
+	width: 15px;
+	height: 15px;
+	float: right;
+	background-color: yellow;
+	border-radius: 8px;
+}
+
+
+.winner-button {
+	margin-right: 20px;
+	display: inline-block;
+}
+
 
 .game-screen-wrap {
 	overflow: hidden;

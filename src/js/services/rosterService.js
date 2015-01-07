@@ -23,44 +23,30 @@ app.factory('rosterService', ['playerService', function rosterService (playerSer
 	];
 
 	/**
-	 * Takes an array, shuffles it's entries and returns it.
-	 * Used to put players on random teams and positions.
-	 * @param array
-	 * @returns {Array}
-	 */
-	var shuffle = function (array) {
-		var currentIndex = array.length, temporaryValue, randomIndex;
-
-		// While there remain elements to shuffle...
-		while (0 !== currentIndex) {
-
-			// Pick a remaining element...
-			randomIndex = Math.floor(Math.random() * currentIndex);
-			currentIndex -= 1;
-
-			// And swap it with the current element.
-			temporaryValue = array[currentIndex];
-			array[currentIndex] = array[randomIndex];
-			array[randomIndex] = temporaryValue;
-		}
-
-		return array;
-	};
-
-	/**
-	 * Used to get the all the players who are in the game.
+	 * Get all the players who are in the game.
 	 * @returns {Array}
 	 */
 	var getRoster = function () {
-		var bullpen = _.where(playerService.players, { 'inBullpen': true });
+		return roster;
+	};
+
+	/**
+	 * Creates the roster from the bullpen
+	 */
+	var createRoster = function () {
+		var bullpen = playerService.getAllPlayersInBullpen();
+
+		//var incumbents = _.filter(bullpen, {"status": "incumbent"});
+        //
+		//if (incumbents.length > 0) {
+		//	roster
+		//}
 
 		if (bullpen.length) {
 			// Combine
 			roster = bullpen;
-			_.merge(shuffle(roster), teamsAndPositions);
+			_.merge(_.shuffle(roster), teamsAndPositions);
 		}
-
-		return roster;
 	};
 
 	/**
@@ -106,7 +92,8 @@ app.factory('rosterService', ['playerService', function rosterService (playerSer
 		getTeamByPlayerId: getTeamByPlayerId,
 		getPlayerIdsByTeam: getPlayerIdsByTeam,
 		getRoster: getRoster,
+		clearRoster: clearRoster,
 		getTeamNames: getTeamNames,
-		clearRoster: clearRoster
+		createRoster: createRoster
 	};
 }]);

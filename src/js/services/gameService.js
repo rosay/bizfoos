@@ -92,27 +92,49 @@ app.factory('gameService', ['rosterService', 'playerService', '$timeout', '$http
 		return 0;
 	};
 
-	var getLosingPlayerIds = function () {
-		if (isGameOver()) {
-			var winningTeam = getWinningTeam();
+	/**
+	 * Gets the losing team number. Returns 0 if no team has won.
+	 * @returns {number}
+	 */
+	var getLosingTeam = function () {
+		var winningTeam = getWinningTeam();
 
-			if (winningTeam === 1) {
-				// return team 2 palyer Ids
-			}
-
-			if (winningTeam === 2) {
-				// retun team 1 player Ids
-			}
+		if (winningTeam === 0) {
+			return 0;
 		}
 
-		return [];
+		return winningTeam === 1 ? 2 : 1;
+	};
+
+	/**
+	 * Gets the losing team members player Ids. Returns 0 if no team has won.
+	 * @returns {Array}
+	 */
+	var getLoserPlayerIds = function () {
+		var losingTeam = getLosingTeam();
+
+		if (losingTeam === 0) {
+			return [];
+		}
+
+		return rosterService.getPlayerIdsByTeam(losingTeam);
+	};
+
+	var getWinnerPlayerIds = function () {
+		var winningTeam = getWinningTeam();
+
+		if (winningTeam === 0) {
+			return [];
+		}
+
+		return rosterService.getPlayerIdsByTeam(winningTeam);
 	};
 
 	/**
 	 * Clean up the game data before sending it to the server.
 	 * @returns {{}}
 	 */
-	var buildGameModel = function() {
+	var buildGameModel = function () {
 		var game = {};
 		game.roster = [];
 		var roster = rosterService.getRoster();
@@ -177,6 +199,9 @@ app.factory('gameService', ['rosterService', 'playerService', '$timeout', '$http
 		isGameOver: isGameOver,
 		setStartTime: setStartTime,
 		checkGameReady: checkGameReady,
+		getLoserPlayerIds: getLoserPlayerIds,
+		getWinnerPlayerIds: getWinnerPlayerIds,
+		getWinningTeam: getWinningTeam,
 		clearScores: clearScores
 	};
 }]);

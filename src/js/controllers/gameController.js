@@ -8,6 +8,8 @@ app.controller('GameController', ['gameService', 'rosterService', 'playerService
 	vm.title = "Let's play!";
 	vm.scores = { 1: 0, 2: 0 };
 	vm.gameOver = false;
+
+	rosterService.createRoster();
 	vm.players = rosterService.getRoster();
 	vm.teamNames = rosterService.getTeamNames();
 
@@ -34,10 +36,20 @@ app.controller('GameController', ['gameService', 'rosterService', 'playerService
 		$location.path('/player');
 	};
 
-	vm.winnersStay = function() {
-		playerService.clearLosersFromBullpen();
-		// send to players screen
-		// clear scores
+	vm.keepWinners = function() {
+		var losers = gameService.getLoserPlayerIds();
+		playerService.clearLosersFromBullpen(losers);
+
+		var winners = gameService.getWinnerPlayerIds();
+		var winningTeam = gameService.getWinningTeam();
+
+		playerService.markWinners(winners, winningTeam);
+
+		rosterService.clearRoster();
+
+		gameService.clearScores();
+		$location.path('/player');
+
 
 		// bootstrap winning team
 		// swap positions
