@@ -35,9 +35,14 @@ app.controller('GameController', ['gameService', 'rosterService', 'playerService
 	};
 
 	vm.winnersStay = function() {
-		// clear out losing team
+		playerService.clearLosersFromBullpen();
 		// send to players screen
-		// bootstrap winners of last game
+		// clear scores
+
+		// bootstrap winning team
+		// swap positions
+
+
 	};
 
 	vm.keepPlayersNewGame = function() {

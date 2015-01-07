@@ -9,6 +9,13 @@ app.factory('gameService', ['rosterService', 'playerService', '$timeout', '$http
 	var endTime;		// Game end time.
 
 	/**
+	 * Clears out all score data.
+	 */
+	var clearScores = function () {
+		scores.length = 0;
+	};
+
+	/**
 	 * Add a score
 	 * @param playerId
 	 */
@@ -41,7 +48,7 @@ app.factory('gameService', ['rosterService', 'playerService', '$timeout', '$http
 	 * @param teamNum
 	 * @returns {Number}
 	 */
-	var getScoresCount = function(teamNum) {
+	var getScoresCount = function (teamNum) {
 		var teamScores = _.where(scores, { team: teamNum });
 		return teamScores.length;
 	};
@@ -50,7 +57,7 @@ app.factory('gameService', ['rosterService', 'playerService', '$timeout', '$http
 	 * Determines if the game is over or not.
 	 * @returns {boolean}
 	 */
-	var isGameOver = function() {
+	var isGameOver = function () {
 		return getScoresCount(1) === 5 || getScoresCount(2) === 5;
 	};
 
@@ -64,8 +71,41 @@ app.factory('gameService', ['rosterService', 'playerService', '$timeout', '$http
 	/**
 	 * Set the end of game time.
 	 */
-	var setEndTime = function() {
+	var setEndTime = function () {
 		endTime = new Date();
+	};
+
+	/**
+	 * Gets the winning team number. Returns 0 if no team has won.
+	 * @returns {number}
+	 */
+	var getWinningTeam = function () {
+		if (isGameOver()) {
+			if (getScoresCount(1) === 5) {
+				return 1;
+			}
+
+			if (getScoresCount(2) === 5) {
+				return 2;
+			}
+		}
+		return 0;
+	};
+
+	var getLosingPlayerIds = function () {
+		if (isGameOver()) {
+			var winningTeam = getWinningTeam();
+
+			if (winningTeam === 1) {
+				// return team 2 palyer Ids
+			}
+
+			if (winningTeam === 2) {
+				// retun team 1 player Ids
+			}
+		}
+
+		return [];
 	};
 
 	/**
@@ -94,6 +134,11 @@ app.factory('gameService', ['rosterService', 'playerService', '$timeout', '$http
 			game.winningTeam = 2;
 		}
 
+		var winningTeam = getWinningTeam();
+
+		if (winningTeam != 0) {
+			game.winningTeam = winningTeam;
+		}
 
 		return game;
 	};
@@ -123,10 +168,6 @@ app.factory('gameService', ['rosterService', 'playerService', '$timeout', '$http
 		if (bullpen.length !== 4) {
 			$location.path( "/players" );
 		}
-	};
-
-	var clearScores = function () {
-		scores.length = 0;
 	};
 
 	return {

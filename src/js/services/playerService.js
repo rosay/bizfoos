@@ -86,5 +86,10 @@ app.factory('playerService', ['$http', function playerService ($http) {
 		}
 	};
 
+	playerService.clearLosersFromBullpen = function () {
+		rosterService.getLosingPlayerIds
+
+	};
+
 	return playerService;
 }]);

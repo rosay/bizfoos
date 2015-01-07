@@ -79,6 +79,15 @@ app.factory('rosterService', ['playerService', function rosterService (playerSer
 		return 0;
 	};
 
+	var getPlayerIdsByTeam = function (teamNumber) {
+		if (roster.length) {
+			var team = _.filter(roster, {"team": teamNumber});
+			return _.map(team, "_id");
+		}
+
+		return [];
+	};
+
 	/**
 	 * Returns the names of players in roster by team.
 	 * @returns {{teamOne: *[], teamTwo: *[]}}
@@ -95,6 +104,7 @@ app.factory('rosterService', ['playerService', function rosterService (playerSer
 
 	return {
 		getTeamByPlayerId: getTeamByPlayerId,
+		getPlayerIdsByTeam: getPlayerIdsByTeam,
 		getRoster: getRoster,
 		getTeamNames: getTeamNames,
 		clearRoster: clearRoster
