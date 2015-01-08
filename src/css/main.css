@@ -497,7 +497,11 @@ font-size: 1.286em;
 	font-size: 2.143em;
 	border: 2px solid #2dad60;
 	min-width: 250px;
-	
+	outline: none;
+}
+
+.team-player button:active {
+	opacity: 0.8;
 }
 
 .team-player button img {
@@ -547,3 +551,40 @@ display: inline-block;
 	margin-top: 15px;
 	display: inline-block;
 }
+
+.player-pos-yellow {
+	width: 100%;
+	display: inline-block;
+	font-size: 19px;
+	margin-bottom: 20px;
+}
+
+.player-pos-black {
+	width: 100%;
+	display: inline-block;
+	font-size: 19px;
+	margin-top: 20px;
+}
+
+.player-pos-black span, .player-pos-yellow span {
+	padding: 10px 15px;
+	background: #35cb71;
+	border-radius: 3px;
+	color: white;
+	border: 1px solid #2dad60;
+	text-transform: uppercase;
+	
+}
+
+
+.team-player .team-yellow {
+	border: 3px solid #D6a044;
+	background: #e8ae4d;
+}
+
+.team-player .team-black {
+	border: 3px solid #000000;
+	background: #333333;
+}
+
+

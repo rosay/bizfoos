@@ -44,8 +44,8 @@ app.factory('rosterService', ['playerService', function rosterService (playerSer
 
 		if (bullpen.length) {
 			// Combine
-			roster = bullpen;
-			_.merge(_.shuffle(roster), teamsAndPositions);
+			roster = _.shuffle(bullpen);
+			_.merge(roster, teamsAndPositions);
 		}
 	};
 

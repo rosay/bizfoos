@@ -34,27 +34,29 @@
 				<button type="button" class="btn btn-info play-screen" ng-click="ctrl.startNewGame()">Start Fresh Game</button>
 				<button type="button" class="btn btn-lg btn-success winner-button" ng-disabled="!ctrl.gameOver" ng-click="ctrl.keepWinners()">Winners</button>
 				<button type="button" class="btn btn-lg btn-warning rematch-button" ng-disabled="!ctrl.gameOver">Rematch</button>
-				</div>
 			</div><!-- end container -->
 		</div><!-- end remove wrap -->
+	</div><!-- end remove wrap -->
 	<div class="container">
 	<div class="row t1-row">
 		<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 t1-half">
 			<div class="team-player">
-				<button type="button" class="player-button" ng-click="ctrl.addScore(ctrl.players[0]._id)">
+				<button type="button" class="player-button team-black" ng-click="ctrl.addScore(ctrl.players[0]._id)">
 					<span class="img-bg"></span>
 					<img src="{{ ctrl.players[0].pic }}" />
 					<span class="pname">{{ ctrl.players[0].name }}</span>
 				</button>
+				<div class="player-pos-black"><span>Offense</span></div>
 			</div><!-- end team-player -->
 		</div><!-- end t1-half -->
 		<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 t1-half">
 			<div class="team-player">
-				<button type="button" class="player-button" ng-click="ctrl.addScore(ctrl.players[1]._id)">
+				<button type="button" class="player-button team-black" ng-click="ctrl.addScore(ctrl.players[1]._id)">
 					<span class="img-bg"></span>
 					<img src="{{ ctrl.players[1].pic }}" />
 					<span class="pname">{{ ctrl.players[1].name }}</span>
 				</button>
+				<div class="player-pos-black"><span>Defense</span></div>
 			</div><!-- end team-player -->
 		</div><!-- end t1-half -->
 	</div><!-- end top player row -->
@@ -68,29 +70,27 @@
 	<div class="row">
 		<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 t1-half">
 			<div class="team-player">
-				<button type="button" class="player-button" ng-click="ctrl.addScore(ctrl.players[2]._id)">
-					<span class="img-bg"></span>
-					<img src="{{ ctrl.players[2].pic }}" />
-					<span class="pname">{{ ctrl.players[2].name }}</span>
-				</button>
-			</div><!-- end team-player -->
-		</div><!-- end t1-half -->
-		<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 t1-half">
-			<div class="team-player">
-				<button type="button" class="player-button" ng-click="ctrl.addScore(ctrl.players[3]._id)">
+			<div class="player-pos-yellow"><span>Defense</span></div>
+				<button type="button" class="player-button team-yellow" ng-click="ctrl.addScore(ctrl.players[3]._id)">
 					<span class="img-bg"></span>
 					<img src="{{ ctrl.players[3].pic }}" />
 					<span class="pname">{{ ctrl.players[3].name }}</span>
 				</button>
 			</div><!-- end team-player -->
+		</div><!-- end t1-half -->
+		<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 t1-half">
+			<div class="team-player">
+			<div class="player-pos-yellow"><span>Offense</span></div>
+				<button type="button" class="player-button team-yellow" ng-click="ctrl.addScore(ctrl.players[2]._id)">
+					<span class="img-bg"></span>
+					<img src="{{ ctrl.players[2].pic }}" />
+					<span class="pname">{{ ctrl.players[2].name }}</span>
+				</button>
+			</div><!-- end team-player -->
 		</div><!-- end t2-half -->
 	</div><!-- end bottom player row -->
-
-	
-	
 	</div><!-- end container -->
 	</div><!-- end game-board -->
-
 </div><!-- end game-screen -->
 </div><!-- end game-screen-wrap -->
 
