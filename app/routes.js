@@ -5,7 +5,7 @@ module.exports = function(app) {
 	// Routes
 	app.get('/api/players', function (req, res) {
 
-		Player.find(function(err, players) {
+		Player.find({}).sort({name: 1}).exec(function(err, players) {
 			if (err) {
 				res.send(err);
 			}

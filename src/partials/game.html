@@ -31,8 +31,8 @@
 				<div class="col-lg-5 col-md-5 col-sm-8 col-xs-12 col-centered">
 					
 				<button type="button" class="btn btn-danger remove-button" ng-disabled="ctrl.gameOver || (ctrl.scores[1] === 0 && ctrl.scores[2] === 0)" ng-click="ctrl.removeLastScore()">Remove Last Score</button>
-				<button type="button" class="btn btn-info play-screen" ng-click="ctrl.startNewGame()">Start Fresh Game</button>
-				<button type="button" class="btn btn-lg btn-success winner-button" ng-disabled="!ctrl.gameOver" ng-click="ctrl.keepWinners()">Winners</button>
+				<button type="button" class="btn btn-info play-screen" ng-click="ctrl.startNewGame()">Start New Game</button>
+				<button type="button" class="btn btn-lg btn-success winner-button" ng-disabled="!ctrl.gameOver" ng-click="ctrl.keepWinners()">Keep Winners</button>
 				<button type="button" class="btn btn-lg btn-warning rematch-button" ng-disabled="!ctrl.gameOver">Rematch</button>
 			</div><!-- end container -->
 		</div><!-- end remove wrap -->
