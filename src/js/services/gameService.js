@@ -202,6 +202,7 @@ app.factory('gameService', ['rosterService', 'playerService', '$timeout', '$http
 		getLoserPlayerIds: getLoserPlayerIds,
 		getWinnerPlayerIds: getWinnerPlayerIds,
 		getWinningTeam: getWinningTeam,
+		getLosingTeam: getLosingTeam,
 		clearScores: clearScores
 	};
 }]);
