@@ -42,7 +42,6 @@ app.factory('playerService', ['$http', function playerService ($http) {
 				.success(function (data, status, headers, config) {
 					for (var i = 0; i < data.length; i++) {
 						data[i].inBullpen = false;
-						data[i].status = "contender";
 					}
 
 					// The call above isn't necessary if the players array is already filled. TODO don't do call if player array is already full.
@@ -97,14 +96,6 @@ app.factory('playerService', ['$http', function playerService ($http) {
 	playerService.clearLosersFromBullpen = function (losers) {
 		for (var i = 0; i < losers.length; i++) {
 			playerService.removePlayerFromBullpen(losers[i]);
-		}
-	};
-
-	playerService.markWinners = function (winners, lastTeam) {
-		for (var i = 0; i < winners.length; i++) {
-			var playerIndex = getPlayerIndex(winners[i]);
-			playerService.players[playerIndex].status = "incumbent";
-			playerService.players[playerIndex].lastTeam = lastTeam;
 		}
 	};
 
