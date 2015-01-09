@@ -8,27 +8,10 @@
 	</div>
 	</div>
 
-	<div class="row score-row">
-	<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 t1-score">
-	<!--<h2 ng-show="gameOver">GG!</h2>-->
-	
-
-	<h1>{{ ctrl.teamNames["teamOne"][0] }} & {{ ctrl.teamNames["teamOne"][1] }}</h1>
-	<p class="score-count">{{ ctrl.scores[1] }}</p>
-	</div><!-- end t1-score -->
-
-	<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 t2-score">
-		<h1>{{ ctrl.teamNames["teamTwo"][0] }} & {{ ctrl.teamNames["teamTwo"][1] }}</h1>
-	<p class="score-count">{{ ctrl.scores[2] }}</p>
-
-	</div><!-- end t2-score -->
-
-	</div><!-- end score row -->
-
 	<div class="game-board">
 		<div class="remove-wrap">
 			<div class="container">
-				<div class="col-lg-5 col-md-5 col-sm-8 col-xs-12 col-centered">
+				<div class="col-lg-8 col-md-8 col-sm-8 col-xs-12 col-centered">
 					
 				<button type="button" class="btn btn-danger remove-button" ng-disabled="ctrl.gameOver || (ctrl.scores[1] === 0 && ctrl.scores[2] === 0)" ng-click="ctrl.removeLastScore()">Remove Last Score</button>
 				<button type="button" class="btn btn-info play-screen" ng-click="ctrl.startNewGame()">Start New Game</button>
@@ -39,7 +22,7 @@
 	</div><!-- end remove wrap -->
 	<div class="container">
 	<div class="row t1-row">
-		<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 t1-half">
+		<div class="col-lg-5 col-md-5 col-sm-5 col-xs-5 t1-half">
 			<div class="team-player">
 				<button type="button" class="player-button team-black" ng-click="ctrl.addScore(ctrl.players[0]._id)">
 					<span class="img-bg"></span>
@@ -49,7 +32,17 @@
 				<div class="player-pos-black"><span>Offense</span></div>
 			</div><!-- end team-player -->
 		</div><!-- end t1-half -->
-		<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 t1-half">
+		
+		<div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 t1-score">
+			<div class="score-box">
+			<!--<h1>{{ ctrl.teamNames["teamOne"][0] }} & {{ ctrl.teamNames["teamOne"][1] }}</h1>-->
+				<div class="score-count">{{ ctrl.scores[1] }}</div>
+				
+			
+			</div><!-- end score-box -->
+		</div><!-- end t1-third -->
+		
+		<div class="col-lg-5 col-md-5 col-sm-5 col-xs-5 t1-half">
 			<div class="team-player">
 				<button type="button" class="player-button team-black" ng-click="ctrl.addScore(ctrl.players[1]._id)">
 					<span class="img-bg"></span>
@@ -68,7 +61,7 @@
 	</div><!-- end table row -->
 
 	<div class="row">
-		<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 t1-half">
+		<div class="col-lg-5 col-md-5 col-sm-5 col-xs-5 t1-half">
 			<div class="team-player">
 			<div class="player-pos-yellow"><span>Defense</span></div>
 				<button type="button" class="player-button team-yellow" ng-click="ctrl.addScore(ctrl.players[3]._id)">
@@ -78,7 +71,18 @@
 				</button>
 			</div><!-- end team-player -->
 		</div><!-- end t1-half -->
-		<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 t1-half">
+		
+		
+		<div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 t1-score">
+			<div class="score-box">
+			<!--<h1>{{ ctrl.teamNames["teamOne"][0] }} & {{ ctrl.teamNames["teamOne"][1] }}</h1>-->
+				<div class="score-count">{{ ctrl.scores[2] }}</div>
+				
+			
+			</div><!-- end score-box -->
+		</div><!-- end t1-third -->
+		
+		<div class="col-lg-5 col-md-5 col-sm-5 col-xs-5 t1-half">
 			<div class="team-player">
 			<div class="player-pos-yellow"><span>Offense</span></div>
 				<button type="button" class="player-button team-yellow" ng-click="ctrl.addScore(ctrl.players[2]._id)">
