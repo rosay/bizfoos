@@ -27,74 +27,32 @@
 				<button type="button" class="btn btn-default" ng-click="ctrl.swapTeamPositions(1)">Swap positions</button>
 			</div>
 		</div>
-	<div class="row t1-row">
-		<div class="col-lg-5 col-md-5 col-sm-5 col-xs-5 t1-half">
-			<div class="team-player">
-				<button type="button" class="player-button team-black" ng-click="ctrl.addScore(ctrl.players.teamBlack.offense._id)">
-					<span class="img-bg"></span>
-					<img src="{{ ctrl.players.teamBlack.offense.pic }}" />
-					<span class="pname">{{ ctrl.players.teamBlack.offense.name }}</span>
-				</button>
-				<div class="player-pos-black"><span>Offense</span></div>
-
-			</div><!-- end team-player -->
-		</div><!-- end t1-half -->
-		
-		<div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 t1-score">
-			<div class="score-box">
-			<!--<h1>{{ ctrl.teamNames["teamOne"][0] }} & {{ ctrl.teamNames["teamOne"][1] }}</h1>-->
-				<div class="score-count">{{ ctrl.scores[1] }}</div>
-				
-			
-			</div><!-- end score-box -->
-		</div><!-- end t1-third -->
-		
-		<div class="col-lg-5 col-md-5 col-sm-5 col-xs-5 t1-half">
-			<div class="team-player">
-				<button type="button" class="player-button team-black" ng-click="ctrl.addScore(ctrl.players.teamBlack.defense._id)">
-					<span class="img-bg"></span>
-					<img src="{{ ctrl.players.teamBlack.defense.pic }}" />
-					<span class="pname">{{ ctrl.players.teamBlack.defense.name }}</span>
-				</button>
-				<div class="player-pos-black"><span>Defense</span></div>
-			</div><!-- end team-player -->
-		</div><!-- end t1-half -->
-	</div><!-- end top player row -->
 	
-	<div class="row">
-		<div class="col-lg-12 col-md-12 table-wrap">
-		<div class="table"><img src="/img/foosball-table.png" /></div>
-		</div>
-	</div><!-- end table row -->
-
-	<div class="row t1-row crap-div" ng-show="ctrl.rematchCount > 1 && (ctrl.scores[1] === 0 && ctrl.scores[2] === 0)">
-		<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 t1-half">
-			<button type="button" class="btn btn-default" ng-click="ctrl.swapTeamPositions(2)">Swap positions</button>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-lg-5 col-md-5 col-sm-5 col-xs-5 t1-half">
+	
+	<div class="row table-row"><!-- this is the row that contains all gameboard interactive elements -->
+	
+		<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 left-side"><!-- this is the left side of table -->
+		
+		
+		
 			<div class="team-player">
-			<div class="player-pos-yellow"><span>Defense</span></div>
+			
 				<button type="button" class="player-button team-yellow" ng-click="ctrl.addScore(ctrl.players.teamOrange.defense._id)">
 					<span class="img-bg"></span>
 					<img src="{{ ctrl.players.teamOrange.defense.pic }}" />
 					<span class="pname">{{ ctrl.players.teamOrange.defense.name }}</span>
 				</button>
+				<div class="player-pos-yellow"><span>Defense</span></div>
 			</div><!-- end team-player -->
-		</div><!-- end t1-half -->
 		
-		
-		<div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 t1-score">
-			<div class="score-box">
-			<!--<h1>{{ ctrl.teamNames["teamOne"][0] }} & {{ ctrl.teamNames["teamOne"][1] }}</h1>-->
+	
+			<div class="score-box t1-score">
+				<!--<h1>{{ ctrl.teamNames["teamOne"][0] }} & {{ ctrl.teamNames["teamOne"][1] }}</h1>-->
 				<div class="score-count">{{ ctrl.scores[2] }}</div>
-				
+			</div><!-- end score-box, t1-score -->
 			
-			</div><!-- end score-box -->
-		</div><!-- end t1-third -->
-		
-		<div class="col-lg-5 col-md-5 col-sm-5 col-xs-5 t1-half">
+			
+			
 			<div class="team-player">
 			<div class="player-pos-yellow"><span>Offense</span></div>
 				<button type="button" class="player-button team-yellow" ng-click="ctrl.addScore(ctrl.players.teamOrange.offense._id)">
@@ -103,8 +61,69 @@
 					<span class="pname">{{ ctrl.players.teamOrange.offense.name }}</span>
 				</button>
 			</div><!-- end team-player -->
-		</div><!-- end t2-half -->
-	</div><!-- end bottom player row -->
+		
+			
+		
+			
+			
+		</div><!-- this ends the left side of table -->
+		
+		
+		
+	
+	
+		<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 table-wrap">
+		<div class="table"><img src="/img/foosball-table[vert].png" /></div>
+		</div>
+		
+		
+		
+		
+		
+		
+		<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4"><!-- this is the right side of table -->
+		
+		
+		<div class="team-player">
+				<button type="button" class="player-button team-black" ng-click="ctrl.addScore(ctrl.players.teamBlack.offense._id)">
+					<span class="img-bg"></span>
+					<img src="{{ ctrl.players.teamBlack.offense.pic }}" />
+					<span class="pname">{{ ctrl.players.teamBlack.offense.name }}</span>
+				</button>
+				<div class="player-pos-black"><span>Offense</span></div>
+
+			</div><!-- end team-player -->
+		
+		
+			<div class="score-box t1-score">
+				<!--<h1>{{ ctrl.teamNames["teamOne"][0] }} & {{ ctrl.teamNames["teamOne"][1] }}</h1>-->
+				<div class="score-count">{{ ctrl.scores[1] }}</div>			
+			</div><!-- end score-box, t1-score -->
+			
+			
+			<div class="team-player">
+			<div class="player-pos-black"><span>Defense</span></div>
+				<button type="button" class="player-button team-black" ng-click="ctrl.addScore(ctrl.players.teamBlack.defense._id)">
+					<span class="img-bg"></span>
+					<img src="{{ ctrl.players.teamBlack.defense.pic }}" />
+					<span class="pname">{{ ctrl.players.teamBlack.defense.name }}</span>
+				</button>
+				
+			</div><!-- end team-player -->
+			
+			
+	
+			
+		</div><!-- this ends the right side of table -->
+		
+	</div><!-- end table row -->
+
+	<div class="row t1-row crap-div" ng-show="ctrl.rematchCount > 1 && (ctrl.scores[1] === 0 && ctrl.scores[2] === 0)">
+		<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 t1-half">
+			<button type="button" class="btn btn-default" ng-click="ctrl.swapTeamPositions(2)">Swap positions</button>
+		</div>
+	</div>
+	
 	</div><!-- end container -->
 	</div><!-- end game-board -->
 </div><!-- end game-screen -->
