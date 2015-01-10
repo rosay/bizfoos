@@ -10,7 +10,7 @@ db.games.aggregate([
         Player: "$roster.player_id",
         TotalGamesPlayed: "$TotalGamesPlayed",
         TotalGamesWon: "$TotalGamesWon",
-        WinningPercentage: { $divide: ["$TotalGamesWon", "$TotalGamesPlayed" ]} 
+        WinningPercentage: { $divide: ["$TotalGamesWon", "$TotalGamesPlayed" ]  } 
         }
     }
     ,{ $sort: {
