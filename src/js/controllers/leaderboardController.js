@@ -1,15 +1,30 @@
-app.controller('LeaderboardController', ['$scope', '$http', function($scope, $http) {
+app.controller('LeaderboardController', ['$http', 'statisticsService', 'playerService', '$q', function($http, statisticsService, playerService, $q) {
 	"use strict";
 
-	$scope.title = "Leaderboard";
-	$scope.topWinners = [];
+	var vm = this;
 
-	// Gets player data
-	$http({method: 'POST', url: 'http://localhost:3000/api/lb/topplayers'}).
-			success(function (data, status, headers, config) {
-				$scope.topWinners = data;
-			}).
-			error(function (data, status, headers, config) {
-				console.log("No players showed up! Status: " + status);
-			});
+	vm.title = "Leaderboard";
+	vm.topWinners = [];
+	vm.players = [];
+
+	playerService.getPlayers()
+		.then(function() {
+			vm.players = playerService.players;
+
+			statisticsService.getTopPlayers()
+				.then(function() {
+					var results = statisticsService.topPlayers;
+
+					var mergedList = _.map(results, function(item){
+						return _.extend(item, _.findWhere(playerService.players, { _id: item._id }));
+					});
+
+					for (var i = 0; i < mergedList.length; i++) {
+						var p = mergedList[i].WinningPercentage * 100
+						mergedList[i].WinningPercentage = p.toFixed(2);
+					}
+
+					vm.topWinners = mergedList;
+				});
+		});
 }]);
