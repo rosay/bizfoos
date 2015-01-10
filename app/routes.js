@@ -13,14 +13,32 @@ module.exports = function(app) {
 		});
 	});
 
-	app.post('/api/lb/topplayers', function (req, res) {
+	app.get('/api/lb/topplayers', function (req, res) {
 
-		Player.find(function(err, players) {
+		Game.aggregate([
+			{ $unwind: "$roster" }
+				,{ $group: {
+					_id: "$roster.player_id" ,
+					TotalGamesPlayed: { $sum: 1 },
+					TotalGamesWon: { $sum: { $cond: { if: { $eq: ["$winningTeam", "$roster.team"] }, then: 1, else: 0 } } }
+				}
+			}
+			,{ $project: {
+				Player: "$roster.player_id",
+				TotalGamesPlayed: "$TotalGamesPlayed",
+				TotalGamesWon: "$TotalGamesWon",
+				WinningPercentage: { $divide: ["$TotalGamesWon", "$TotalGamesPlayed" ]}
+			}
+			}
+			,{ $sort: {
+				"WinningPercentage":-1, "TotalGamesPlayed":1
+			}
+			}
+		], function(err, result){
 			if (err) {
 				res.send(err);
 			}
-
-			res.json(players);
+			res.json(result);
 		});
 	});
 

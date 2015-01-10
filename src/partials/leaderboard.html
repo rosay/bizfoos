@@ -1,4 +1,24 @@
-<div>{{ title }}</div>
-<ul>
-	<li ng-repeat="player in topWinners">{{ player.name }}</li>
-</ul>
+<div class="container">
+	<div class="row">
+
+		<div class="col-lg-offset-2 col-md-offset-2 col-sm-offset-1 col-lg-8 col-md-8 col-sm-10 col-xs-12">
+			<div class="lboard-single">
+				<h2>Leaderboard</h2>
+				<table class="table table-striped">
+					<tr>
+						<th>Player</th>
+						<th>Played</th>
+						<th>Won</th>
+						<th>Win pct.</th>
+					</tr>
+					<tr ng-repeat="player in ctrl.topWinners">
+						<td>{{ player.name }}</td>
+						<td>{{ player.TotalGamesPlayed }}</td>
+						<td>{{ player.TotalGamesWon }}</td>
+						<td>{{ player.WinningPercentage }}</td>
+					</tr>
+				</table>
+			</div><!-- end lboard-single -->
+		</div>
+	</div>
+</div>

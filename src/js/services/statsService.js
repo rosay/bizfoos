@@ -1,9 +1,23 @@
 // Responsible handling the stats
-app.factory('statisticsService', ['$rootScope', '$http', function ($rootScope, $http) {
+app.factory('statisticsService', ['$rootScope', '$http', function statisticsService ($rootScope, $http) {
 	"use strict";
 
-	return {
+	statisticsService.topPlayers = [];
 
-	}
+	/**
+	 * Server call to get all players from server.
+	 * @returns {*}
+	 */
+	statisticsService.getTopPlayers = function () {
+		return $http.get('/api/lb/topplayers')
+			.success(function (data, status, headers, config) {
+				statisticsService.topPlayers = data;
+			})
+			.error(function (data, status, headers, config) {
+				console.log("No players showed up! Status: " + status);
+			});
+	};
+
+	return statisticsService;
 
 }]);
