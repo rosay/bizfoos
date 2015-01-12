@@ -6,12 +6,14 @@
 				<h2>Leaderboard</h2>
 				<table class="table table-striped">
 					<tr>
+						<th></td>
 						<th>Player</th>
 						<th>Played</th>
 						<th>Won</th>
 						<th>Win pct.</th>
 					</tr>
 					<tr ng-repeat="player in ctrl.topWinners">
+						<td>{{ $index + 1 }}</td>
 						<td>{{ player.name }}</td>
 						<td>{{ player.TotalGamesPlayed }}</td>
 						<td>{{ player.TotalGamesWon }}</td>
