@@ -469,13 +469,129 @@ box-shadow: inset 0px 0px 23px 4px rgba(42,115,71,1);
 	background-color: white;
 	padding-top: 15px;
 	padding-bottom: 15px;
-	border-bottom: 4px solid #35cb71;
-	border-top: 4px solid #35cb71;
+
 }
+
+.remove-wrap
+{
+  	position:relative;       
+    -webkit-box-shadow:0 1px 4px rgba(0, 0, 0, 0.5), 0 0 40px rgba(0, 0, 0, 0.1) inset;
+       -moz-box-shadow:0 1px 4px rgba(0, 0, 0, 0.5), 0 0 40px rgba(0, 0, 0, 0.1) inset;
+            box-shadow:0 1px 4px rgba(0, 0, 0, 0.5), 0 0 40px rgba(0, 0, 0, 0.1) inset;
+}
+.remove-wrap:before, .remove-wrap:after
+{
+	content:"";
+    position:absolute; 
+    z-index:-1;
+    -webkit-box-shadow:0 0 20px rgba(0,0,0,0.8);
+    -moz-box-shadow:0 0 20px rgba(0,0,0,0.8);
+    box-shadow:0 0 20px rgba(0,0,0,0.8);
+    top:0;
+    bottom:0;
+    left:10px;
+    right:10px;
+    -moz-border-radius:100px / 10px;
+    border-radius:100px / 10px;
+} 
+.remove-wrap:after
+{
+	right:10px; 
+    left:auto;
+    -webkit-transform:skew(8deg) rotate(3deg); 
+       -moz-transform:skew(8deg) rotate(3deg);     
+        -ms-transform:skew(8deg) rotate(3deg);     
+         -o-transform:skew(8deg) rotate(3deg); 
+            transform:skew(8deg) rotate(3deg);
+}
+
 
 .remove-button {
 	float: left;
-	margin-top: 5px;
+	
+	background: rgba(217,65,65,1);
+	padding: 8px 12px;
+	font-size: 16px;
+	color: white;
+	border-radius: 3px;
+	border: 1px solid #982e2e;
+	background: -moz-linear-gradient(top, rgba(217,65,65,1) 0%, rgba(255,77,77,1) 33%, rgba(190,62,62,1) 100%);
+	background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(217,65,65,1)), color-stop(33%, rgba(255,77,77,1)), color-stop(100%, rgba(190,62,62,1)));
+	background: -webkit-linear-gradient(top, rgba(217,65,65,1) 0%, rgba(255,77,77,1) 33%, rgba(190,62,62,1) 100%);
+	background: -o-linear-gradient(top, rgba(217,65,65,1) 0%, rgba(255,77,77,1) 33%, rgba(190,62,62,1) 100%);
+	background: -ms-linear-gradient(top, rgba(217,65,65,1) 0%, rgba(255,77,77,1) 33%, rgba(190,62,62,1) 100%);
+	background: linear-gradient(to bottom, rgba(217,65,65,1) 0%, rgba(255,77,77,1) 33%, rgba(190,62,62,1) 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#d94141', endColorstr='#be3e3e', GradientType=0 );
+	outline: none;
+}
+
+.remove-button:hover {
+	color: white;
+}
+
+.remove-button:active {
+	color: white;
+	background: rgba(217,65,65,1);
+	background: -moz-linear-gradient(top, rgba(217,65,65,1) 0%, rgba(255,77,77,1) 33%, rgba(190,62,62,1) 100%);
+	background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(217,65,65,1)), color-stop(33%, rgba(255,77,77,1)), color-stop(100%, rgba(190,62,62,1)));
+	background: -webkit-linear-gradient(top, rgba(217,65,65,1) 0%, rgba(255,77,77,1) 33%, rgba(190,62,62,1) 100%);
+	background: -o-linear-gradient(top, rgba(217,65,65,1) 0%, rgba(255,77,77,1) 33%, rgba(190,62,62,1) 100%);
+	background: -ms-linear-gradient(top, rgba(217,65,65,1) 0%, rgba(255,77,77,1) 33%, rgba(190,62,62,1) 100%);
+	background: linear-gradient(to bottom, rgba(217,65,65,1) 0%, rgba(255,77,77,1) 33%, rgba(190,62,62,1) 100%);
+	-webkit-box-shadow: inset 0px 0px 7px 3px rgba(50, 50, 50, 0.4);
+-moz-box-shadow:    inset 0px 0px 7px 3px rgba(50, 50, 50, 0.4);
+box-shadow:         inset 0px 0px 7px 3px rgba(50, 50, 50, 0.4);
+outline: none;
+}
+
+
+
+.new-button {
+outline: none;
+	float: right;
+	background: rgba(217,65,65,1);
+	padding: 8px 12px;
+	font-size: 16px;
+	color: white;
+	border-radius: 3px;
+	border: 1px solid #29854e;
+	background: rgba(47,185,102,1);
+	background: -moz-linear-gradient(top, rgba(47,185,102,1) 0%, rgba(53,203,113,1) 32%, rgba(43,171,94,1) 100%);
+	background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(47,185,102,1)), color-stop(32%, rgba(53,203,113,1)), color-stop(100%, rgba(43,171,94,1)));
+	background: -webkit-linear-gradient(top, rgba(47,185,102,1) 0%, rgba(53,203,113,1) 32%, rgba(43,171,94,1) 100%);
+	background: -o-linear-gradient(top, rgba(47,185,102,1) 0%, rgba(53,203,113,1) 32%, rgba(43,171,94,1) 100%);
+	background: -ms-linear-gradient(top, rgba(47,185,102,1) 0%, rgba(53,203,113,1) 32%, rgba(43,171,94,1) 100%);
+	background: linear-gradient(to bottom, rgba(47,185,102,1) 0%, rgba(53,203,113,1) 32%, rgba(43,171,94,1) 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#2fb966', endColorstr='#2bab5e', GradientType=0 );
+}
+
+.new-button:active {
+outline: none;
+	color: white;
+	background: rgba(47,185,102,1);
+	background: -moz-linear-gradient(top, rgba(47,185,102,1) 0%, rgba(53,203,113,1) 32%, rgba(43,171,94,1) 100%);
+	background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(47,185,102,1)), color-stop(32%, rgba(53,203,113,1)), color-stop(100%, rgba(43,171,94,1)));
+	background: -webkit-linear-gradient(top, rgba(47,185,102,1) 0%, rgba(53,203,113,1) 32%, rgba(43,171,94,1) 100%);
+	background: -o-linear-gradient(top, rgba(47,185,102,1) 0%, rgba(53,203,113,1) 32%, rgba(43,171,94,1) 100%);
+	background: -ms-linear-gradient(top, rgba(47,185,102,1) 0%, rgba(53,203,113,1) 32%, rgba(43,171,94,1) 100%);
+	background: linear-gradient(to bottom, rgba(47,185,102,1) 0%, rgba(53,203,113,1) 32%, rgba(43,171,94,1) 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#2fb966', endColorstr='#2bab5e', GradientType=0 );
+	-webkit-box-shadow: inset 0px 0px 7px 3px rgba(50, 50, 50, 0.4);
+-moz-box-shadow:    inset 0px 0px 7px 3px rgba(50, 50, 50, 0.4);
+box-shadow:         inset 0px 0px 7px 3px rgba(50, 50, 50, 0.4);
+outline: none;
+}
+
+.remove-button[disabled="disabled"] {
+	opacity: .5;
+}
+
+.winner-button[disabled="disabled"] {
+	opacity: .5;
+}
+
+.rematch-button[disabled="disabled"] {
+	opacity: .5;
 }
 
 .play-screen {
@@ -495,6 +611,68 @@ box-shadow: inset 0px 0px 23px 4px rgba(42,115,71,1);
 .winner-button {
 	margin-right: 20px;
 	display: inline-block;
+	padding: 8px 12px;
+	font-size: 16px;
+	color: white;
+	border-radius: 3px;
+	border: 1px solid #20719d;
+	background: rgba(74,168,218,1);
+background: -moz-linear-gradient(top, rgba(74,168,218,1) 0%, rgba(103,191,235,1) 32%, rgba(40,141,195,1) 100%);
+background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(74,168,218,1)), color-stop(32%, rgba(103,191,235,1)), color-stop(100%, rgba(40,141,195,1)));
+background: -webkit-linear-gradient(top, rgba(74,168,218,1) 0%, rgba(103,191,235,1) 32%, rgba(40,141,195,1) 100%);
+background: -o-linear-gradient(top, rgba(74,168,218,1) 0%, rgba(103,191,235,1) 32%, rgba(40,141,195,1) 100%);
+background: -ms-linear-gradient(top, rgba(74,168,218,1) 0%, rgba(103,191,235,1) 32%, rgba(40,141,195,1) 100%);
+background: linear-gradient(to bottom, rgba(74,168,218,1) 0%, rgba(103,191,235,1) 32%, rgba(40,141,195,1) 100%);
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#4aa8da', endColorstr='#288dc3', GradientType=0 );
+}
+
+.winner-button:active {
+outline: none;
+	color: white;
+	background: rgba(74,168,218,1);
+background: -moz-linear-gradient(top, rgba(74,168,218,1) 0%, rgba(103,191,235,1) 32%, rgba(40,141,195,1) 100%);
+background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(74,168,218,1)), color-stop(32%, rgba(103,191,235,1)), color-stop(100%, rgba(40,141,195,1)));
+background: -webkit-linear-gradient(top, rgba(74,168,218,1) 0%, rgba(103,191,235,1) 32%, rgba(40,141,195,1) 100%);
+background: -o-linear-gradient(top, rgba(74,168,218,1) 0%, rgba(103,191,235,1) 32%, rgba(40,141,195,1) 100%);
+background: -ms-linear-gradient(top, rgba(74,168,218,1) 0%, rgba(103,191,235,1) 32%, rgba(40,141,195,1) 100%);
+background: linear-gradient(to bottom, rgba(74,168,218,1) 0%, rgba(103,191,235,1) 32%, rgba(40,141,195,1) 100%);
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#4aa8da', endColorstr='#288dc3', GradientType=0 );
+	-webkit-box-shadow: inset 0px 0px 7px 3px rgba(50, 50, 50, 0.4);
+-moz-box-shadow:    inset 0px 0px 7px 3px rgba(50, 50, 50, 0.4);
+box-shadow:         inset 0px 0px 7px 3px rgba(50, 50, 50, 0.4);
+}
+
+.rematch-button {
+	display: inline-block;
+	padding: 8px 12px;
+	font-size: 16px;
+	color: white;
+	border-radius: 3px;
+	background: rgba(243,185,89,1);
+background: -moz-linear-gradient(top, rgba(243,185,89,1) 0%, rgba(245,200,128,1) 33%, rgba(218,168,82,1) 100%);
+background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(243,185,89,1)), color-stop(33%, rgba(245,200,128,1)), color-stop(100%, rgba(218,168,82,1)));
+background: -webkit-linear-gradient(top, rgba(243,185,89,1) 0%, rgba(245,200,128,1) 33%, rgba(218,168,82,1) 100%);
+background: -o-linear-gradient(top, rgba(243,185,89,1) 0%, rgba(245,200,128,1) 33%, rgba(218,168,82,1) 100%);
+background: -ms-linear-gradient(top, rgba(243,185,89,1) 0%, rgba(245,200,128,1) 33%, rgba(218,168,82,1) 100%);
+background: linear-gradient(to bottom, rgba(243,185,89,1) 0%, rgba(245,200,128,1) 33%, rgba(218,168,82,1) 100%);
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f3b959', endColorstr='#daa852', GradientType=0 );
+border: 1px solid #8c7246;
+}
+
+.rematch-button:active {
+outline: none;
+	color: white;
+	background: rgba(243,185,89,1);
+background: -moz-linear-gradient(top, rgba(243,185,89,1) 0%, rgba(245,200,128,1) 33%, rgba(218,168,82,1) 100%);
+background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(243,185,89,1)), color-stop(33%, rgba(245,200,128,1)), color-stop(100%, rgba(218,168,82,1)));
+background: -webkit-linear-gradient(top, rgba(243,185,89,1) 0%, rgba(245,200,128,1) 33%, rgba(218,168,82,1) 100%);
+background: -o-linear-gradient(top, rgba(243,185,89,1) 0%, rgba(245,200,128,1) 33%, rgba(218,168,82,1) 100%);
+background: -ms-linear-gradient(top, rgba(243,185,89,1) 0%, rgba(245,200,128,1) 33%, rgba(218,168,82,1) 100%);
+background: linear-gradient(to bottom, rgba(243,185,89,1) 0%, rgba(245,200,128,1) 33%, rgba(218,168,82,1) 100%);
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f3b959', endColorstr='#daa852', GradientType=0 );
+	-webkit-box-shadow: inset 0px 0px 7px 3px rgba(50, 50, 50, 0.4);
+-moz-box-shadow:    inset 0px 0px 7px 3px rgba(50, 50, 50, 0.4);
+box-shadow:         inset 0px 0px 7px 3px rgba(50, 50, 50, 0.4);
 }
 
 
@@ -504,6 +682,7 @@ box-shadow: inset 0px 0px 23px 4px rgba(42,115,71,1);
 
 .game-board {
 	/*background-color: rgba(255,255,255, 0.9); */
+	padding-top: 30px;
 	background-color: rgba(65, 179, 110, 1); 
 	
 }
