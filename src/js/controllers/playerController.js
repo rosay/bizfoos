@@ -12,6 +12,7 @@ app.controller('PlayerController', ['gameService', 'playerService', function (ga
 	playerService.getPlayers()
 		.then(function() {
 			vm.players = playerService.players;
+			console.table(vm.players);
 		});
 
 	vm.bullpenCount = playerService.getBullpenCount();

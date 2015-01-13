@@ -6,8 +6,9 @@
 		<div class="player-sidebar">
 			<h2>{{ ctrl.playerHeader }}</h2>
 			<ul>
-				<li ng-repeat="player in ctrl.players">
-					<button ng-disabled="player.inBullpen == true" type="button" class="player-button" ng-click="ctrl.addPlayerToBullpen(player._id)">
+				<input ng-model="searchPlayers.name" class="search-box" placeholder="Search Players">
+				<li ng-repeat="player in ctrl.players | filter:searchPlayers:strict">
+					<button ng-disabled="player.inBullpen == true" type="button" class="player-button" ng-click="ctrl.addPlayerToBullpen(player._id); searchPlayers.name = ''">
 						<span class="img-bg"></span>
 						<img src="{{ player.pic }}" />{{ player.name }}
 					</button>
