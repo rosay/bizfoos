@@ -1,4 +1,4 @@
-app.controller('GameController', ['gameService', 'rosterService', 'playerService', '$location', function(gameService, rosterService, playerService, $location) {
+app.controller('GameController', ['gameService', 'rosterService', 'playerService', '$location','$document', '$scope', function(gameService, rosterService, playerService, $location, $document, $scope) {
 	"use strict";
 
 	var vm = this;
@@ -117,6 +117,24 @@ app.controller('GameController', ['gameService', 'rosterService', 'playerService
 
 		vm.rematchCount += 1;
 	};
+
+	$document.unbind('keypress').bind('keypress', function(event){
+
+		var kc = event.keyCode;
+
+		$scope.$apply(function(){
+			if(kc === 113){ // Keypress "q" for Orange D 
+				vm.addScore(vm.players.teamOrange.defense._id);
+			}else if(kc === 97){ // Keypress "a" for Orange O
+				vm.addScore(vm.players.teamOrange.offense._id);
+			}else if(kc === 119){ // Keypress "w" for Black O
+				vm.addScore(vm.players.teamBlack.offense._id);
+			}else if(kc === 115){ // Keypress "s" for Black D
+				vm.addScore(vm.players.teamBlack.defense._id);
+			}
+		});
+		
+	});
 
 }]);
 
