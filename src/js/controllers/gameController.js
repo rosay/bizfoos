@@ -13,6 +13,8 @@ app.controller('GameController', ['gameService', 'rosterService', 'playerService
 
 	rosterService.createRoster();
 
+
+
 	vm.players = {
 		"teamBlack": {
 		"offense": {
@@ -54,10 +56,21 @@ app.controller('GameController', ['gameService', 'rosterService', 'playerService
 	gameService.setStartTime();
 
 	vm.addScore = function(playerId) {
+
 		gameService.addScore(playerId);
 		vm.scores[1] = gameService.getScoresCount(1);
 		vm.scores[2] = gameService.getScoresCount(2);
 		vm.gameOver = gameService.isGameOver();
+
+
+		// Sound Effects
+		var sound;
+		if(!vm.gameOver){
+			sound = new Audio(vm.scoreEffect());
+		}else{
+			sound = new Audio('sounds/win.mp3');
+		}
+		sound.play();
 	};
 
 	vm.removeLastScore = function() {
@@ -116,6 +129,12 @@ app.controller('GameController', ['gameService', 'rosterService', 'playerService
 		vm.gameOver = false;
 
 		vm.rematchCount += 1;
+
+		vm.startEffect();
+	};
+
+	vm.scoreEffect = function(){
+		return 'sounds/score-' + (Math.floor(Math.random() * 5) + 1 )+ '.mp3';
 	};
 
 	$document.unbind('keypress').bind('keypress', function(event){
@@ -135,6 +154,13 @@ app.controller('GameController', ['gameService', 'rosterService', 'playerService
 		});
 		
 	});
+
+	vm.startEffect = function(){
+		var audio = new Audio('sounds/start.mp3');
+		audio.play();
+	}
+
+	vm.startEffect();
 
 }]);
 

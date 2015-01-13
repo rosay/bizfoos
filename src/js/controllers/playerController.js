@@ -19,6 +19,8 @@ app.controller('PlayerController', ['gameService', 'playerService', function (ga
 	vm.addPlayerToBullpen = function (playerId) {
 		playerService.addPlayerToBullpen(playerId);
 		vm.bullpenCount = playerService.getBullpenCount();
+		var audio = new Audio('sounds/add.mp3');
+		audio.play();
 	};
 
 	vm.removePlayerFromBullpen = function (playerId) {
