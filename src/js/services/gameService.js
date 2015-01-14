@@ -1,7 +1,7 @@
 /**
 * Handles everything to do with the current game being played.
 */
-app.factory('gameService', ['rosterService', 'playerService', '$timeout', '$http', '$location', function gameService (rosterService, playerService, $timeout, $http, $location) {
+app.factory('gameService', ['rosterService', 'playerService', 'configService', '$timeout', '$http', '$location', function gameService (rosterService, playerService, configService, $timeout, $http, $location) {
 	"use strict";
 
 	var scores = [];	// Holds all scores for the game.
@@ -58,7 +58,7 @@ app.factory('gameService', ['rosterService', 'playerService', '$timeout', '$http
 	 * @returns {boolean}
 	 */
 	var isGameOver = function () {
-		return getScoresCount(1) === 5 || getScoresCount(2) === 5;
+		return getScoresCount(1) === configService.getScoreLimit() || getScoresCount(2) === configService.getScoreLimit();
 	};
 
 	/**
@@ -81,11 +81,11 @@ app.factory('gameService', ['rosterService', 'playerService', '$timeout', '$http
 	 */
 	var getWinningTeam = function () {
 		if (isGameOver()) {
-			if (getScoresCount(1) === 5) {
+			if (getScoresCount(1) === configService.getScoreLimit()) {
 				return 1;
 			}
 
-			if (getScoresCount(2) === 5) {
+			if (getScoresCount(2) === configService.getScoreLimit()) {
 				return 2;
 			}
 		}
@@ -150,7 +150,7 @@ app.factory('gameService', ['rosterService', 'playerService', '$timeout', '$http
 		game.startTime = startTime;
 		game.endTime = endTime;
 
-		if (getScoresCount(1) === 5) {
+		if (getScoresCount(1) === configService.getScoreLimit()) {
 			game.winningTeam = 1;
 		} else {
 			game.winningTeam = 2;

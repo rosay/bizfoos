@@ -9,7 +9,11 @@ int t1d = 0;
 int t2o = 0;
 int t2d = 0;
 
-int buttonPressed = 0;
+int counter = 0;
+
+// Microphone
+int sensorPin = A2;
+int sensorValue = 0;
 
 void setup() {
   // Team 1 offense
@@ -25,6 +29,7 @@ void setup() {
   pinMode(bt2d, INPUT); 
   
   Keyboard.begin();
+  Serial.begin(9600);
 }
 
 void loop(){
@@ -55,5 +60,14 @@ void loop(){
     Keyboard.write('s');
     delay(1000);
   }
+  
+  
+  //if(counter == 500){
+    //sensorValue = analogRead(sensorPin);
+    //Serial.print(sensorValue);
+    //Serial.print("\n");
+    //counter = 0;
+  //}
+  //counter++;
 
 }

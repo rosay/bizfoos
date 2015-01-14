@@ -42,6 +42,10 @@
 				<a ng-disabled="ctrl.bullpenCount < 1" class="btn btn-reset" href="#">Reset</a>
 				</div><!-- end start wrap -->
 			</div><!-- end start-button -->
+			<div class="col-xs-12">
+				<input ng-model="scoreLimit" type="range" name="points" min="3" max="10">
+				<p class="score-label">Play to: {{scoreLimit}}</p>
+			</div>
 		</div><!-- end sub-row -->
 		</div><!-- end game summary -->
 	</div><!-- end game-col -->
