@@ -1,5 +1,5 @@
 var a;
-app.controller('GameController', ['gameService', 'rosterService', 'playerService', '$location','$document', '$scope', function(gameService, rosterService, playerService, $location, $document, $scope) {
+app.controller('GameController', ['gameService', 'rosterService', 'playerService', '$location','$document', '$scope', '$interval', function(gameService, rosterService, playerService, $location, $document, $scope, $interval) {
 	"use strict";
 
 	var vm = this;
@@ -11,8 +11,10 @@ app.controller('GameController', ['gameService', 'rosterService', 'playerService
 	vm.title = "Let's play!";
 	vm.scores = { 1: gameService.getScoresCount(1), 2: gameService.getScoresCount(2) };
 	vm.gameOver = gameService.isGameOver();
+	var timePlayed = 0;
+	var clock = null;
+	vm.gameClock = "0:00";
 
-	
 
 	rosterService.createRoster();
 
@@ -55,6 +57,14 @@ app.controller('GameController', ['gameService', 'rosterService', 'playerService
 
 	gameService.setStartTime();
 
+	clock = $interval(function() {
+		timePlayed++;
+		var min = Math.floor(timePlayed / 60);
+		var sec = timePlayed % 60 > 9 ? timePlayed % 60 : "0" + timePlayed % 60;
+
+		vm.gameClock = min + ":" + sec;
+	}, 1000);
+
 	vm.addScore = function(playerId) {
 
 		gameService.addScore(playerId);
@@ -68,6 +78,7 @@ app.controller('GameController', ['gameService', 'rosterService', 'playerService
 			sound = new Audio(vm.scoreEffect());
 		}else{
 			sound = new Audio('sounds/win.mp3');
+			$interval.cancel(clock);
 		}
 		sound.play();
 	};
@@ -101,8 +112,6 @@ app.controller('GameController', ['gameService', 'rosterService', 'playerService
 		$location.path('/player');
 
 		gameService.clearScores();
-
-		// bootstrap winning team
 	};
 
 	vm.swapTeamPositions = function (teamNum) {
