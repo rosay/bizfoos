@@ -1,3 +1,4 @@
+var a;
 app.controller('GameController', ['gameService', 'rosterService', 'playerService', '$location','$document', '$scope', function(gameService, rosterService, playerService, $location, $document, $scope) {
 	"use strict";
 
@@ -8,8 +9,10 @@ app.controller('GameController', ['gameService', 'rosterService', 'playerService
 	vm.rematchCount = 0;
 
 	vm.title = "Let's play!";
-	vm.scores = { 1: 0, 2: 0 };
-	vm.gameOver = false;
+	vm.scores = { 1: gameService.getScoresCount(1), 2: gameService.getScoresCount(2) };
+	vm.gameOver = gameService.isGameOver();
+
+	
 
 	rosterService.createRoster();
 
