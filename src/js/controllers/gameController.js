@@ -13,8 +13,6 @@ app.controller('GameController', ['gameService', 'rosterService', 'playerService
 
 	rosterService.createRoster();
 
-
-
 	vm.players = {
 		"teamBlack": {
 		"offense": {
@@ -48,7 +46,6 @@ app.controller('GameController', ['gameService', 'rosterService', 'playerService
 
 		vm.players.teamOrange.offense = rosterService.getPlayer(2, "offense");
 		vm.players.teamOrange.defense = rosterService.getPlayer(2, "defense");
-
 	};
 
 	setPlayers();
@@ -61,7 +58,6 @@ app.controller('GameController', ['gameService', 'rosterService', 'playerService
 		vm.scores[1] = gameService.getScoresCount(1);
 		vm.scores[2] = gameService.getScoresCount(2);
 		vm.gameOver = gameService.isGameOver();
-
 
 		// Sound Effects
 		var sound;
@@ -158,7 +154,7 @@ app.controller('GameController', ['gameService', 'rosterService', 'playerService
 	vm.startEffect = function(){
 		var audio = new Audio('sounds/start.mp3');
 		audio.play();
-	}
+	};
 
 	vm.startEffect();
 
