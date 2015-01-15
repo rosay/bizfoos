@@ -57,13 +57,20 @@ app.controller('GameController', ['gameService', 'rosterService', 'playerService
 
 	gameService.setStartTime();
 
-	clock = $interval(function() {
-		timePlayed++;
-		var min = Math.floor(timePlayed / 60);
-		var sec = timePlayed % 60 > 9 ? timePlayed % 60 : "0" + timePlayed % 60;
+	var startClock = function () {
+		vm.gameClock = "0:00";
+		timePlayed = 0;
 
-		vm.gameClock = min + ":" + sec;
-	}, 1000);
+		clock = $interval(function() {
+			timePlayed++;
+			var min = Math.floor(timePlayed / 60);
+			var sec = timePlayed % 60 > 9 ? timePlayed % 60 : "0" + timePlayed % 60;
+
+			vm.gameClock = min + ":" + sec;
+		}, 1000);
+	};
+
+	startClock();
 
 	vm.addScore = function(playerId) {
 
@@ -137,7 +144,7 @@ app.controller('GameController', ['gameService', 'rosterService', 'playerService
 		vm.gameOver = false;
 
 		vm.rematchCount += 1;
-
+		startClock();
 		vm.startEffect();
 	};
 
