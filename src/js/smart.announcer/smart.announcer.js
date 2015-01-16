@@ -165,6 +165,29 @@ function SmartAnnouncer(config) {
 			,"And fours all around, next point wins"
 		]
 
+		// Final POINT
+			this.sayThis_PlayerScores_Game_FinalPoint_CloseGame = [
+				"And the {final/last/winning} {point/goal/score} by {{name}} finishes out {a close game/a nail-biter/an intense match-up} defeating {{other-team}}"
+				,"{And that is the end of the game/And that's all folks/And that brings this game to a conclusion}. {{other-team}} has been {beaten/defeated} by {{team}} in a {very close match/tight game/close match/very close game} with a {{team-score}} to {{other-team-score}} {victory/win}."
+				,"{And that is the end of the game/And that's all folks/And that brings this game to a conclusion}. {{team}} has {beaten/defeated/won over} {{other-team}} in a {very close match/tight game/close match/very close game} with a {{team-score}} to {{other-team-score}} {victory/win}."
+				,"{And that is the end of the game/And that's all folks/And that brings this game to a conclusion}. {{team}} has won in a {very close match/tight game/close match/very close game} with a {{team-score}} to {{other-team-score}} {victory/win} over {{other-team}}."
+				//,"And the {final/last/winning} {point/goal/score} by {{name}} finishes out {a close game/a nail-biter/an intense match-up} defeating {{other-team}}"
+				//,"wav:and_another_one.wav"
+			];
+
+			this.sayThis_PlayerScores_Game_FinalPoint_Other = [
+				"{{name}} {puts in/with/drops in/knocks in/scores/sinks} the final {point/score/goal} against {{other-team}} giving {{team}} yet another {{team-score}} to {{other-team-score}} {victory/win}."
+				,"And the ends the game for {{other-team}}, giving {{team}} yet another {victory/win}. The final score is {{team-score}} to {{other-team-score}}."
+				,"{And that is the end of the game/And that's all folks/And that brings this game to a conclusion}. {{other-team}} has been {beaten/defeated} by {{team}} with a {{team-score}} to {{other-team-score}} {victory/win}."
+				//,"wav:and_another_one.wav"
+			];
+
+			this.sayThis_PlayerScores_Game_FinalPoint_ShutOut = [
+				"{{name}} with the final {nail in the coffin/score/goal} against the {{other-team}} gives {{team}} yet another {shut out/crushing 5 to 0 victory/devastating 5 and O victory}."
+				,"{And that is the end of the game/And that's all folks/And that brings this game to a conclusion}. {{other-team}} has been {shut out/blanked/crushed/annihilated/demolished} by {{team}}"
+				//,"wav:and_another_one.wav"
+			];
+		//END Final Point
 
 		// player scores and it took over 2 minutes
 		// "Wow, that point took some effort"
@@ -348,6 +371,22 @@ function SmartAnnouncer(config) {
 				} else {
 					sayThisAlsoOptions = sayThisAlsoOptions.concat(this.sayThis_PlayerScores_ReportScoreTeamLosing);
 				}
+			}
+		}
+
+		// FINAL POINT
+		console.log(oTeam.score,this.pointsNeededToWin)
+		if (oTeam.score == this.config.pointsNeededToWin) {
+			var closeMatchPoints = (this.config.pointsNeededToWin - 1); // eventually should be a percentage
+
+			// clear original arrays
+			sayThisAlsoOptions = [];
+			if (oOtherTeam.score == closeMatchPoints) {
+				sayThisOptions = this.sayThis_PlayerScores_Game_FinalPoint_CloseGame;
+			} else if (oOtherTeam.score == 0) {
+				sayThisOptions = this.sayThis_PlayerScores_Game_FinalPoint_ShutOut;
+			} else {
+				sayThisOptions = this.sayThis_PlayerScores_Game_FinalPoint_Other;
 			}
 		}
 
