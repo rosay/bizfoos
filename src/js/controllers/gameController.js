@@ -75,7 +75,7 @@ app.controller('GameController', ['gameService', 'rosterService', 'playerService
 			],
 			"players" : [
 				{	//0
-					"playerid": vm.players.teamBlack.offense.playerId,
+					"playerid": vm.players.teamBlack.offense._id,
 					"color": "black",
 					"position": "o",
 					"team": "The Black Team",
@@ -88,7 +88,7 @@ app.controller('GameController', ['gameService', 'rosterService', 'playerService
 					]
 				},
 				{	//1
-					"playerid": vm.players.teamBlack.defense.playerId,
+					"playerid": vm.players.teamBlack.defense._id,
 					"color": "black",
 					"position": "d",
 					"team": "The Dream Team",
@@ -101,7 +101,7 @@ app.controller('GameController', ['gameService', 'rosterService', 'playerService
 					]
 				},
 				{	//2
-					"playerid": vm.players.teamOrange.offense.playerId,
+					"playerid": vm.players.teamOrange.offense._id,
 					"color": "yellow",
 					"position": "o",
 					"team": "The Avengers",
@@ -115,7 +115,7 @@ app.controller('GameController', ['gameService', 'rosterService', 'playerService
 					]
 				},
 				{	//3
-					"playerid": vm.players.teamOrange.defense.playerId,
+					"playerid": vm.players.teamOrange.defense._id,
 					"color": "yellow",
 					"position": "d",
 					"team": "The Avengers",
@@ -165,10 +165,10 @@ app.controller('GameController', ['gameService', 'rosterService', 'playerService
 			sound = new Audio('sounds/win.mp3');
 			$interval.cancel(clock);
 		}
-		sound.play();
+		//sound.play();
 
 		// let the game announcer know a point was scored
-		var oMessage = smartAnnouncer.ScorePoint({
+		var oMessage = vm.smartAnnouncer.ScorePoint({
 			"playerid": playerId, 
 			"power":  -42 /* should be a number 0-9. -42 == random */
 		})
