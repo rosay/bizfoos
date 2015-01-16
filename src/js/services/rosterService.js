@@ -181,6 +181,10 @@ app.factory('rosterService', ['playerService', function rosterService (playerSer
 				var aNames = player.name.split(" ", 2);
 				player.firstName = aNames[0];
 				player.lastName  = aNames[1];
+			} else {
+				// just in case
+				player.firstName = player.name;
+				player.lastName  = player.name;
 			}
 			return player[0];
 		}
