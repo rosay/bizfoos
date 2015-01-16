@@ -1,5 +1,4 @@
 jQuery(function($) {
-	var smartAnnouncer;
 
 	var gameSpeedSimulator = 5;// 5 times faster
 
@@ -16,7 +15,7 @@ jQuery(function($) {
 	$("#newGame").click(function() {
 		gameSeconds = 0;
 		addToLog("New Game Started");
-		smartAnnouncer = new SmartAnnouncer({
+		smartAnnouncer.init({
 			"pointsNeededToWin": 5,
 			"debug": true,
 			"teams" : [
@@ -100,7 +99,7 @@ jQuery(function($) {
 	$("button.player-score").click(function() {
 		var $this = $(this);
 
-		var oMessage = smartAnnouncer.ScorePoint({
+		var oMessage = smartAnnouncer.scorePoint({
 			"playerid":$this.attr("data-playerid"), 
 			//"color": $this.attr("data-color"),
 			//"position": $this.attr("data-position"),
