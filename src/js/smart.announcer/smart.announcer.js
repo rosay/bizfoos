@@ -153,10 +153,10 @@ function SmartAnnouncer(config) {
 		];
 
 		this.sayThis_PlayerScores_ReportTiedScore = [
-			 "Score is tied up at {{team-score}} to {{other-team-score}}"
+			 "Score is {tied/all tied} up at {{team-score}} to {{other-team-score}}"
 			 ,"{And we are/The scores are/It's all} tied up at {{team-score}} to {{other-team-score}}"
 			 ,"And the scores are at {{team-score}} and {{other-team-score}}"
-			 ,"All tied up at {{team-score}} and {{other-team-score}}"
+			 ,"{All tied up at/we're even with a score of/It's anyones game with a score of} {{team-score}} and {{other-team-score}}"
 		];
 
 		this.sayThis_PlayerScores_ReportTiedScoreNextPointWins = [
@@ -359,9 +359,12 @@ function SmartAnnouncer(config) {
 			// let's also announce the score
 			// score is tied up
 			console.log("oOtherTeam.score == oTeam.score", oOtherTeam.score == oTeam.score)
+			// if it is tied up
 			if (oOtherTeam.score == oTeam.score) {
 				if (oOtherTeam.score == 4) {
 					sayThisAlsoOptions = this.sayThis_PlayerScores_ReportTiedScoreNextPointWins;
+				} else {
+					sayThisAlsoOptions = this.sayThis_PlayerScores_ReportTiedScore;
 				}
 			} else {
 				sayThisAlsoOptions = this.sayThis_PlayerScores_ReportScore;
