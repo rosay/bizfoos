@@ -4,6 +4,8 @@ app.controller('GameController', ['gameService', 'rosterService', 'playerService
 
 	var vm = this;
 
+	vm.smartAnnouncer;
+
 	gameService.checkGameReady();
 
 	vm.rematchCount = 0;
@@ -55,6 +57,82 @@ app.controller('GameController', ['gameService', 'rosterService', 'playerService
 
 	setPlayers();
 
+	// intialize the smart announcer everytime a game starts
+	vm.smartAnnouncer = new SmartAnnouncer({
+			"pointsNeededToWin": 5,
+			//"debug": true,
+			"teams" : [
+				{
+					"color": "black",
+					"team": "The Black Team" // eventually Team names: The Dream Team
+					//"probabilty": .80
+				},
+				{
+					"color": "yellow",
+					"team": "The Yellow Team" // eventually team names: The Avengers
+					//"probabilty": .20
+				}
+			],
+			"players" : [
+				{	//0
+					"playerid": vm.players.teamBlack.offense.playerId,
+					"color": "black",
+					"position": "o",
+					"team": "The Black Team",
+					"names": [
+						vm.players.teamBlack.offense.firstName,
+						vm.players.teamBlack.offense.lastName
+						// eventually nicknames
+						//"Bert", 
+						//"The Trash man"
+					]
+				},
+				{	//1
+					"playerid": vm.players.teamBlack.defense.playerId,
+					"color": "black",
+					"position": "d",
+					"team": "The Dream Team",
+					"names": [
+						vm.players.teamBlack.defense.firstName,
+						vm.players.teamBlack.defense.lastName
+						// eventually nicknames
+						//"Adam",
+						//"Reece"
+					]
+				},
+				{	//2
+					"playerid": vm.players.teamOrange.offense.playerId,
+					"color": "yellow",
+					"position": "o",
+					"team": "The Avengers",
+					"names": [
+						vm.players.teamOrange.offense.firstName,
+						vm.players.teamOrange.offense.lastName
+						// eventually nicknames
+						//"Mark",
+						//"Schmidt",
+						//"Schmidty"
+					]
+				},
+				{	//3
+					"playerid": vm.players.teamOrange.defense.playerId,
+					"color": "yellow",
+					"position": "d",
+					"team": "The Avengers",
+					"names": [
+						vm.players.teamOrange.defense.firstName,
+						vm.players.teamOrange.defense.lastName
+						// eventually nicknames
+						//"Sterling",
+						//"Heibeck",
+						//"The Sterl",
+						//"The Ninja"
+					]
+				}
+			] // end array of peole
+		}); // end config, end initalize of SmartAnnouncer
+
+
 	gameService.setStartTime();
 
 	var startClock = function () {
@@ -88,6 +166,12 @@ app.controller('GameController', ['gameService', 'rosterService', 'playerService
 			$interval.cancel(clock);
 		}
 		sound.play();
+
+		// let the game announcer know a point was scored
+		var oMessage = smartAnnouncer.ScorePoint({
+			"playerid": playerId, 
+			"power":  -42 /* should be a number 0-9. -42 == random */
+		})
 	};
 
 	vm.removeLastScore = function() {
