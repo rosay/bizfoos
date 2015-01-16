@@ -13,7 +13,7 @@ app.factory('announcerService', [ function announcerService () {
 	// Options for annoncing when someone scores
 	var sayThis_PlayerScores_Game_FirstPoint = [
 		"First point of the game by {{name}}"
-		,"{{name}} {with the/starts us off with the/knocks in/puts in} first {score/score of the game/shot on the table}"
+		,"{{name}} {with the/starts us off with the/knocks in the/puts in the} first {score/score of the game/shot on the table}"
 		,"{{name}} with the first {score/ball in the hole}"
 		,"{{name}} break{{team{s|}}} the ice with a 1 to 0 lead"
 		,"And now {{team}} {{team{is|are}}} in the lead thanks to {{name}} with the first point"
@@ -126,10 +126,11 @@ app.factory('announcerService', [ function announcerService () {
 
 	//  it would be really nice to know about fooses
 
-	var sayThis_PlayerScores_Team_MoreThan2_OtherTeamZero = [
-		 "{{team}} {{team{is|are}}} putting the hurt on {{other-team}}"
-		 ,"Ouch, {{other-team}} {{other-team{is|are}}} in the danger zone now"
-		 ,"{{other-team}} {{other-team{has|have}}} some catching up to do"
+	var sayThis_PlayerScores_Team_ApporachingShutOutMoreThan2Points = [
+		 "{{team}} {{team{is|are}}} {putting the hurt on {{other-team}}/gaining a solid lead/working on a shut out/sticking it to {{other-team}}}"
+		 ,"{Ouch/Snap/Dang/Hey Now/Oh man/Wow/Look Out/It's On now}, {{other-team}} {{other-team{is|are}}} {in the danger zone now/on their way to a shut out/in need of some points}"
+		 ,"{Ouch/Snap/Dang/Hey Now/Oh man/Wow/Look Out/It's On now}, {{other-team}} {need{{other-team{s|}}} to catch up/need{{other-team{s|}}} to make up some points/need{{other-team{s|}}} their first point/is way behind now/is falling behind}"
+		 ,"{{other-team}} {{other-team{has|have}}} some {catching up to do/work to do}"
 	];
 
 	var sayThis_PlayerScores_ReportScore = [
@@ -353,7 +354,7 @@ app.factory('announcerService', [ function announcerService () {
 				// empty any previous entries, this is imporant :)
 				sayThisOptions = sayThis_PlayerScores_Team_ShutOutAlert;
 			} else if (oTeam.score >= 2) {
-				sayThisOptions = sayThis_PlayerScores_Team_MoreThan2_OtherTeamZero;
+				sayThisOptions = sayThis_PlayerScores_Team_ApporachingShutOutMoreThan2Points;
 			}
 		} else if (oOtherTeam.score + oTeam.score >= 3) {
 			// let's also announce the score
