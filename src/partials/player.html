@@ -6,8 +6,12 @@
 		<div class="player-sidebar">
 			<h2>{{ ctrl.playerHeader }}</h2>
 			<ul>
-				<li ng-repeat="player in ctrl.players">
-					<button ng-disabled="player.inBullpen == true" type="button" class="player-button" ng-click="ctrl.addPlayerToBullpen(player._id)">
+				<input ng-model="searchPlayers.name" 
+					class="search-box" 
+					placeholder="Search Players"
+					foos-enter>
+				<li ng-repeat="player in filteredPlayers = (ctrl.players | filter:searchPlayers:strict)">
+					<button ng-disabled="player.inBullpen == true" type="button" class="player-button" ng-click="ctrl.addPlayerToBullpen(player._id); searchPlayers.name = ''">
 						<span class="img-bg"></span>
 						<img src="{{ player.pic }}" />{{ player.name }}
 					</button>
@@ -38,6 +42,10 @@
 				<a ng-disabled="ctrl.bullpenCount < 1" class="btn btn-reset" href="#">Reset</a>
 				</div><!-- end start wrap -->
 			</div><!-- end start-button -->
+			<div class="col-xs-12">
+				<input ng-model="scoreLimit" type="range" name="points" min="3" max="10">
+				<p class="score-label">Play to: {{scoreLimit}}</p>
+			</div>
 		</div><!-- end sub-row -->
 		</div><!-- end game summary -->
 	</div><!-- end game-col -->
