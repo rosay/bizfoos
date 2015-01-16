@@ -190,6 +190,8 @@ function SmartAnnouncer(config) {
 		this.config.players.forEach(function(player) {
 			//console.log(player)
 			//console.log(oFilter)
+		    if (player.playerid == oFilter.playerid)
+		    	matchingPlayer = player;
 		    if (player.color == oFilter.color && player.position == oFilter.position)
 		    	matchingPlayer = player;
 		});
@@ -362,10 +364,13 @@ function SmartAnnouncer(config) {
 		if (sayThisAlsoOptions.length > 0) {
 			alsoMessage = this.getRandomItem(sayThisAlsoOptions);			
 		}
-
+		var returnMessage
 		message     = this.updateMessageReplacements(message,     oPlayer, oTeam, oOtherTeam)
-		if (alsoMessage)
+		returnMessage = message;
+		if (alsoMessage) {
 			alsoMessage = this.updateMessageReplacements(alsoMessage, oPlayer, oTeam, oOtherTeam)
+			returnMessage = returnMessage +". "+ alsoMessage; 
+		}
 
 		// add to point history array
 		this.pointHistory.push({ "player": oPlayer, "time": gameTime});
@@ -374,7 +379,7 @@ function SmartAnnouncer(config) {
 		this.sayThis(message, alsoMessage);
 
 		// return to user
-		return { "message": message + ". "+ alsoMessage };
+		return { "message":returnMessage };
 	}
 
 	this.sayThis = function(message, alsoMessage) {
@@ -406,3 +411,39 @@ function SmartAnnouncer(config) {
 	// initialize
 	this.init();
 };
+
+/*
+	New Game
+	Play intro music...
+	play low crowd sound...
+
+	"Welcome to the BizStream areana on this gloomy Monday afternoon. Today's matchup is  going to be a great one. Albert's team  should be able to win this game with ease. It will be an uphill battle for the Yellow Team.
+
+
+	"{Welcome to the/And we will start things off at/Our game today} {BizStream Areana/BizStream Plex/Biz Plex/BizStream Warehouse} on this {{day-description}} {{time-of-day}} for a great {match-up/game}
+
+	"Welcome to game 3 in this tough battle for a victory. 
+
+	{{day-description}} = get current weather/zipcode
+	rain = rainy, wet, dreary
+	clouds = gloomy, cloudy, overcast
+	sun = beautiful, sunny
+
+	temp below 15 = cold, freezing, 
+	temp above 70 = warm, comfortable
+	temp above 85 = scorching, hot, sweaty
+
+	{{time-of-day}} = Monday Afternoon, Friday Evening, Lunchtime, post-company meeting
+
+
+	TODO:
+	Game init... SeriesGameCount: 1-3
+
+	on the score add {"power": 1-3} weak, avg, power
+
+	{{name}} could also randomly be replaced with "Dream Team's D-fense", "The D-Fense", "The Yellow Team's defense"
+
+	{{defense/offense}} replaced with the player's position
+	{{defensive/offensive}} replaced with the player's position
+
+*/

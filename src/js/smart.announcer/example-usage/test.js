@@ -23,14 +23,17 @@ jQuery(function($) {
 				{
 					"color": "black",
 					"team": "The Dream Team"
+					//"probabilty": .80
 				},
 				{
 					"color": "yellow",
 					"team": "The Avengers"
+					//"probabilty": .20
 				}
 			],
 			"players" : [
 				{	//0
+					"playerid": "ahovingh@bizstream.com",
 					"color": "black",
 					"position": "o",
 					"team": "The Dream Team",
@@ -42,6 +45,7 @@ jQuery(function($) {
 					]
 				},
 				{	//1
+					"playerid": "areece@bizstream.com",
 					"color": "black",
 					"position": "d",
 					"team": "The Dream Team",
@@ -51,6 +55,7 @@ jQuery(function($) {
 					]
 				},
 				{	//2
+					"playerid": "mschmidt@bizstream.com",
 					"color": "yellow",
 					"position": "o",
 					"team": "The Avengers",
@@ -61,6 +66,7 @@ jQuery(function($) {
 					]
 				},
 				{	//3
+					"playerid": "sheibeck@bizstream.com",
 					"color": "yellow",
 					"position": "d",
 					"team": "The Avengers",
@@ -95,8 +101,10 @@ jQuery(function($) {
 		var $this = $(this);
 
 		var oMessage = smartAnnouncer.ScorePoint({
-			"color": $this.attr("data-color"),
-			"position": $this.attr("data-position")
+			"playerid":$this.attr("data-playerid"), 
+			//"color": $this.attr("data-color"),
+			//"position": $this.attr("data-position"),
+			"power":  -42/* should be a number 0-9. -42 == random */
 		})
 
 		addToLog(oMessage.message);
