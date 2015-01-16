@@ -415,30 +415,19 @@ function SmartAnnouncer(config) {
 		this.pointHistory.push({ "player": oPlayer, "time": gameTime});
 
 
-		this.sayThis(message, alsoMessage);
+		this.sayThis(returnMessage);
 
 		// return to user
 		return { "message":returnMessage };
 	}
 
-	this.sayThis = function(message, alsoMessage) {
+	this.sayThis = function(message) {
 		//alert(this.config.useTTS)
 		if (this.config.useTTS) {
 			if (this.config.debug) console.log("sayThis: ", message);
-			var audio = new Audio();
-			//audio.src ='http://translate.google.com/translate_tts?ie=utf-8&tl=en&q='+ escape(message);
-			//audio.play();
 			window.speechSynthesis.speak(
 				new SpeechSynthesisUtterance(message)
 			);
-			if (alsoMessage) {
-				audio.addEventListener("ended", function() {
-		          	audio.currentTime = 0;
-					//var audio2 = new Audio();
-					//audio2.src ='http://translate.google.com/translate_tts?ie=utf-8&tl=en&q='+ escape(alsoMessage);
-					//audio2.play();
-			     });
-			}
 		}
 	}
 
