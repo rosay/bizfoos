@@ -177,14 +177,14 @@ app.factory('rosterService', ['playerService', function rosterService (playerSer
 
 		if (player.length) {
 			// let's force some first and last names until the database get's them
-			if (/\s/.test(player.name)) {
-				var aNames = player.name.split(" ", 2);
-				player.firstName = aNames[0];
-				player.lastName  = aNames[1];
+			if (/\s/.test(player[0].name)) {
+				var aNames = player[0].name.split(" ", 2);
+				player[0].firstName = aNames[0];
+				player[0].lastName  = aNames[1];
 			} else {
 				// just in case
-				player.firstName = player.name;
-				player.lastName  = player.name;
+				player[0].firstName = player[0].name;
+				player[0].lastName  = player[0].name;
 			}
 			return player[0];
 		}
