@@ -129,9 +129,10 @@ function SmartAnnouncer(config) {
 
 		//  it would be really nice to know about fooses
 
-		this.sayThis_PlayerScores_Team_MoreThan2_OtherTeamZero = [
-			 "{{team}} {{team{is|are}}} putting the hurt on {{other-team}}"
-			 ,"Ouch, {{other-team}} {{other-team{is|are}}} in the danger zone now"
+		this.sayThis_PlayerScores_Team_ApporachingShutOutMoreThan2Points = [
+			 "{{team}} {{team{is|are}}} {putting the hurt on {{other-team}}/gaining a solid lead/working on a shut out/sticking it to {{other-team}}}"
+			 ,"Ouch, {{other-team}} {{other-team{is|are}}} {in the danger zone now/need{{other-team{s|}}} to catch up/needs to make up some points/needs their first point/}"
+			 ,"Snap, {{other-team}} {need{{other-team{s|}}} to catch up/need{{other-team{s|}}} to make up some points/need{{other-team{s|}}} their first point/is way behind now/is falling behind}"
 			 ,"{{other-team}} {{other-team{has|have}}} some catching up to do"
 		];
 
@@ -353,13 +354,12 @@ function SmartAnnouncer(config) {
 				// empty any previous entries, this is imporant :)
 				sayThisOptions = this.sayThis_PlayerScores_Team_ShutOutAlert;
 			} else if (oTeam.score >= 2) {
-				sayThisOptions = this.sayThis_PlayerScores_Team_MoreThan2_OtherTeamZero;
+				sayThisOptions = this.sayThis_PlayerScores_Team_ApporachingShutOutMoreThan2Points;
 			}
 		} else if (oOtherTeam.score + oTeam.score >= 3) {
 			// let's also announce the score
 			// score is tied up
 			console.log("oOtherTeam.score == oTeam.score", oOtherTeam.score == oTeam.score)
-			// if it is tied up
 			if (oOtherTeam.score == oTeam.score) {
 				if (oOtherTeam.score == 4) {
 					sayThisAlsoOptions = this.sayThis_PlayerScores_ReportTiedScoreNextPointWins;
