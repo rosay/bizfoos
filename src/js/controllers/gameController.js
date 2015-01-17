@@ -55,15 +55,56 @@ app.controller('GameController', ['gameService', 'rosterService', 'playerService
 
 	setPlayers();
 
+	// intialize the smart announcer everytime a game starts
+
+	gameService.initializeAnnouncer({
+		blackO:{
+			id: vm.players.teamBlack.offense._id,
+			names: [
+				vm.players.teamBlack.offense.firstName,
+				vm.players.teamBlack.offense.lastName
+			]
+		},
+		blackD:{
+			id: vm.players.teamBlack.defense._id,
+			names: [
+				vm.players.teamBlack.defense.firstName,
+				vm.players.teamBlack.defense.lastName
+			]
+		},
+		yellowO:{
+			id: vm.players.teamOrange.offense._id,
+			names: [
+				vm.players.teamOrange.offense.firstName,
+				vm.players.teamOrange.offense.lastName
+			]
+		},
+		yellowD:{
+			id: vm.players.teamOrange.defense._id,
+			names: [
+				vm.players.teamOrange.defense.firstName,
+				vm.players.teamOrange.defense.lastName
+			]
+		}
+	});
+
+
 	gameService.setStartTime();
 
-	clock = $interval(function() {
-		timePlayed++;
-		var min = Math.floor(timePlayed / 60);
-		var sec = timePlayed % 60 > 9 ? timePlayed % 60 : "0" + timePlayed % 60;
+	var startClock = function () {
+		vm.gameClock = "0:00";
+		timePlayed = 0;
 
-		vm.gameClock = min + ":" + sec;
-	}, 1000);
+		clock = $interval(function() {
+			timePlayed++;
+			var min = Math.floor(timePlayed / 60);
+			var sec = timePlayed % 60 > 9 ? timePlayed % 60 : "0" + timePlayed % 60;
+
+			vm.gameClock = min + ":" + sec;
+		}, 1000);
+	};
+
+	startClock();
 
 	vm.addScore = function(playerId) {
 
@@ -80,7 +121,7 @@ app.controller('GameController', ['gameService', 'rosterService', 'playerService
 			sound = new Audio('sounds/win.mp3');
 			$interval.cancel(clock);
 		}
-		sound.play();
+		//sound.play();
 	};
 
 	vm.removeLastScore = function() {
@@ -137,7 +178,7 @@ app.controller('GameController', ['gameService', 'rosterService', 'playerService
 		vm.gameOver = false;
 
 		vm.rematchCount += 1;
-
+		startClock();
 		vm.startEffect();
 	};
 

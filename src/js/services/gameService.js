@@ -1,7 +1,7 @@
 /**
 * Handles everything to do with the current game being played.
 */
-app.factory('gameService', ['rosterService', 'playerService', 'configService', '$timeout', '$http', '$location', function gameService (rosterService, playerService, configService, $timeout, $http, $location) {
+app.factory('gameService', ['rosterService', 'playerService', 'configService', 'announcerService', '$timeout', '$http', '$location', function gameService (rosterService, playerService, configService, announcerService, $timeout, $http, $location) {
 	"use strict";
 
 	var scores = [];	// Holds all scores for the game.
@@ -32,6 +32,11 @@ app.factory('gameService', ['rosterService', 'playerService', 'configService', '
 				postGame();
 			}
 		}
+
+		var oMessage = announcerService.scorePoint({
+			"playerid": playerId, 
+			"power":  -42 /* should be a number 0-9. -42 == random */
+		})
 	};
 
 	/**
@@ -192,6 +197,56 @@ app.factory('gameService', ['rosterService', 'playerService', 'configService', '
 		}
 	};
 
+	var initializeAnnouncer = function(players){
+		announcerService.init({
+			"pointsNeededToWin": configService.getScoreLimit(),
+			"teams" : [
+				{
+					"color": "black",
+					"team": "The Black Team", // eventually Team names: The Dream Team
+					//"probabilty": .80
+				},
+				{
+					"color": "yellow",
+					"team": "The Yellow Team", // eventually team names: The Avengers
+					//"probabilty": .20
+				}
+			],
+			"players" : [
+				{	//0
+					"playerid": players.blackO.id,
+					"color": "black",
+					"position": "o",
+					"team": "The Black Team",
+					"names": players.blackO.names
+				},
+				{	//1
+					"playerid": players.blackD.id,
+					"color": "black",
+					"position": "d",
+					"team": "The Dream Team",
+					"names": players.blackD.names
+				},
+				{	//2
+					"playerid": players.yellowO.id,
+					"color": "yellow",
+					"position": "o",
+					"team": "The Avengers",
+					"names": players.yellowO.names
+				},
+				{	//3
+					"playerid": players.yellowD.id,
+					"color": "yellow",
+					"position": "d",
+					"team": "The Avengers",
+					"names": players.yellowD.names
+				}
+			], // end array of peole
+			"useTTS": true,
+			"debug": false
+		});
+	}
+
 	return {
 		addScore: addScore,
 		removeLastScore: removeLastScore,
@@ -203,6 +258,7 @@ app.factory('gameService', ['rosterService', 'playerService', 'configService', '
 		getWinnerPlayerIds: getWinnerPlayerIds,
 		getWinningTeam: getWinningTeam,
 		getLosingTeam: getLosingTeam,
-		clearScores: clearScores
+		clearScores: clearScores,
+		initializeAnnouncer: initializeAnnouncer
 	};
 }]);

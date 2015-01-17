@@ -167,6 +167,16 @@ app.factory('rosterService', ['playerService', function rosterService (playerSer
 		var player = _.filter(roster, {"team": teamNum, "position": position});
 
 		if (player.length) {
+			// let's force some first and last names until the database get's them
+			if (/\s/.test(player[0].name)) {
+				var aNames = player[0].name.split(" ", 2);
+				player[0].firstName = aNames[0];
+				player[0].lastName  = aNames[1];
+			} else {
+				// just in case
+				player[0].firstName = player[0].name;
+				player[0].lastName  = player[0].name;
+			}
 			return player[0];
 		}
 
