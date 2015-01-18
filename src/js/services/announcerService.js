@@ -460,9 +460,9 @@ app.factory('announcerService', [ function announcerService () {
 		var m = d.getMinutes();
 
 		if (h <= 10) { timeOfDay = "Morning"; }
-		else if (h <= (1)) { timeOfDay = "{Lunch Time/noon time}"; dayOfTheWeek = ""; }
-		else if (h <= (4)) { timeOfDay = "after noon"; }
-		else if (h <= (8)) { timeOfDay = "evening"; }
+		else if (h <= (12 + 1)) { timeOfDay = "{Lunch Time break/noon time break}"; dayOfTheWeek = ""; }
+		else if (h <= (12 + 4)) { timeOfDay = "after noon"; }
+		else if (h <= (12 + 8)) { timeOfDay = "evening"; }
 		else if (h <= (23)) { timeOfDay = "night"; }
 
 		return dayOfTheWeek +" "+ timeOfDay;
@@ -537,20 +537,21 @@ app.factory('announcerService', [ function announcerService () {
 		}
 	}
 
-	var updateMessageReplacements = function(originalMessage, oPlayer, oTeam, oOtherTeam) {
+	var updateMessageReplacements = function(originalMessage, oValues) {
+		// oPlayer, oTeam, oOtherTeam
 		var playerName;
 		var teamName;
 		var otherTeamName;
 		try {
-			playerName = getRandomItem(oPlayer.names);
-			teamName =  oTeam.team;
-			otherTeamName =  oOtherTeam.team;
+			playerName = getRandomItem(oValues.oPlayer.names);
+			teamName =  oValues.oTeam.team;
+			otherTeamName =  oValues.oOtherTeam.team;
 		} catch(err) {
 			playerName = " ";
 			teamName =  " ";
 			otherTeamName =  " ";
-			oTeam = {"score": 0}
-			oOtherTeam = {"score": 0}
+			oValues.oTeam = {"score": 0}
+			oValues.oOtherTeam = {"score": 0}
 		}
 		
 		var teamEndsInS = (teamName.substr(-1,1) == "s");
@@ -560,12 +561,14 @@ app.factory('announcerService', [ function announcerService () {
 		debug(otherTeamName, otherTeamName.substr(-1,1), otherTeamEndsInS);
 
 		var msg = originalMessage
+			.replace(/{{winning-score}}/g, oValues["winning-score"])
+			.replace(/{{losing-score}}/g, oValues["losing-score"])
 			.replace(/{{name}}/g, playerName)
 			.replace(/{{name}}/g, playerName)
 			.replace(/{{team}}/g, teamName)
 			.replace(/{{other\-team}}/g, otherTeamName)
-			.replace(/{{team\-score}}/g, oTeam.score)
-			.replace(/{{other\-team\-score}}/g, oOtherTeam.score)
+			.replace(/{{team\-score}}/g, oValues.oTeam.score)
+			.replace(/{{other\-team\-score}}/g, oValues.oOtherTeam.score)
 			.replace(/{{team{has\|have}}}/g, (teamEndsInS ? "have" : "has"))  // The Dream Team [has]... The Avengers [have]
 			.replace(/{{team{is\|are}}}/g, (teamEndsInS ? "are" : "is"))  // The Dream Team [is]... The Avengers [are]
 			.replace(/{{team{s\|}}}/g, (teamEndsInS ? "" : "s"))  // The Dream Team score[s]... The Avengers score[]
@@ -666,7 +669,7 @@ app.factory('announcerService', [ function announcerService () {
 			var oOtherTeam = config.teams[1];
 
 
-			message     = updateMessageReplacements(message, oPlayer, oTeam, oOtherTeam)
+			message     = updateMessageReplacements(message, { oPlayer : oPlayer, oTeam : oTeam, oOtherTeam : oOtherTeam })
 			sayThis(message);
 			//todo, also announce player positions and team names and colors/sides
 
@@ -680,17 +683,18 @@ app.factory('announcerService', [ function announcerService () {
 	}
 
 	var giveGameUpdates = function() {
-		if (getSecondSince(config.timeLastAnnouncementWasMade) > 15) {
+		var secondsSinceLastAnnouncement = getSecondSince(config.timeLastAnnouncementWasMade);
+		if (secondsSinceLastAnnouncement > 15) {
 			var secondsSinceLastScore = getSecondSince(config.timeLastGoalWasScored);
 			debug("seconds since last goal: "+ secondsSinceLastScore);
 			var sayThisOptions = [];
 			var bLetSeeSomeAction = (secondsSinceLastScore > 60);
 			var bLetSeeSomeActionAllowBoos = (secondsSinceLastScore > 120);
 
-			if (config.teams[0].score == config.teams[1].score) {
+			if (config.teams[0].score == config.teams[1].score && secondsSinceLastAnnouncement > 60) {
 				// all tied up
 				//TODO: Make this happen
-				//sayThisOptions = sayThisOptions.concat(thingsToSay.gameUpdates.stillTiedUp);
+				sayThisOptions = sayThisOptions.concat(thingsToSay.gameUpdates.stillTiedUp);
 			}
 
 			if (secondsSinceLastScore > 120)  {
@@ -706,7 +710,10 @@ app.factory('announcerService', [ function announcerService () {
 						playChargeSound(bLetSeeSomeActionAllowBoos, false);
 				} else {
 					var msg = getRandomItem(sayThisOptions);
-					msg = updateMessageReplacements(msg);
+					msg = updateMessageReplacements(msg, {
+						 "winning-score": config.teams[0].score
+						,"losing-score": config.teams[0].score
+					});
 					doThis(msg);
 				}
 			}
@@ -846,6 +853,13 @@ app.factory('announcerService', [ function announcerService () {
 		var sayThisOptions = [];
 		var sayThisAlsoOptions = [];
 
+		// TODO: IF THe score took more than 120 seconds
+		// FINALLY SOMEONE SCORED
+
+		// TODO: IF the score was rapids fire
+		// Wow, another one, rapid fire...
+
+
 		// if this is the first point of the team or game
 		if (oTeam.score == 1) {
 			if (oOtherTeam.score == 0) {
@@ -948,10 +962,10 @@ app.factory('announcerService', [ function announcerService () {
 			alsoMessage = getRandomItem(sayThisAlsoOptions);			
 		}
 		var returnMessage
-		message     = updateMessageReplacements(message,     oPlayer, oTeam, oOtherTeam)
+		message     = updateMessageReplacements(message,     { oPlayer : oPlayer, oTeam : oTeam, oOtherTeam : oOtherTeam })
 		returnMessage = message;
 		if (alsoMessage) {
-			alsoMessage = updateMessageReplacements(alsoMessage, oPlayer, oTeam, oOtherTeam)
+			alsoMessage = updateMessageReplacements(alsoMessage, { oPlayer : oPlayer, oTeam : oTeam, oOtherTeam : oOtherTeam })
 			returnMessage = returnMessage +". "+ alsoMessage; 
 		}
 
