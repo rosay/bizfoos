@@ -26,14 +26,20 @@ app.factory('announcerService', [ function announcerService () {
 
 	var crowdControl = {
 		audioElement : null,
+		audioApplause : null,
 		startCrowd: function() {
 			var crowd = getSoundFile("crowd");
-			if ($("#bgAudio").length == 0)
+			if ($("#bgAudio").length == 0) {
 				$("body").append('<audio id="bgAudio" loop="loop" src="'+ crowd +'"></audio>')
-
+			}
 			crowdControl.audioElement = document.getElementById("bgAudio");
 			crowdControl.audioElement.volume = .05;
 			crowdControl.audioElement.play();
+		},
+		playApplause: function(volumeLevel) {
+			crowdControl.audioApplause = new Audio(getSoundFile("applause"));
+			crowdControl.audioApplause.volume = crowdControl.ensureSafeVolume(volumeLevel, crowdControl.audioElement.volume); // volumeLevel
+			crowdControl.audioApplause.play();
 		},
 		ensureSafeVolume: function(level, min) {
 			if (level < min) level = min;
@@ -467,6 +473,8 @@ app.factory('announcerService', [ function announcerService () {
 		var fileName = "";
 		switch (whichSound) {
 			case "crowd": fileName = "crowd.wav"; break;
+			case "applause": fileName = 'applause-' + (Math.floor(Math.random() * 1) + 1 )+ '.mp3'; break;; break;
+			case "end": fileName = 'end-of-game-' + (Math.floor(Math.random() * 1) + 1 )+ '.wav'; break;; break;
 			case "score": fileName = 'score-' + (Math.floor(Math.random() * 5) + 1 )+ '.mp3'; break;
 		}
 		return soundRootPath + fileName;
@@ -520,13 +528,18 @@ app.factory('announcerService', [ function announcerService () {
 	 	crowdControl.adjustVolume((Math.random() - .4) * .1);
 	}
 
+	var playSound = function(soundType) {
+		var sound = new Audio(getSoundFile(soundType));
+		sound.play();
+	}
 
 	var scorePoint = function(oPlayer, gameTime) {
 		// play a sound effect
-		var sound = new Audio(getSoundFile("score"));sound.play();
-
-		// make the crowd a bit louder
-		//crowdControl.adjustVolume(.4);
+		playSound("score");
+		// fake a random volumne
+		var shotPowerLevel = crowdControl.ensureSafeVolume(.25 + Math.random(), crowdControl.audioElement.volume)
+		debug(shotPowerLevel)
+		crowdControl.playApplause(shotPowerLevel); //FUTURE: Pass level 0-1 based on strength of shot
 
 		var oPlayer    = getPlayer(oPlayer);
 		var oTeam      = getTeam(oPlayer.color);
@@ -658,7 +671,7 @@ app.factory('announcerService', [ function announcerService () {
 		// put a slight delay on the announcement
 		setTimeout(function() {
 			sayThis(returnMessage);
-		}, (500 + (Math.random() * 100)));
+		}, (1500 + (shotPowerLevel * 3000)));
 
 		// return to user
 		return { "message":returnMessage };
