@@ -1,43 +1,114 @@
+// TO DO
+// player Gender
+// player NickNames
+// Team Names
+
 app.factory('announcerService', [ function announcerService () {
 	"use strict";
 
+	var soundRootPath = "sounds/"
+	if (window.location.protocol == "file:") soundRootPath = "../../../sounds/";
+		
 	var config = {
 		"pointsNeededToWin": 5,
+		"series:": 1,
 		"useTTS": true,
 		"debug": false
 	};
+
+	var weather = {
+		condition: "",
+		temperature: 42,
+		wind: 42
+	}
+
+	var tmrGameUpdates = null; // just a timer/interval that we can turn on or off if needed
+
+	var crowdControl = {
+		audioElement : null,
+		startCrowd: function() {
+			var crowd = getSoundFile("crowd");
+			if ($("#bgAudio").length == 0)
+				$("body").append('<audio id="bgAudio" loop="loop" src="'+ crowd +'"></audio>')
+
+			crowdControl.audioElement = document.getElementById("bgAudio");
+			crowdControl.audioElement.volume = .05;
+			crowdControl.audioElement.play();
+		},
+		ensureSafeVolume: function(level, min) {
+			if (level < min) level = min;
+			if (level > 1) level = 1;
+			return level
+		},
+		getVolume: function() { return crowdControl.audioElement.volume; },
+		setVolume: function(level) {
+		    debug("crowdControl.audioElement.volume:pre  = "+ crowdControl.audioElement.volume);
+		    crowdControl.audioElement.volume = crowdControl.ensureSafeVolume(level, .05);
+		    debug("crowdControl.audioElement.volume:post = "+ crowdControl.audioElement.volume);
+		},
+		adjustVolume: function(changeBy) {
+			var changeTo = crowdControl.audioElement.volume + changeBy;
+		 	debug("adjustVolume "+ changeBy + " == "+ changeTo);
+		    crowdControl.setVolume(changeTo);
+		}
+	}
 	
 	var pointHistory = [];
 	var teamScores = {};
 
-	// Options for annoncing when someone scores
-	var sayThis_PlayerScores_Game_FirstPoint = [
-		"First point of the game by {{name}}"
-		,"{{name}} {with the/starts us off with the/knocks in the/puts in the} first {score/score of the game/shot on the table}"
-		,"{{name}} with the first {score/ball in the hole}"
-		,"{{name}} break{{team{s|}}} the ice with a 1 to 0 lead"
-		,"And now {{team}} {{team{is|are}}} in the lead thanks to {{name}} with the first point"
-		//,"wav:and_another_one.wav"
-	];
+	var thingsToSay = {
+		newGame : {
+			intro : [
+				"{Welcome to/And we will start things off at/Thanks for joining us today at} the {BizStream Arena/BizStream Plex/Biz Plex/BizStream Warehouse} on this {{day-description}} {{time-of-day}} for {an excellent/a great/a fun/an exciting} {match-up/game/battle of skill/battle/competition} on the {field/table/foos ball table/playing field}."
+				//,"{Welcome to/And we will start things off at/Our game today is at} the {BizStream Areana/BizStream Plex/Biz Plex/BizStream Warehouse} on this {{day-description}} {{time-of-day}} for {an excellent/a great/a fun} {match-up/game/battle of skill/battle/competition}."
+			]
+		},
 
-	var sayThis_PlayerScores_Team_FirstPoint = [
-		"And now {{team}} is on the board with 1 point by {{name}}"
-		,"{{name}} with the first goal for {{team}}"
-		,"{{name}} put {{team}} on the board"
-		//,"wav:and_another_one.wav"
-	];
+		// Options for annoncing when someone scores
+		firstPoint : {
+			ofTheGame : [
+				"First point of the game by {{name}}"
+				,"{{name}} {with the/starts us off with the/knocks in the/puts in the} first {score/score of the game/shot on the table}"
+				,"{{name}} with the first {score/ball in the hole}"
+				,"{{team}} breaks{{team{s|}}} the ice with a 1 to 0 lead. {Great/excellent/nice} {shot/goal/point/score} {by/from} {{name}}."
+				,"{{name}} breaks the ice with a 1 to 0 lead"
+				,"And now {{team}} {{team{is|are}}} in the lead thanks to {{name}} with the first point"
+				//,"wav:and_another_one.wav"
+			],
+			ofTheTeam : [
+				"And now {{team}} {{team{is|are}}} on the board with 1 point by {{name}}"
+				,"{{name}} with the first goal for {{team}}"
+				,"{{name}} put {{team}} on the board"
+				//,"wav:and_another_one.wav"
+			],
+			ofThePlayer : [
+				"And no} {{name}} is scoring points for {{team}}"
+				,"{{name}} {has put in/with/puts in/scores/drops/sinks} his first goal for {{team}}"
+				,"{{name}} put {{team}} on the board"
+				//,"wav:and_another_one.wav"
+			]
+		},
+		playerStreak : {
+			multiplePoints : [
+				"And another shot by {{name}}"
+				,"{{name}} with another goal"
+				,"{{name}} sinks another one"
+				,"{{name}} drops another one"
+				//,"wav:and_another_one.wav"
+			],
+			twoPoints : [
+				 "That's two in a row by {{name}}"
+				 ,"{{name}} {knocks/smacks/hits} another one in, {he has/that's/that makes} 2 in a row."
+				//,"wav:and_another_one.wav"
+			]
+		}
+	}
+
 
 	var sayThis_PlayerScores_Player_MultiplePointStreak = [
-		"And another shot by {{name}}"
-		,"{{name}} with another goal"
-		,"{{name}} sinks another one"
-		,"{{name}} drops another one"
-		//,"wav:and_another_one.wav"
 	];
 
 	var sayThis_PlayerScores_Player_2PointStreak = [
-		 "That's two in a row by {{name}}"
-		//,"wav:and_another_one.wav"
 	];
 
 	var sayThis_PlayerScores_Player_3PointStreak = [
@@ -174,8 +245,8 @@ app.factory('announcerService', [ function announcerService () {
 	];
 
 	var sayThis_PlayerScores_Game_FinalPoint_Other = [
-		"{{name}} {puts in/with/drops in/knocks in/scores/sinks} the final {point/score/goal} against {{other-team}} giving {{team}} yet another {{team-score}} to {{other-team-score}} {victory/win}."
-		,"And the ends the game for {{other-team}}, giving {{team}} yet another {victory/win}. The final score is {{team-score}} to {{other-team-score}}."
+		"{{name}} {puts in/with/drops in/knocks in/scores/sinks} the final {point/score/goal} against {{other-team}} giving {{team}} yet another {victory/win} with a final score of {{team-score}} to {{other-team-score}}."
+		,"And {that ends/that is the end of} the game for {{other-team}}, giving {{team}} yet another {victory/win}. The final score is {{team-score}} to {{other-team-score}}."
 		,"{And that is the end of the game/And that's all folks/And that brings this game to a conclusion}. {{other-team}} has been {beaten/defeated} by {{team}} with a {{team-score}} to {{other-team-score}} {victory/win}."
 		//,"wav:and_another_one.wav"
 	];
@@ -211,11 +282,7 @@ app.factory('announcerService', [ function announcerService () {
 	var getPlayer = function(oFilter) {
 		var matchingPlayer;
 		config.players.forEach(function(player) {
-			//console.log(player)
-			//console.log(oFilter)
 		    if (player.playerid == oFilter.playerid)
-		    	matchingPlayer = player;
-		    if (player.color == oFilter.color && player.position == oFilter.position)
 		    	matchingPlayer = player;
 		});
 		return matchingPlayer;
@@ -237,6 +304,94 @@ app.factory('announcerService', [ function announcerService () {
 		return matchingTeam;
 	}
 
+	var getMessageTimeOfDay = function() {
+		var d = new Date();
+		var weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+
+		var dayOfTheWeek = weekday[d.getDay()];
+		var timeOfDay = "";
+
+		var h = d.getHours();
+		var m = d.getMinutes();
+
+		if (h <= 10) { timeOfDay = "Morning"; }
+		else if (h <= (1)) { timeOfDay = "{Lunch Time/noon time}"; dayOfTheWeek = ""; }
+		else if (h <= (4)) { timeOfDay = "after noon"; }
+		else if (h <= (8)) { timeOfDay = "evening"; }
+		else if (h <= (23)) { timeOfDay = "night"; }
+
+		return dayOfTheWeek +" "+ timeOfDay;
+	}
+
+	var updateLocalEnviromentInfo = function(doThisWhenDone) {
+		//http://api.openweathermap.org/data/2.5/weather?q=Allendale,MI		
+		$.get("http://api.openweathermap.org/data/2.5/weather", {q:"Allendale,MI"}, function(r) {
+			debug(r);
+			weather.temperature = ((9/5)*(r.main.temp - 273.15)) + 32; // K to F
+			weather.wind = r.wind.speed *  2.2369362920544; // mps to MPH
+			weather.condition = r.weather;
+			debug(weather);
+
+			doThisWhenDone();
+		})
+	}
+
+	var getMessageDayDescription = function() {
+		// http://www.openweathermap.org/weather-data#current
+		// http://www.openweathermap.org/weather-conditions
+		var temp = ""; 
+		var wind = "";
+		var cond = [];
+		if (weather.temperature < 0) temp = "{bloody freezing/ridiculously cold}";
+		else if (weather.temperature <= 10) temp = "freezing";
+		else if (weather.temperature <= 40) temp = "{cold/wintery}"; // yes, I put in the empty option on purpose
+		else if (weather.temperature >= 100) temp = "{scorching hot/ridiculously hot}";
+		else if (weather.temperature >= 90) temp = "{toasty/hot}";
+		else if (weather.temperature >= 85) temp = "hot";
+		else if (weather.temperature >= 80) temp = "summer";
+		else if (weather.temperature >= 70) temp = "warm";
+
+		if (weather.wind <= 5) wind = "";
+		else if (weather.wind <= 10) wind = "windy";
+		else if (weather.wind <= 20) wind = "windy/gusty";
+		else if (weather.wind <= 30) wind = "ridiculously windy";
+		if (wind != "") cond.push(wind);
+
+		if (weather.condition.length > 0) {
+			weather.condition.forEach(function(c) {
+				if (/overcast/.test(c.description)) cond.push("overcast"); 
+				else if (/cloud/.test(c.description)) cond.push("partly cloduy"); 
+				else if (/clear sky/.test(c.description)) cond.push("sunny");
+				else if (/heavy.*snow/.test(c.description)) cond.push("riduclusly snowy");
+				else if (/snow/.test(c.description)) cond.push("snowy");
+				else if (/sleet/.test(c.description)) cond.push("nasty");
+				else if (/heavy.*rain/.test(c.description)) cond.push("riduclusly rainy/riduclusly wet");
+				else if (/rain/.test(c.description)) cond.push("rainy/wet");
+				else if (/drizzle/.test(c.description)) cond.push("wet");
+				else if (/thunderstorm/.test(c.description)) cond.push("stormy");
+			});
+
+			debug(cond)
+			cond = "{"+ cond.join("/") +"}";
+		}
+		if (cond != "") cond = ", "+ cond;
+
+		// cold, windy, wet
+		// warm, sunny
+		// cold
+		// if both have a value...
+		if (temp != "" && cond != "") {
+			if (Math.random() > .5)
+				return (temp + cond);
+			else if (Math.random() > .5)
+				return (temp);
+			else  
+				return (cond);
+		} else {
+			return (temp + cond);
+		}
+	}
+
 	var updateMessageReplacements = function(originalMessage, oPlayer, oTeam, oOtherTeam) {
 		var playerName = getRandomItem(oPlayer.names);
 		var teamName =  oTeam.team;
@@ -251,6 +406,7 @@ app.factory('announcerService', [ function announcerService () {
 
 		var msg = originalMessage
 			.replace(/{{name}}/g, playerName)
+			.replace(/{{name}}/g, playerName)
 			.replace(/{{team}}/g, teamName)
 			.replace(/{{other\-team}}/g, otherTeamName)
 			.replace(/{{team\-score}}/g, oTeam.score)
@@ -263,6 +419,14 @@ app.factory('announcerService', [ function announcerService () {
 			.replace(/{{other\-team{s\|}}}/g, (otherTeamEndsInS ? "" : "s"))  // The Dream Team score[s]... The Avengers score[]
 			;
 
+		//check for any "calculated replacements"
+		if (/time\-of\-day/.test(msg)) {
+			msg = msg.replace(/{{time\-of\-day}}/g, getMessageTimeOfDay());
+		}
+		if (/day\-description/.test(msg)) {
+			msg = msg.replace(/{{day\-description}}/g, getMessageDayDescription());
+		}
+
 		// find each set of curly braces
 		debug('Prefiltered Message: ' + msg)
 		var aRandomReplacements = msg.match(/{(.*?)}/g);
@@ -273,18 +437,21 @@ app.factory('announcerService', [ function announcerService () {
 				msg = msg.replace(item, replacements[Math.floor(Math.random() * replacements.length) ]);
 			});
 		}
+
 		debug('Message: ' + msg)
+
+
 
 		return msg;
 	}
 
 	var updateStreaks = function(oPlayer, oTeam, oOtherTeam) {
-		oPlayer.pointStreak = (oPlayer.pointStreak ? oPlayer.pointStreak+1 : 1);
+		oPlayer.pointStreak++;
 		oTeam.pointStreak++;
-		oOtherTeam.pointStreak = 0;
 
+		oOtherTeam.pointStreak = 0;
 		config.players.forEach(function(player) {
-		    if (!(player.color == oPlayer.color && player.position == oPlayer.position))
+		    if (player.playerid != oPlayer.playerid)
 		    	player.pointStreak = 0;
 		});
 
@@ -296,7 +463,75 @@ app.factory('announcerService', [ function announcerService () {
 		return aData[Math.floor(Math.random()*aData.length)];
 	}
 
+	var getSoundFile = function(whichSound) {
+		var fileName = "";
+		switch (whichSound) {
+			case "crowd": fileName = "crowd.wav"; break;
+			case "score": fileName = 'score-' + (Math.floor(Math.random() * 5) + 1 )+ '.mp3'; break;
+		}
+		return soundRootPath + fileName;
+	}
+
+	var resetGame = function() {
+		if (tmrGameUpdates != null)
+			clearInterval(tmrGameUpdates);
+
+		config.teams.forEach(function(team) {
+			team.score = 0;
+			team.pointStreak = 0;
+		});
+
+		config.players.forEach(function(player) {
+			player.score = 0;
+			player.pointStreak = 0;
+		});
+	}
+
+	var endGame = function() {
+
+	}
+
+	var newGame = function(c) {
+		resetGame();
+		// do sound effects
+		crowdControl.startCrowd();
+
+		// can't make the welcome announcement until we load the weather data
+		updateLocalEnviromentInfo(function(){
+			// when all of the local enviroment info is updated, now we can start the game
+			var sayThisOptions = [];
+			sayThisOptions = sayThisOptions.concat(thingsToSay.newGame.intro);
+
+			var message = getRandomItem(sayThisOptions);
+
+			var oPlayer    = config.players[0]; // first random player
+			var oTeam      = config.teams[0];
+			var oOtherTeam = config.teams[1];
+
+
+			message     = updateMessageReplacements(message, oPlayer, oTeam, oOtherTeam)
+			sayThis(message);
+			tmrGameUpdates = setInterval(giveGameUpdates, 5000);
+		});
+	}
+
+	var giveGameUpdates = function() {
+		// goal -.04 to .06
+	 	crowdControl.adjustVolume((Math.random() - .4) * .1);
+	}
+
+
 	var scorePoint = function(oPlayer, gameTime) {
+		// play a sound effect
+
+		var pointFile = getSoundFile("score");
+		debug(pointFile)
+
+		var sound = new Audio(pointFile);
+
+		// make the crowd a bit louder
+		//crowdControl.adjustVolume(.4);
+
 		var oPlayer    = getPlayer(oPlayer);
 		var oTeam      = getTeam(oPlayer.color);
 		var oOtherTeam = getTeam(oPlayer.color, true);
@@ -305,6 +540,8 @@ app.factory('announcerService', [ function announcerService () {
 		//if (config.debug) console.log("oOtherTeam", oOtherTeam);
 		updateStreaks(oPlayer, oTeam, oOtherTeam);
 		
+		// update player score
+		oPlayer.score++;
 		// update team score
 		oTeam.score++;
 
@@ -312,10 +549,14 @@ app.factory('announcerService', [ function announcerService () {
 		var sayThisOptions = [];
 		var sayThisAlsoOptions = [];
 
-		// if this is the first point of the game
-		if (pointHistory.length == 0) {
-			sayThisOptions = sayThisOptions.concat(sayThis_PlayerScores_Game_FirstPoint);
-		} 
+		// if this is the first point of the team or game
+		if (oTeam.score == 1) {
+			if (oOtherTeam.score == 0) {
+				sayThisOptions = sayThisOptions.concat(thingsToSay.firstPoint.ofTheGame);
+			} else {
+				sayThisOptions = sayThisOptions.concat(thingsToSay.firstPoint.ofTheTeam);
+			}
+		}
 
 		// STREAKS!!!
 		// If a player is streaking, note that FIRST
@@ -403,8 +644,8 @@ app.factory('announcerService', [ function announcerService () {
 
 		var message = getRandomItem(sayThisOptions);
 		var alsoMessage;
-		debug("sayThisAlsoOptions.length", sayThisAlsoOptions.length)
-		if (sayThisAlsoOptions.length > 0) {
+		//debug("sayThisAlsoOptions.length: "+ sayThisAlsoOptions.length)
+		if (sayThisAlsoOptions && sayThisAlsoOptions.length > 0) {
 			alsoMessage = getRandomItem(sayThisAlsoOptions);			
 		}
 		var returnMessage
@@ -418,32 +659,68 @@ app.factory('announcerService', [ function announcerService () {
 		// add to point history array
 		pointHistory.push({ "player": oPlayer, "time": gameTime});
 
-
-		sayThis(returnMessage);
+		// put a slight delay on the announcement
+		setTimeout(function() {
+			sayThis(returnMessage);
+		}, (500 + (Math.random() * 100)));
 
 		// return to user
 		return { "message":returnMessage };
 	}
 
+	var voiceTest = function() {
+		//sayThis("Kevin Stachura");
+		//sayThis("Big Red");
+		//sayThis("Sterling Heibeck");
+		sayThis("Nick Beukema");
+		sayThis("The Sterl");
+		sayThis("The Ninja");
+	}
+
+	var doWordFixes = function(msg) {
+		return msg.replace(/BizStream/g, "Biz Stream")
+			.replace(/The Sterl/g, "The Sturl")
+			.replace(/Beukema/g, "Beukuma")
+		;
+	}
+
 	var sayThis = function(message) {
 		//alert(config.useTTS)
 		if (config.useTTS) {
-			if (config.debug) console.log("sayThis: ", message);
-			window.speechSynthesis.speak(
-				new SpeechSynthesisUtterance(message)
-			);
+			debug("sayThis: "+ message);
+			message = doWordFixes(message);
+			debug("sayThis: "+ message);
+			var msg = new SpeechSynthesisUtterance(message);
+			msg.lang = 'en-GB'; //translates on the fly - soooo awesome (japanese is the funniest)
+
+			var originalVolume = crowdControl.getVolume();
+			msg.onend = function(e) {
+				debug("restore the volume...");
+				crowdControl.setVolume(originalVolume);
+			};
+
+
+			//msg.volume = 1; // 0 to 1
+			//msg.rate = 1; // 0.1 to 10
+			//msg.pitch = 2; //0 to 2
+			//msg.voice = 'Hysterical'; // this seems to do nothing
+			debug("lower volume for speaking...");
+			crowdControl.setVolume(crowdControl.ensureSafeVolume(originalVolume-.5, 0.05));
+			window.speechSynthesis.speak(msg);
 		}
+	}
+
+	var dumpVoices = function() {
+		speechSynthesis.getVoices().forEach(function(voice) {
+			console.log(voice.name, voice.default ? '(default)' :'');
+		});
 	}
 
 	var init = function(c) {
 		debug(c);
 		config = MergeRecursive(config, c);
 
-		config.teams.forEach(function(team) {
-			team.score = 0;
-			team.pointStreak = 0;
-		});
-
+		newGame(); 
 
 		debug(config);
 	}
@@ -452,6 +729,10 @@ app.factory('announcerService', [ function announcerService () {
 		if(config.debug){
 			console.log(item);
 		}
+	}
+
+	var textExport = function() {
+
 	}
 
 
@@ -463,6 +744,8 @@ app.factory('announcerService', [ function announcerService () {
 		getRandomItem: getRandomItem,
 		scorePoint: scorePoint,
 		sayThis: sayThis,
+		voiceTest: voiceTest,
+		textExport: textExport,
 		init: init
 	};
 

@@ -12,6 +12,10 @@ jQuery(function($) {
 		$("#log").append("<div>"+ d.toLocaleTimeString() +": "+ $gameClock.text() +": "+ msg +"</Div>");
 	}
 
+	$("#doVoiceTest").click(function() {
+		smartAnnouncer.voiceTest();
+	});
+
 	$("#newGame").click(function() {
 		gameSeconds = 0;
 		addToLog("New Game Started");
