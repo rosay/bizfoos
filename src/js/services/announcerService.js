@@ -36,8 +36,8 @@ app.factory('announcerService', [ function announcerService () {
 			crowdControl.audioElement.volume = .05;
 			crowdControl.audioElement.play();
 		},
-		playApplause: function(volumeLevel) {
-			crowdControl.audioApplause = new Audio(getSoundFile("applause"));
+		playApplause: function(soundType, volumeLevel) {
+			crowdControl.audioApplause = new Audio(getSoundFile(soundType));
 			crowdControl.audioApplause.volume = crowdControl.ensureSafeVolume(volumeLevel, crowdControl.audioElement.volume); // volumeLevel
 			crowdControl.audioApplause.play();
 		},
@@ -469,17 +469,6 @@ app.factory('announcerService', [ function announcerService () {
 		return aData[Math.floor(Math.random()*aData.length)];
 	}
 
-	var getSoundFile = function(whichSound) {
-		var fileName = "";
-		switch (whichSound) {
-			case "crowd": fileName = "crowd.wav"; break;
-			case "applause": fileName = 'applause-' + (Math.floor(Math.random() * 1) + 1 )+ '.mp3'; break;; break;
-			case "end": fileName = 'end-of-game-' + (Math.floor(Math.random() * 1) + 1 )+ '.wav'; break;; break;
-			case "score": fileName = 'score-' + (Math.floor(Math.random() * 5) + 1 )+ '.mp3'; break;
-		}
-		return soundRootPath + fileName;
-	}
-
 	var resetGame = function() {
 		if (tmrGameUpdates != null)
 			clearInterval(tmrGameUpdates);
@@ -496,6 +485,9 @@ app.factory('announcerService', [ function announcerService () {
 	}
 
 	var endGame = function() {
+
+
+
 
 	}
 
@@ -528,31 +520,52 @@ app.factory('announcerService', [ function announcerService () {
 	 	crowdControl.adjustVolume((Math.random() - .4) * .1);
 	}
 
+	var getSoundFile = function(whichSound) {
+		var fileName = "";
+		switch (whichSound) {
+			case "crowd": fileName = "crowd.wav"; break;
+			case "applause": fileName = 'applause-' + (Math.floor(Math.random() * 3) + 1 )+ '.wav'; break;; break;
+			case "end": fileName = 'end-of-game-' + (Math.floor(Math.random() * 1) + 1 )+ '.wav'; break;; break;
+			case "score": fileName = 'score-' + (Math.floor(Math.random() * 5) + 1 )+ '.mp3'; break;
+			case "win": fileName = 'win-' + (Math.floor(Math.random() * 1) + 1 )+ '.mp3'; break;
+		}
+		return soundRootPath + fileName;
+	}
+
 	var playSound = function(soundType) {
 		var sound = new Audio(getSoundFile(soundType));
 		sound.play();
 	}
 
 	var scorePoint = function(oPlayer, gameTime) {
-		// play a sound effect
-		playSound("score");
-		// fake a random volumne
-		var shotPowerLevel = crowdControl.ensureSafeVolume(.25 + Math.random(), crowdControl.audioElement.volume)
-		debug(shotPowerLevel)
-		crowdControl.playApplause(shotPowerLevel); //FUTURE: Pass level 0-1 based on strength of shot
-
 		var oPlayer    = getPlayer(oPlayer);
 		var oTeam      = getTeam(oPlayer.color);
 		var oOtherTeam = getTeam(oPlayer.color, true);
 
-		//if (config.debug) console.log("oTeam", oTeam);
-		//if (config.debug) console.log("oOtherTeam", oOtherTeam);
+		oTeam.score++;   // update team score
+		oPlayer.score++; // update player score
+
+		// fake a random volumne
+		var gameCompleteMessageDelay = 0;
+		var shotPowerLevel = crowdControl.ensureSafeVolume(.25 + Math.random(), crowdControl.audioElement.volume)
+		debug(shotPowerLevel)
+
+		// play a sound effect
+		if (oTeam.score == config.pointsNeededToWin) {
+			playSound("win");
+			crowdControl.playApplause("applause", shotPowerLevel); //FUTURE: Pass level 0-1 based on strength of shot
+			//crowdControl.playApplause("end-of-game", .6); //FUTURE: Pass level 0-1 based on strength of shot
+			//gameCompleteMessageDelay = 5000;
+		}
+		else {
+			playSound("score");
+			crowdControl.playApplause("applause", shotPowerLevel); //FUTURE: Pass level 0-1 based on strength of shot
+			gameCompleteMessageDelay = shotPowerLevel;
+		}
+
+
 		updateStreaks(oPlayer, oTeam, oOtherTeam);
 		
-		// update player score
-		oPlayer.score++;
-		// update team score
-		oTeam.score++;
 
 		// array to be used to load random options of messages
 		var sayThisOptions = [];
