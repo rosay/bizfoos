@@ -486,16 +486,20 @@ app.factory('announcerService', [ function announcerService () {
 
 	var endGame = function() {
 
-
-
-
 	}
 
 	var newGame = function(c) {
 		resetGame();
 		// do sound effects
 		crowdControl.startCrowd();
+		
+		playSound("intro");
 
+		// give it a small delay to the the intro play
+		setTimeout(speakOpeneingMessage, 5000);
+	}
+
+	var speakOpeneingMessage = function() {
 		// can't make the welcome announcement until we load the weather data
 		updateLocalEnviromentInfo(function(){
 			// when all of the local enviroment info is updated, now we can start the game
@@ -523,11 +527,15 @@ app.factory('announcerService', [ function announcerService () {
 	var getSoundFile = function(whichSound) {
 		var fileName = "";
 		switch (whichSound) {
-			case "crowd": fileName = "crowd.wav"; break;
-			case "applause": fileName = 'applause-' + (Math.floor(Math.random() * 3) + 1 )+ '.wav'; break;; break;
-			case "end": fileName = 'end-of-game-' + (Math.floor(Math.random() * 1) + 1 )+ '.wav'; break;; break;
-			case "score": fileName = 'score-' + (Math.floor(Math.random() * 5) + 1 )+ '.mp3'; break;
-			case "win": fileName = 'win-' + (Math.floor(Math.random() * 1) + 1 )+ '.mp3'; break;
+			// http://soundbible.com/tags-crowd.html
+			case "intro": 	 fileName = "intro.wav"; break;
+			case "crowd": 	 fileName = "crowd.wav"; break;
+			case "applause": fileName = 'applause-' + (Math.floor(Math.random() * 5) + 1 )+ '.wav'; break;; break;
+			case "boo": 	 fileName = 'boo-' + (Math.floor(Math.random() * 5) + 1 )+ '.wav'; break;; break;
+			case "charge": 	 fileName = 'cheering-charge-' + (Math.floor(Math.random() * 1) + 1 )+ '.wav'; break;; break;
+			case "end": 	 fileName = 'end-of-game-' + (Math.floor(Math.random() * 1) + 1 )+ '.wav'; break;; break;
+			case "score": 	 fileName = 'score-' + (Math.floor(Math.random() * 6) + 1 )+ '.mp3'; break;
+			case "win": 	 fileName = 'win-' + (Math.floor(Math.random() * 1) + 1 )+ '.mp3'; break;
 		}
 		return soundRootPath + fileName;
 	}
@@ -559,7 +567,10 @@ app.factory('announcerService', [ function announcerService () {
 		}
 		else {
 			playSound("score");
-			crowdControl.playApplause("applause", shotPowerLevel); //FUTURE: Pass level 0-1 based on strength of shot
+			if (Math.random() >.3)
+				crowdControl.playApplause("applause", shotPowerLevel); //FUTURE: Pass level 0-1 based on strength of shot
+			else // 1/3 you get boo'd
+				crowdControl.playApplause("boo", shotPowerLevel); //FUTURE: Pass level 0-1 based on strength of shot
 			gameCompleteMessageDelay = shotPowerLevel;
 		}
 
@@ -616,6 +627,7 @@ app.factory('announcerService', [ function announcerService () {
 			if (oTeam.score == 4) {
 				// empty any previous entries, this is imporant :)
 				sayThisOptions = sayThis_PlayerScores_Team_ShutOutAlert;
+				setTimeout(function(){ playSound("charge");}, 15000);
 			} else if (oTeam.score >= 2) {
 				sayThisOptions = sayThis_PlayerScores_Team_ApporachingShutOutMoreThan2Points;
 			}
@@ -627,6 +639,7 @@ app.factory('announcerService', [ function announcerService () {
 			if (oOtherTeam.score == oTeam.score) {
 				if (oOtherTeam.score == 4) {
 					sayThisAlsoOptions = sayThis_PlayerScores_ReportTiedScoreNextPointWins;
+					setTimeout(function(){ playSound("charge");}, 15000);
 				} else {
 					sayThisAlsoOptions = this.sayThis_PlayerScores_ReportTiedScore;
 				}
