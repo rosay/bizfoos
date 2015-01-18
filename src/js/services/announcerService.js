@@ -5,6 +5,8 @@
 
 // announce player positions and the home team (yellow) and the away team (black)
 
+// todo: simulate noise levels
+
 app.factory('announcerService', [ function announcerService () {
 	"use strict";
 
@@ -187,9 +189,10 @@ app.factory('announcerService', [ function announcerService () {
 				"{Welcome to/And we will start things off at/Thanks for joining us today at} the {BizStream Arena/BizStream Plex/Biz Plex/BizStream Warehouse} on this {{day-description}} {{time-of-day}} for {an excellent/a great/a fun/an exciting} {match-up/game/battle of skill/battle/competition} on the {field/table/foos ball table/playing field}."
 				//,"{Welcome to/And we will start things off at/Our game today is at} the {BizStream Areana/BizStream Plex/Biz Plex/BizStream Warehouse} on this {{day-description}} {{time-of-day}} for {an excellent/a great/a fun} {match-up/game/battle of skill/battle/competition}."
 			],
+			// yellow-team, black-team, yellow-d, yellow-o, black-d, black-o
 			teamsAndPlayersIntro : [
-				"For today's match-up we have {{{yellow-team}}}/{{yellow-player-o}}} and {{yellow-player-d}}} on the {yellow/home} team. And on the {black/away} team we have {{black-player-o}} and {{black-player-d}}. {{black-player-o}} will be playing offense for the yellow team and {{yellow-player-d}} will be {playing defense/defending the goals}"
-				,""
+				"For today's match-up we have {{{yellow-team}}/{{yellow-o}} and {{yellow-d}}} on the {yellow/home} team. And on the {black/away} team we have {{black-o}} and {{black-d}}. {{black-o}} will be playing offense for the yellow team and {{yellow-d}} will be {playing defense/defending the goals}"
+				//,""
 			]
 		},
 
@@ -561,8 +564,14 @@ app.factory('announcerService', [ function announcerService () {
 		debug(otherTeamName, otherTeamName.substr(-1,1), otherTeamEndsInS);
 
 		var msg = originalMessage
-			.replace(/{{winning-score}}/g, oValues["winning-score"])
-			.replace(/{{losing-score}}/g, oValues["losing-score"])
+			.replace(/{{winning\-score}}/g, oValues["winning-score"])
+			.replace(/{{losing\-score}}/g, oValues["losing-score"])
+			.replace(/{{yellow\-team}}/g, oValues["yellow-team"])
+			.replace(/{{black\-team}}/g, oValues["black-team"])
+			.replace(/{{yellow\-d}}/g, oValues["yellow-d"])
+			.replace(/{{black\-d}}/g, oValues["black-d"])
+			.replace(/{{yellow\-o}}/g, oValues["yellow-o"])
+			.replace(/{{black\-o}}/g, oValues["black-o"])
 			.replace(/{{name}}/g, playerName)
 			.replace(/{{name}}/g, playerName)
 			.replace(/{{team}}/g, teamName)
@@ -659,19 +668,22 @@ app.factory('announcerService', [ function announcerService () {
 		// can't make the welcome announcement until we load the weather data
 		updateLocalEnviromentInfo(function(){
 			// when all of the local enviroment info is updated, now we can start the game
-			var sayThisOptions = [];
-			sayThisOptions = sayThisOptions.concat(thingsToSay.newGame.intro);
-
-			var message = getRandomItem(sayThisOptions);
-
-			var oPlayer    = config.players[0]; // first random player
-			var oTeam      = config.teams[0];
-			var oOtherTeam = config.teams[1];
-
-
-			message     = updateMessageReplacements(message, { oPlayer : oPlayer, oTeam : oTeam, oOtherTeam : oOtherTeam })
+			var message = getRandomItem(thingsToSay.newGame.intro);
+			message     = updateMessageReplacements(message, {})
 			sayThis(message);
+
 			//todo, also announce player positions and team names and colors/sides
+			message = getRandomItem(thingsToSay.newGame.teamsAndPlayersIntro);
+			message = updateMessageReplacements(message, {
+				// yellow-team, black-team, yellow-d, yellow-o, black-d, black-o
+				"yellow-team": getTeam("yellow").team,
+				"yellow-o": "Mark",
+				"yellow-d": "Sterling",
+				"black-team": getTeam("black").team,
+				"black-o": "Adam",
+				"black-d": "Albert",
+			});
+			//sayThis(message);
 
 			tmrGameUpdates = setInterval(giveGameUpdates, 7000);
 		});
