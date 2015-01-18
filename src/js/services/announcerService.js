@@ -63,6 +63,7 @@ app.factory('announcerService', [ function announcerService () {
 	var teamScores = {};
 
 	var thingsToSay = {
+		//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		newGame : {
 			intro : [
 				"{Welcome to/And we will start things off at/Thanks for joining us today at} the {BizStream Arena/BizStream Plex/Biz Plex/BizStream Warehouse} on this {{day-description}} {{time-of-day}} for {an excellent/a great/a fun/an exciting} {match-up/game/battle of skill/battle/competition} on the {field/table/foos ball table/playing field}."
@@ -70,6 +71,7 @@ app.factory('announcerService', [ function announcerService () {
 			]
 		},
 
+		//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// Options for annoncing when someone scores
 		firstPoint : {
 			ofTheGame : [
@@ -107,7 +109,29 @@ app.factory('announcerService', [ function announcerService () {
 				 ,"{{name}} {knocks/smacks/hits} another one in, {he has/that's/that makes} 2 in a row."
 				//,"wav:and_another_one.wav"
 			]
+		},
+
+		//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		// Options for annoncing throughout the game
+		gameUpdates : {
+			noScoreFor60Seconds : [
+				"Someone {needs to/has to/should try to} get a {goal/point/score} in"
+				,"Let's see {some action/a point/a goal/someone score/someone put the ball in the hole}"
+				,"sound:boo"
+				,"sound:airhorn.wav"
+			],
+
+			noScoreFor120Seconds : [
+				"{Holy cow/Wow/Really}! Someone {needs to/has to/should try to} get a {goal/point/score} in"
+				,"Let's see {some action/a point/a goal/someone score/someone put the ball in the hole}"
+				,"sound:boo"
+				,"sound:charge"
+				,"sound:airhorn.wav"
+			]
 		}
+
+		//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 	}
 
 
@@ -269,20 +293,6 @@ app.factory('announcerService', [ function announcerService () {
 	// "That point took some time, {{name}} should get extra points for that shot"
 
 
-
-	// Options for annoncing throughout the game
-	var sayThis_NoScoreFor60Seconds = [
-		"Someone needs to get a goal in"
-		,"Let's see some action"
-		//,"wav:boo.wav"
-	];
-
-	var sayThis_NoScoreFor120Seconds = [
-		"You need to work for this point"
-		//,"wav:boo.wav"
-	];
-
-
 	// Functions
 
 	var getPlayer = function(oFilter) {
@@ -399,11 +409,21 @@ app.factory('announcerService', [ function announcerService () {
 	}
 
 	var updateMessageReplacements = function(originalMessage, oPlayer, oTeam, oOtherTeam) {
-		var playerName = getRandomItem(oPlayer.names);
-		var teamName =  oTeam.team;
-		var otherTeamName =  oOtherTeam.team;
-
-
+		var playerName;
+		var teamName;
+		var otherTeamName;
+		try {
+			playerName = getRandomItem(oPlayer.names);
+			teamName =  oTeam.team;
+			otherTeamName =  oOtherTeam.team;
+		} catch(err) {
+			playerName = " ";
+			teamName =  " ";
+			otherTeamName =  " ";
+			oTeam = {"score": 0}
+			oOtherTeam = {"score": 0}
+		}
+		
 		var teamEndsInS = (teamName.substr(-1,1) == "s");
 		var otherTeamEndsInS = (otherTeamName.substr(-1,1) == "s");
 
@@ -433,8 +453,8 @@ app.factory('announcerService', [ function announcerService () {
 			msg = msg.replace(/{{day\-description}}/g, getMessageDayDescription());
 		}
 
-		// find each set of curly braces
 		debug('Prefiltered Message: ' + msg)
+		// find each set of curly braces
 		var aRandomReplacements = msg.match(/{(.*?)}/g);
 		if (aRandomReplacements && aRandomReplacements.length > 0) {
 			aRandomReplacements.forEach(function(item) {
@@ -473,6 +493,10 @@ app.factory('announcerService', [ function announcerService () {
 		if (tmrGameUpdates != null)
 			clearInterval(tmrGameUpdates);
 
+		config.gameStartTime = new Date();
+		config.timeLastGoalWasScored = config.gameStartTime;
+		config.timeLastAnnouncementWasMade = config.gameStartTime;
+
 		config.teams.forEach(function(team) {
 			team.score = 0;
 			team.pointStreak = 0;
@@ -496,10 +520,10 @@ app.factory('announcerService', [ function announcerService () {
 		playSound("intro");
 
 		// give it a small delay to the the intro play
-		setTimeout(speakOpeneingMessage, 5000);
+		setTimeout(speakOpeningMessage, 5000);
 	}
 
-	var speakOpeneingMessage = function() {
+	var speakOpeningMessage = function() {
 		// can't make the welcome announcement until we load the weather data
 		updateLocalEnviromentInfo(function(){
 			// when all of the local enviroment info is updated, now we can start the game
@@ -515,11 +539,35 @@ app.factory('announcerService', [ function announcerService () {
 
 			message     = updateMessageReplacements(message, oPlayer, oTeam, oOtherTeam)
 			sayThis(message);
+			//todo, also announce player positions and team names and colors/sides
+
 			tmrGameUpdates = setInterval(giveGameUpdates, 5000);
 		});
 	}
 
+	var getSecondSince = function(dateSinceWhen) {
+		var now = new Date();
+		return (now.getTime() - dateSinceWhen.getTime()) / 1000;
+	}
+
 	var giveGameUpdates = function() {
+		if (getSecondSince(config.timeLastAnnouncementWasMade) > 30) {
+			var secondsSinceLastScore = getSecondSince(config.timeLastGoalWasScored);
+			debug("seconds since last goal: "+ secondsSinceLastScore);
+			var sayThisOptions = [];
+			if (secondsSinceLastScore > 120)  {
+				sayThisOptions = sayThisOptions.concat(thingsToSay.gameUpdates.noScoreFor120Seconds);
+			} else if (secondsSinceLastScore > 60)  {
+				sayThisOptions = sayThisOptions.concat(thingsToSay.gameUpdates.noScoreFor60Seconds);
+			}
+			if (sayThisOptions && sayThisOptions.length > 0) {
+				var msg = getRandomItem(sayThisOptions);
+				msg = updateMessageReplacements(msg);
+				doThis(msg);
+			}
+
+
+		}
 		// goal -.04 to .06
 	 	crowdControl.adjustVolume((Math.random() - .4) * .1);
 	}
@@ -536,6 +584,7 @@ app.factory('announcerService', [ function announcerService () {
 			case "end": 	 fileName = 'end-of-game-' + (Math.floor(Math.random() * 1) + 1 )+ '.wav'; break;; break;
 			case "score": 	 fileName = 'score-' + (Math.floor(Math.random() * 6) + 1 )+ '.mp3'; break;
 			case "win": 	 fileName = 'win-' + (Math.floor(Math.random() * 1) + 1 )+ '.mp3'; break;
+			default: fileName = whichSound;
 		}
 		return soundRootPath + fileName;
 	}
@@ -553,6 +602,10 @@ app.factory('announcerService', [ function announcerService () {
 		oTeam.score++;   // update team score
 		oPlayer.score++; // update player score
 
+		config.timeLastGoalWasScored = new Date(); // update last point
+		oTeam.timeLastGoalWasScored = config.timeLastGoalWasScored;
+		oPlayer.timeLastGoalWasScored = config.timeLastGoalWasScored;
+
 		// fake a random volumne
 		var gameCompleteMessageDelay = 0;
 		var shotPowerLevel = crowdControl.ensureSafeVolume(.25 + Math.random(), crowdControl.audioElement.volume)
@@ -567,8 +620,15 @@ app.factory('announcerService', [ function announcerService () {
 		}
 		else {
 			playSound("score");
-			if (Math.random() >.3)
+			if (Math.random() >.3) {
 				crowdControl.playApplause("applause", shotPowerLevel); //FUTURE: Pass level 0-1 based on strength of shot
+
+				// occasionally, play another random sound
+				if (Math.random() <.2) {
+					//10 to 20 secnds in the future
+					setTimeout(function() { playSound("applause") }, 10000 + (Math.random() * 10000));
+				}
+			}
 			else // 1/3 you get boo'd
 				crowdControl.playApplause("boo", shotPowerLevel); //FUTURE: Pass level 0-1 based on strength of shot
 			gameCompleteMessageDelay = shotPowerLevel;
@@ -696,7 +756,7 @@ app.factory('announcerService', [ function announcerService () {
 
 		// put a slight delay on the announcement
 		setTimeout(function() {
-			sayThis(returnMessage);
+			doThis(returnMessage);
 		}, (1500 + (shotPowerLevel * 3000)));
 
 		// return to user
@@ -717,6 +777,15 @@ app.factory('announcerService', [ function announcerService () {
 			.replace(/The Sterl/g, "The Sturl")
 			.replace(/Beukema/g, "Beukuma")
 		;
+	}
+
+	var doThis = function(doThisThing) {
+		if (/sound\:/.test(doThisThing)) {
+			playSound(doThisThing.replace("sound:", ""));
+		} else {
+			// assume it is text that needs to be spoken
+			sayThis(doThisThing);
+		}
 	}
 
 	var sayThis = function(message) {
@@ -741,6 +810,7 @@ app.factory('announcerService', [ function announcerService () {
 			//msg.voice = 'Hysterical'; // this seems to do nothing
 			debug("lower volume for speaking...");
 			crowdControl.setVolume(crowdControl.ensureSafeVolume(originalVolume-.5, 0.05));
+			config.timeLastAnnouncementWasMade = new Date();
 			window.speechSynthesis.speak(msg);
 		}
 	}
