@@ -3,6 +3,8 @@
 // player NickNames
 // Team Names
 
+// announce player positions and the home team (yellow) and the away team (black)
+
 app.factory('announcerService', [ function announcerService () {
 	"use strict";
 
@@ -61,6 +63,122 @@ app.factory('announcerService', [ function announcerService () {
 	
 	var pointHistory = [];
 	var teamScores = {};
+	/*
+		soundsToMake.music.intro
+		soundsToMake.music.win
+		soundsToMake.score.point
+		soundsToMake.organ.charge
+		soundsToMake.organ.chargeLong
+		soundsToMake.organ.cheer
+		soundsToMake.background.crowd
+		soundsToMake.positiveCrowd.airhorn
+		soundsToMake.positiveCrowd.cheer
+		soundsToMake.positiveCrowd.chant
+		soundsToMake.negativeCrowd.aww
+		soundsToMake.negativeCrowd.boo
+		soundsToMake.negativeCrowd.ohno
+	*/
+	var soundsToMake = {
+		music : {
+			intro : [
+				"intro.wav"
+			],
+			win : [
+				"win-1.mp3", 
+			]
+		},
+		score : {
+			point : [
+				"score-1.mp3", 
+				"score-2.mp3", 
+				"score-3.mp3", 
+				"score-4.mp3", 				
+				"score-5.mp3", 
+				"score-6.wav"
+			]
+		},
+		organ : {
+			charge : [
+				"cheering-charge-1.wav", 
+				"organ-hockey-organ-charge_GkVzP3EO.mp3", 
+				"organ-hockey-organ-melody-in-stadium-arena_M17SP3EO.mp3", 
+				"organ-hockey-organ-melody-lets-go_fJT8P3N_.mp3", 
+			],
+			chargeLong : [
+				"organ-sports-arena-music-organ-charge-ascend-reverb.mp3", // 18s
+				"organ-sports-arena-music-organ-melody-ascend-reverb_M1ptqYEu.mp3", // 16s
+				"organ-sports-arena-music-mexican-hat-dance-organ-clap_fyxsqtNu.mp3", // 11s
+			],
+			cheer : [
+				"organ-short-single-chord-sports-arena-music-organ-chord-stab-reverb_Gkn29tNu.mp3", 
+			]
+		},
+		background : {
+			crowd : [
+				"crowd.wav" 
+			],
+		},
+		positiveCrowd : {
+			airhorn : [
+				"air-horn_Mka55z4u.mp3", 
+				"airhorn.wav"
+			],
+			cheer : [
+				"applause-1.mp3", 
+				"applause-1.wav", 
+				"applause-2.wav", 
+				"applause-3.wav", 
+				"applause-4.wav", 
+				"applause-5.wav", 
+				"cheer-crowd-battle-cry-ahhhoh_M1S_ZOV_.mp3", 
+				"cheer-crowd-cheer-clap-scream_fJkt-OV_.mp3", 
+				"cheer-crowd-hooray_MJzKZ_4_.mp3", 
+				"cheer-crowd-loud-ohh_zyqq-uEd.mp3", 
+				"cheer-crowd-scream-goal_Myqs-u4_.mp3", 
+				"cheer-crowd-scream-hooray_z1g3W_4d.mp3", 
+				"cheer-crowd-scream-oh-yeah_MyNnbuEd.mp3", 
+				"cheer-crowd-scream-ohh_zJL3bO4u.mp3", 
+				"cheer-crowd-scream-shocked-whoa_fkd3-dN_.mp3", 
+				"cheer-crowd-scream-yes_MykaZO4O.mp3", 
+				"cheer-crowd-tongue-rolls_Gy9aZuVd.mp3", 
+				"cheer-crowd-vocal-element-goal-long_G1j6-ON_.mp3", 
+				"cheer-crowd-yes-unison_MkhTW_V_.mp3", 
+				"cheer-sports-event_MJoQI64u.mp3",
+				"crowd-cheer-baseball-game.mp3", 
+				"crowd-cheer-baseball-game_M1WXv2Nd.mp3", 
+				"crowd-cheer-baseball-game_z1IbPhE_.mp3",
+				"crowd-scream-go-go-go_zJ6Kb_Nu.mp3", 
+				"crowd-scream-whoa_MJAnZO4O.mp3"
+			],
+			chant : [
+				"chant-chanting-concert-applause_zyGZ-HE_.mp3", 
+				"chant-male-crowd-chanting-solidarnosc_MknsmSNu.mp3", 
+			]
+		},
+		negativeCrowd : {
+			aww : [
+				"aww-crowd-aww-disappointed_G1SdWOVd.mp3", 
+				"aww-crowd-aww_GJKdZ_Nu.mp3", 
+				"aww-crowd-disgusted-aww_G1qd-OVd.mp3", 
+				"aww-crowd-disgusted-aww_zkuqZdN_.mp3", 
+				"aww-crowd-scream-aww_fJa9Z_V_.mp3"
+			],
+			boo : [
+				"boo-1.wav", 
+				"boo-2.wav", 
+				"boo-3.wav", 
+				"boo-4.wav", 
+				"boo-5.wav", 
+				"boo-crowd-boo_fkA_ZONd.mp3", 
+			],
+			ohno : [
+				"oh-no-crowd-scream-oh-no_fkm3Zu4_.mp3", 
+				"crowd-painful-ohh_fkmKbONO.mp3",
+				"boo-crowd-scream-no-different-times_My-nZdNu.mp3", 
+				"boo-crowd-scream-no_M1xhZ_Nd.mp3"
+			]
+		}
+	}
 
 	var thingsToSay = {
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -68,6 +186,10 @@ app.factory('announcerService', [ function announcerService () {
 			intro : [
 				"{Welcome to/And we will start things off at/Thanks for joining us today at} the {BizStream Arena/BizStream Plex/Biz Plex/BizStream Warehouse} on this {{day-description}} {{time-of-day}} for {an excellent/a great/a fun/an exciting} {match-up/game/battle of skill/battle/competition} on the {field/table/foos ball table/playing field}."
 				//,"{Welcome to/And we will start things off at/Our game today is at} the {BizStream Areana/BizStream Plex/Biz Plex/BizStream Warehouse} on this {{day-description}} {{time-of-day}} for {an excellent/a great/a fun} {match-up/game/battle of skill/battle/competition}."
+			],
+			teamsAndPlayersIntro : [
+				"For today's match-up we have {{{yellow-team}}}/{{yellow-player-o}}} and {{yellow-player-d}}} on the {yellow/home} team. And on the {black/away} team we have {{black-player-o}} and {{black-player-d}}. {{black-player-o}} will be playing offense for the yellow team and {{yellow-player-d}} will be {playing defense/defending the goals}"
+				,""
 			]
 		},
 
@@ -124,9 +246,16 @@ app.factory('announcerService', [ function announcerService () {
 			noScoreFor120Seconds : [
 				"{Holy cow/Wow/Really}! Someone {needs to/has to/should try to} get a {goal/point/score} in"
 				,"Let's see {some action/a point/a goal/someone score/someone put the ball in the hole}"
-				,"sound:boo"
+				//,"sound:boo"
 				,"sound:charge"
-				,"sound:airhorn.wav"
+				//,"sound:airhorn.wav"
+			],
+			// todo: need to handle the replacements
+			stillTiedUp : [
+				 "And we are still {tied/all tied} up at {{winning-score}} to {{losing-score}}"
+				 ,"{And we are/The scores are/It's all} tied up at {{winning-score}} to {{losing-score}}"
+				 ,"And the scores are at {{winning-score}} and {{losing-score}}"
+				 ,"{All tied up at/we're even with a score of/It's anyones game with a score of} {{winning-score}} and {{losing-score}}"				
 			]
 		}
 
@@ -517,7 +646,7 @@ app.factory('announcerService', [ function announcerService () {
 		// do sound effects
 		crowdControl.startCrowd();
 		
-		playSound("intro");
+		playSound(soundsToMake.music.intro);
 
 		// give it a small delay to the the intro play
 		setTimeout(speakOpeningMessage, 5000);
@@ -541,7 +670,7 @@ app.factory('announcerService', [ function announcerService () {
 			sayThis(message);
 			//todo, also announce player positions and team names and colors/sides
 
-			tmrGameUpdates = setInterval(giveGameUpdates, 5000);
+			tmrGameUpdates = setInterval(giveGameUpdates, 7000);
 		});
 	}
 
@@ -551,19 +680,35 @@ app.factory('announcerService', [ function announcerService () {
 	}
 
 	var giveGameUpdates = function() {
-		if (getSecondSince(config.timeLastAnnouncementWasMade) > 30) {
+		if (getSecondSince(config.timeLastAnnouncementWasMade) > 15) {
 			var secondsSinceLastScore = getSecondSince(config.timeLastGoalWasScored);
 			debug("seconds since last goal: "+ secondsSinceLastScore);
 			var sayThisOptions = [];
+			var bLetSeeSomeAction = (secondsSinceLastScore > 60);
+			var bLetSeeSomeActionAllowBoos = (secondsSinceLastScore > 120);
+
+			if (config.teams[0].score == config.teams[1].score) {
+				// all tied up
+				//TODO: Make this happen
+				//sayThisOptions = sayThisOptions.concat(thingsToSay.gameUpdates.stillTiedUp);
+			}
+
 			if (secondsSinceLastScore > 120)  {
 				sayThisOptions = sayThisOptions.concat(thingsToSay.gameUpdates.noScoreFor120Seconds);
 			} else if (secondsSinceLastScore > 60)  {
 				sayThisOptions = sayThisOptions.concat(thingsToSay.gameUpdates.noScoreFor60Seconds);
 			}
 			if (sayThisOptions && sayThisOptions.length > 0) {
-				var msg = getRandomItem(sayThisOptions);
-				msg = updateMessageReplacements(msg);
-				doThis(msg);
+				
+				if (bLetSeeSomeAction && Math.random() > .2) {
+					// don't do it every single time
+					if (Math.random() > .6)
+						playChargeSound(bLetSeeSomeActionAllowBoos, false);
+				} else {
+					var msg = getRandomItem(sayThisOptions);
+					msg = updateMessageReplacements(msg);
+					doThis(msg);
+				}
 			}
 
 
@@ -572,26 +717,81 @@ app.factory('announcerService', [ function announcerService () {
 	 	crowdControl.adjustVolume((Math.random() - .4) * .1);
 	}
 
+	// this function will take in anything you throw at it. string, array of arrays, a single array, or an object of arrays
 	var getSoundFile = function(whichSound) {
 		var fileName = "";
-		switch (whichSound) {
-			// http://soundbible.com/tags-crowd.html
-			case "intro": 	 fileName = "intro.wav"; break;
-			case "crowd": 	 fileName = "crowd.wav"; break;
-			case "applause": fileName = 'applause-' + (Math.floor(Math.random() * 5) + 1 )+ '.wav'; break;; break;
-			case "boo": 	 fileName = 'boo-' + (Math.floor(Math.random() * 5) + 1 )+ '.wav'; break;; break;
-			case "charge": 	 fileName = 'cheering-charge-' + (Math.floor(Math.random() * 1) + 1 )+ '.wav'; break;; break;
-			case "end": 	 fileName = 'end-of-game-' + (Math.floor(Math.random() * 1) + 1 )+ '.wav'; break;; break;
-			case "score": 	 fileName = 'score-' + (Math.floor(Math.random() * 6) + 1 )+ '.mp3'; break;
-			case "win": 	 fileName = 'win-' + (Math.floor(Math.random() * 1) + 1 )+ '.mp3'; break;
-			default: fileName = whichSound;
+		//debug(whichSound)
+		//debug("type of: "+ (typeof whichSound))
+		//debug("$.isPlainObject: "+ ($.isPlainObject(whichSound)));
+		if (typeof whichSound == "stirng") {
+			switch (whichSound) {
+				// http://soundbible.com/tags-crowd.html
+				case "boo": 	 whichSound = soundsToMake.negativeCrowd; break;
+				case "charge": 	 whichSound = [soundsToMake.organ.charge,soundsToMake.organ.chargeLong,soundsToMake.positiveCrowd.chant]; break;
+			}
 		}
+		if (typeof whichSound == "object") {
+			var aryChooseFrom = [];
+
+			//debug("Array.isArray(whichSound): "+ Array.isArray(whichSound))
+			if (Array.isArray(whichSound)) {
+				//debug(typeof whichSound)
+				//debug("Array.isArray(whichSound[0]): "+ Array.isArray(whichSound[0]))
+				if (Array.isArray(whichSound[0])) {
+					// if it is an array of arrays, we need to concat
+					whichSound.forEach(function(aryOfSound) {
+						aryChooseFrom = aryChooseFrom.concat(aryOfSound);
+					});
+				} else {
+					// a single array
+					 aryChooseFrom = whichSound;
+				}
+			} else {
+				// if it is an object of arrays, we need to concat
+				//debug("I AM AN OBJECT WITH ARRAYS")
+				for (var key in whichSound) {
+					aryChooseFrom = aryChooseFrom.concat(whichSound[key]);
+				}
+			}
+			fileName = getRandomItem(aryChooseFrom);
+		} else {
+			switch (whichSound) {
+				// http://soundbible.com/tags-crowd.html
+				case "intro": 	 fileName = "intro.wav"; break;
+				case "crowd": 	 fileName = "crowd.wav"; break;
+				case "applause": fileName = 'applause-' + (Math.floor(Math.random() * 5) + 1 )+ '.wav'; break;; break;
+				case "boo": 	 fileName = 'boo-' + (Math.floor(Math.random() * 5) + 1 )+ '.wav'; break;; break;
+				case "charge": 	 fileName = 'cheering-charge-' + (Math.floor(Math.random() * 1) + 1 )+ '.wav'; break;; break;
+				case "end": 	 fileName = 'end-of-game-' + (Math.floor(Math.random() * 1) + 1 )+ '.wav'; break;; break;
+				case "score": 	 fileName = 'score-' + (Math.floor(Math.random() * 6) + 1 )+ '.mp3'; break;
+				case "win": 	 fileName = 'win-' + (Math.floor(Math.random() * 1) + 1 )+ '.mp3'; break;
+				default: fileName = whichSound;
+			}
+		}
+		debug("getSoundFile: "+ fileName); 
 		return soundRootPath + fileName;
 	}
 
 	var playSound = function(soundType) {
 		var sound = new Audio(getSoundFile(soundType));
 		sound.play();
+	}
+
+	var playChargeSound = function(allowNegative, delayIt) {
+		var playCharge = function() {
+			var soundList = [
+				soundsToMake.organ.charge,
+				soundsToMake.organ.chargeLong,
+				soundsToMake.positiveCrowd.chant,
+				soundsToMake.positiveCrowd.airhorn,
+			]
+			if (allowNegative) soundList = soundList.concat(soundsToMake.negativeCrowd.boo);
+			playSound(soundList);			
+		}
+		if (delayIt)
+			setTimeout(playCharge, (5000 + (Math.random() * 15000)));
+		else
+			playCharge();
 	}
 
 	var scorePoint = function(oPlayer, gameTime) {
@@ -613,24 +813,28 @@ app.factory('announcerService', [ function announcerService () {
 
 		// play a sound effect
 		if (oTeam.score == config.pointsNeededToWin) {
-			playSound("win");
-			crowdControl.playApplause("applause", shotPowerLevel); //FUTURE: Pass level 0-1 based on strength of shot
+			playSound(soundsToMake.music.win);
+			crowdControl.playApplause(soundsToMake.positiveCrowd, shotPowerLevel); //FUTURE: Pass level 0-1 based on strength of shot
 			//crowdControl.playApplause("end-of-game", .6); //FUTURE: Pass level 0-1 based on strength of shot
 			//gameCompleteMessageDelay = 5000;
 		}
 		else {
-			playSound("score");
-			if (Math.random() >.3) {
-				crowdControl.playApplause("applause", shotPowerLevel); //FUTURE: Pass level 0-1 based on strength of shot
+			playSound(soundsToMake.score.point);
+			
+			// if you are the home team/yellow
+			//if (Math.random() >.3) {
+			if (oTeam.color == "yellow") {
+				crowdControl.playApplause(soundsToMake.positiveCrowd, shotPowerLevel); //FUTURE: Pass level 0-1 based on strength of shot
 
 				// occasionally, play another random sound
 				if (Math.random() <.2) {
 					//10 to 20 secnds in the future
-					setTimeout(function() { playSound("applause") }, 10000 + (Math.random() * 10000));
+					setTimeout(function() { playSound(soundsToMake.positiveCrowd) }, 10000 + (Math.random() * 10000));
 				}
+			} else { // if you are the away team/black
+				crowdControl.playApplause(soundsToMake.negativeCrowd, shotPowerLevel); //FUTURE: Pass level 0-1 based on strength of shot
+
 			}
-			else // 1/3 you get boo'd
-				crowdControl.playApplause("boo", shotPowerLevel); //FUTURE: Pass level 0-1 based on strength of shot
 			gameCompleteMessageDelay = shotPowerLevel;
 		}
 
@@ -687,7 +891,7 @@ app.factory('announcerService', [ function announcerService () {
 			if (oTeam.score == 4) {
 				// empty any previous entries, this is imporant :)
 				sayThisOptions = sayThis_PlayerScores_Team_ShutOutAlert;
-				setTimeout(function(){ playSound("charge");}, 15000);
+				playChargeSound(false, true);
 			} else if (oTeam.score >= 2) {
 				sayThisOptions = sayThis_PlayerScores_Team_ApporachingShutOutMoreThan2Points;
 			}
@@ -699,7 +903,7 @@ app.factory('announcerService', [ function announcerService () {
 			if (oOtherTeam.score == oTeam.score) {
 				if (oOtherTeam.score == 4) {
 					sayThisAlsoOptions = sayThis_PlayerScores_ReportTiedScoreNextPointWins;
-					setTimeout(function(){ playSound("charge");}, 15000);
+					playChargeSound(false, true);
 				} else {
 					sayThisAlsoOptions = this.sayThis_PlayerScores_ReportTiedScore;
 				}
