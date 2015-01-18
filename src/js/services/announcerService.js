@@ -523,11 +523,7 @@ app.factory('announcerService', [ function announcerService () {
 
 	var scorePoint = function(oPlayer, gameTime) {
 		// play a sound effect
-
-		var pointFile = getSoundFile("score");
-		debug(pointFile)
-
-		var sound = new Audio(pointFile);
+		var sound = new Audio(getSoundFile("score"));sound.play();
 
 		// make the crowd a bit louder
 		//crowdControl.adjustVolume(.4);
