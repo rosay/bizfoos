@@ -22,6 +22,41 @@ jQuery(function($) {
 		smartAnnouncer.init({
 			"pointsNeededToWin": 5,
 			"debug": true,
+			"skipIntro": false,
+			
+			"roster": {
+				"teamBlack": {
+					"offense": {
+						"_id": "ahovingh@bizstream.com",
+						"name": "Albert Hovingh",
+						"nicknames": "Bert, Al, The Trash Man",
+						"pic": ""
+					},
+					"defense": {
+						"_id": "areece@bizstream.com",
+						"name": "Adam Reece",
+						"pic": ""
+					}
+				},
+				"teamOrange": {
+					"offense": {
+						"_id": "mschmidt@bizstream.com",
+						"name": "Mark Schmidt",
+						"firstName": "Mark",
+						"lastName": "Schmidt",
+						"nicknames": "Schmidty",
+						"pic": ""
+					},
+					"defense": {
+						"_id": "sheibeck@bizstream.com",
+						"name": "Sterling Heibeck",
+						"nicknames": "The Ninja",
+						"pic": ""
+					}
+				}
+			}
+
+			/*
 			"teams" : [
 				{
 					"color": "black",
@@ -81,6 +116,7 @@ jQuery(function($) {
 					]
 				}
 			] // end array of peole
+			*/
 		}); // end config, end initalize of SmartAnnouncer
 
 		// start game clock
