@@ -64,6 +64,11 @@ app.factory('announcerService', [ function announcerService () {
 		}
 	}
 	
+	var teamNames = {
+
+	}
+
+
 	var pointHistory = [];
 	var teamScores = {};
 	/*
@@ -95,6 +100,8 @@ app.factory('announcerService', [ function announcerService () {
 			// http://www.soundboard.com/sb/jimi_yorke1
 			// http://www.soundboard.com/sb/WiiHockey
 			// http://www.soundboard.com/sb/SportsChantsCharge
+			// http://www.soundboard.com/sb/thatbassboard
+			// http://www.soundboard.com/sb/LCSC
 			afterAwesomeGoalScored : [
 				{ start: 0, end: 13000, file: "music/Best Goal Song Ever215099-4cb8905f-a537-4486-8808-a3c6bebe64ae.mp3" },
 				{ start: 0, end: 17000, file: "music/Survivor - Eye of the Tiger215099-056b6ddb-3fe7-4e8c-981e-d9891fdf3d96.mp3" },
@@ -119,6 +126,18 @@ app.factory('announcerService', [ function announcerService () {
 				{ start: 0, end: 12000, file: "music/wild-side-65515-a0b7e206-156f-40c5-83cd-1ee87ae17371.mp3" },
 				{ start: 0, end: 28000, file: "music/welcome-to-the-jungle-65515-97fe62cd-746b-4265-9bac-805acd86e252.mp3" },
 				{ start: 0, end: 17000, file: "music/goal-siren-prodigy-65515-bb8ef7ea-86e5-40aa-a03f-e83b3e8c5c53.mp3" },
+				{ start: 0, end: 19000, file: "music/all-i-do-is-one-201470-165d44eb-ead6-4e1a-ab44-e822a15237c6.mp3" },
+				{ start: 0, end: 30000, file: "music/Song - Happy217844-7f887dc7-c5cf-48ea-ac47-0a6795f7c7ea.mp3" },
+				{ start: 0, end: 13000, file: "music/Song - Ive Got the Power217844-d57ada2a-3597-480e-b991-b9faf3ffce7a.mp3" },
+				{ start: 0, end: 22000, file: "music/SIP - Til I Collapse217844-5f7e1e8c-7191-44bc-a28c-9d95bb6627c5.mp3" },
+				{ start: 0, end: 20000, file: "music/SIP - Locked Out Of Heaven217844-c5f78886-a4fc-4093-a231-e5c8a529f8c9.mp3" },
+				{ start: 0, end: 20000, file: "music/SIP - Without Me Remix217844-7c548ec2-8a3c-4635-8c82-b098a285bb98.mp3" },
+				{ start: 0, end: 15000, file: "music/SIP - Seven Nation Army217844-441aff80-8125-4861-b98f-666c938f9e95.mp3" },
+				{ start: 0, end: 10000, file: "music/SIP - Fuel217844-73324ff7-f955-40b4-92d1-63bf20d1c9e4.mp3" },
+				{ start: 0, end: 25000, file: "music/SIP - Enter Sandman217844-74d43275-a90f-41f4-8b4e-984aa273ae77.mp3" },
+				{ start: 0, end: 16000, file: "music/SIP - Call Me Maybe217844-b6c75657-5b9e-4009-b18b-7a1d066d56a1.mp3" },
+				{ start: 0, end: 16000, file: "music/SIP - Break Your Heart217844-fcad0017-8fb7-462a-b563-836c8b4dfb57.mp3" },
+				{ start: 0, end: 15000, file: "music/I'm-to-sexy-NjMxMTQxNzE2MzExNjQ_0VP46tDcKEc.mp3" },
 				//{ start: 0, end: 15000, file: "music/" },
 				//{ start: 0, end: 15000, file: "music/" },
 				//{ start: 0, end: 15000, file: "music/" },
@@ -126,11 +145,27 @@ app.factory('announcerService', [ function announcerService () {
 				//{ start: 0, end: 15000, file: "music/" },
 				//{ start: 0, end: 15000, file: "music/" },
 				//{ start: 0, end: 30000, file: "music/Thunderstruck - ACDC215099-60f70578-2abb-4058-b400-c5d4c5191dbc.mp3" },
-
 			],
-			getTheCrowdPumped : [
+			awayGoal : [
+				{ start: 0, end: 8000, file: "music/Away Goal - It Doesnt Matter217844-d4fc0f49-3808-43cf-a972-8df7ab0f1fb4.mp3" },
+				{ start: 0, file: "music/SIP - Wheres your head at217844-7401f6ee-6bfa-4e05-a98c-06fcb53ca51d.mp3" },
+				{ start: 0, end: 21000, file: "music/SIP - Fight for Your Right217844-04310f82-b577-482b-a6a8-6e73b4a79179.mp3" },
+				//{ start: 0, end: 15000, file: "music/" },
+				//{ start: 0, end: 15000, file: "music/" },
+			],
+			startingAComeback : [
+				{ start: 0, end: 5000, file: "music/SIP - Started From The Bottom 217844-2518f532-9abb-4165-befc-71c16eb11005.mp3" },
+				{ start: 0, end: 11000, file: "music/SIP - No Sleep Till Brooklyn217844-1d430377-f6a6-41dd-a442-bd56f1e6d28a.mp3" },
+				{ start: 0, end: 19000, file: "music/SIP - Walk217844-0b7fb1e2-e4c8-4ec0-9c98-7694a7cfafc9.mp3" },
+				//{ start: 0, end: 15000, file: "music/" },
+				//{ start: 0, end: 15000, file: "music/" },
+				//{ start: 0, end: 15000, file: "music/" },
+			],
+			someoneDoSomethingNow : [
 				{ start: 0, end: 16500, file: "music/Pump The Crowd - Get Ready For This215099-120fa195-6fa0-463f-b003-9fb4d99dc5f3.mp3"},
 				{ start: 0, end: 19000, file: "music/everybody-dance-now-NzQ3NDQ5NTQ3NDc1MjM_c28jQ4MF8M0.mp3" },
+				{ start: 0, end: 19000, file: "music/SIP - Blitzkrieg Bop217844-4c64f818-88bc-4cc1-b6b7-dc77ba241e81.mp3" },
+
 			]
 		},
 		score : {
@@ -266,6 +301,11 @@ app.factory('announcerService', [ function announcerService () {
 			]
 		},
 		playerStreak : {
+			onfire : [
+				"{{name}} is on fire!"
+				,"{{name}} is {tearing it up/crushing {{other-team}}} with {a few/some} {quick/rapid-fire} {goals/points}!"
+				,"And it's {{name}} with another one! He's on fire!"
+			],
 			multiplePoints : [
 				"And another shot by {{name}}"
 				,"{{name}} with another goal"
@@ -304,9 +344,9 @@ app.factory('announcerService', [ function announcerService () {
 				 ,"And the scores are at {{winning-score}} and {{losing-score}}"
 				 ,"{All tied up at/we're even with a score of/It's anyones game with a score of} {{winning-score}} and {{losing-score}}"				
 			]
-		}
-
+		},
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 	}
 
@@ -317,9 +357,9 @@ app.factory('announcerService', [ function announcerService () {
 	var sayThis_PlayerScores_Player_2PointStreak = [
 	];
 
-	var sayThis_PlayerScores_Player_3PointStreak = [
-		"That's three in a row by {{name}}"
-		,"{{name}} with another goal. 3 point streak."
+    var sayThis_PlayerScores_Player_3PointStreak = [
+        "That's three in a row by {{name}}"
+        ,"{{name}} with another goal. 3 point streak."
 		,"And he sinks another one. Three in a row by {{name}}"
 		//,"wav:and_another_one.wav"
 	];
@@ -694,11 +734,13 @@ app.factory('announcerService', [ function announcerService () {
 		config.teams.forEach(function(team) {
 			team.score = 0;
 			team.pointStreak = 0;
+			team.timeLastGoalWasScored = config.gameStartTime;
 		});
 
 		config.players.forEach(function(player) {
 			player.score = 0;
 			player.pointStreak = 0;
+			player.timeLastGoalWasScored = config.gameStartTime;
 		});
 	}
 
@@ -977,31 +1019,8 @@ app.factory('announcerService', [ function announcerService () {
 		oTeam.score++;   // update team score
 		oPlayer.score++; // update player score
 
-		var doThisAfterwards;
 
 		updateStreaks(oPlayer, oTeam, oOtherTeam);
-
-		var playAwesomeGoalMusic = false;
-		if (oTeam.pointStreak >= 3 && oTeam.score < config.pointsNeededToWin) {
-			// if it is more than a 3 point streak
-			playAwesomeGoalMusic = true;
-		} else if (oTeam.pointStreak >= 2 && getSecondSince(oTeam.timeLastGoalWasScored) < 20) {
-			// 2 points in a quick about of time by the same team
-			playAwesomeGoalMusic = true;
-		} else if (oTeam.score >= 2 && oOtherTeam.score == 0) {
-			// 2 - 0 or more
-			playAwesomeGoalMusic = true;
-		}
-		if (playAwesomeGoalMusic) {
-			doThisAfterwards = function() {
-				playSound(getRandomItem(soundsToMake.music.afterAwesomeGoalScored));
-			}
-		}
-
-
-		config.timeLastGoalWasScored = new Date(); // update last point
-		oTeam.timeLastGoalWasScored = config.timeLastGoalWasScored;
-		oPlayer.timeLastGoalWasScored = config.timeLastGoalWasScored;
 
 		// fake a random volumne
 		var gameCompleteMessageDelay = 0;
@@ -1042,11 +1061,53 @@ app.factory('announcerService', [ function announcerService () {
 		var sayThisOptions = [];
 		var sayThisAlsoOptions = [];
 
-		// TODO: IF THe score took more than 120 seconds
-		// FINALLY SOMEONE SCORED
 
-		// TODO: IF the score was rapids fire
-		// Wow, another one, rapid fire...
+
+		var doThisAfterwards;
+		var playMusicAfterTalking;
+		if (oTeam.pointStreak >= 3 && oTeam.score < config.pointsNeededToWin) {
+			// if it is more than a 3 point streak
+			playMusicAfterTalking = soundsToMake.music.afterAwesomeGoalScored;
+		} else if (oPlayer.pointStreak >= 2 && getSecondSince(oTeam.timeLastGoalWasScored) < 20) {
+			// 2 points in a quick about of time by the same team
+			sayThisOptions = thingsToSay.playerStreak.onfire;
+			// Wow, another one, rapid fire...
+			playMusicAfterTalking = soundsToMake.music.afterAwesomeGoalScored;
+		} else if (oTeam.pointStreak >= 2 && getSecondSince(oTeam.timeLastGoalWasScored) < 20) {
+			// 2 points in a quick about of time by the same team
+			playMusicAfterTalking = soundsToMake.music.afterAwesomeGoalScored;
+		} else if (oTeam.score >= 2 && oOtherTeam.score == 0) {
+			// 2 - 0 or more
+			playMusicAfterTalking = soundsToMake.music.afterAwesomeGoalScored;
+		} else if (getSecondSince(oTeam.timeLastGoalWasScored) > 120) {
+			// if it took a ridiculously long time to score ...
+			// TODO: IF THe score took more than 120 seconds
+			// FINALLY SOMEONE SCORED
+			playMusicAfterTalking = soundsToMake.music.afterAwesomeGoalScored;
+		} else if (oTeam.color == "yellow" && oTeam.score < oOtherTeam.score && Math.random() > .5) {
+			// if the home team just score, yet still behind, ... and don't do it every time
+			playMusicAfterTalking = soundsToMake.music.startingAComeback;
+		} else if (oTeam.color == "black" && oOtherTeam.score == (oTeam.score + 1)) {
+			// if the away team JUST passed the home team
+			playMusicAfterTalking = soundsToMake.music.awayGoal;
+		}
+
+		if (playMusicAfterTalking) {
+			doThisAfterwards = function() {
+				playSound(getRandomItem(playMusicAfterTalking));
+			}
+		}
+
+
+		config.timeLastGoalWasScored = new Date(); // update last point
+		oTeam.timeLastGoalWasScored = config.timeLastGoalWasScored;
+		oPlayer.timeLastGoalWasScored = config.timeLastGoalWasScored;
+
+
+
+
+
+
 
 
 		// if this is the first point of the team or game
