@@ -884,8 +884,15 @@ app.factory('announcerService', [ function announcerService () {
 				
 				if (bLetSeeSomeAction && Math.random() > .2) {
 					// don't do it every single time
-					if (Math.random() > .6)
-						playChargeSound(bLetSeeSomeActionAllowBoos, false);
+					if (Math.random() > .6) {
+						if (Math.random() > .4) {
+							// play charge sound
+							playChargeSound(bLetSeeSomeActionAllowBoos, false);
+						} else {
+							// play pump up the table music
+							playSound(getRandomItem(soundsToMake.music.someoneDoSomethingNow));
+						}
+					}
 				} else {
 					var msg = getRandomItem(sayThisOptions);
 					msg = updateMessageReplacements(msg, {
