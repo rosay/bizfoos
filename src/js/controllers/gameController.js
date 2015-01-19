@@ -20,27 +20,27 @@ app.controller('GameController', ['gameService', 'rosterService', 'playerService
 
 	vm.players = {
 		"teamBlack": {
-		"offense": {
-			"name": "",
-				"id": "",
-				"pic": ""
-		},
-		"defense": {
-			"name": "",
-				"id": "",
-				"pic": ""
-		}
-		},
-			"teamOrange": {
 			"offense": {
 				"name": "",
-					"id": "",
-					"pic": ""
+				"id": "",
+				"pic": ""
 			},
 			"defense": {
 				"name": "",
-					"id": "",
-					"pic": ""
+				"id": "",
+				"pic": ""
+			}
+		},
+		"teamOrange": {
+			"offense": {
+				"name": "",
+				"id": "",
+				"pic": ""
+			},
+			"defense": {
+				"name": "",
+				"id": "",
+				"pic": ""
 			}
 		}
 	};
@@ -51,43 +51,13 @@ app.controller('GameController', ['gameService', 'rosterService', 'playerService
 
 		vm.players.teamOrange.offense = rosterService.getPlayer(2, "offense");
 		vm.players.teamOrange.defense = rosterService.getPlayer(2, "defense");
+
+		// intialize the smart announcer everytime a game starts
+
+		gameService.initializeAnnouncer(vm.players);
 	};
 
 	setPlayers();
-
-	// intialize the smart announcer everytime a game starts
-
-	gameService.initializeAnnouncer({
-		blackO:{
-			id: vm.players.teamBlack.offense._id,
-			names: [
-				vm.players.teamBlack.offense.firstName,
-				vm.players.teamBlack.offense.lastName
-			]
-		},
-		blackD:{
-			id: vm.players.teamBlack.defense._id,
-			names: [
-				vm.players.teamBlack.defense.firstName,
-				vm.players.teamBlack.defense.lastName
-			]
-		},
-		yellowO:{
-			id: vm.players.teamOrange.offense._id,
-			names: [
-				vm.players.teamOrange.offense.firstName,
-				vm.players.teamOrange.offense.lastName
-			]
-		},
-		yellowD:{
-			id: vm.players.teamOrange.defense._id,
-			names: [
-				vm.players.teamOrange.defense.firstName,
-				vm.players.teamOrange.defense.lastName
-			]
-		}
-	});
-
 
 	gameService.setStartTime();
 
