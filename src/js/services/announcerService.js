@@ -10,6 +10,8 @@
 app.factory('announcerService', [ function announcerService () {
 	"use strict";
 
+	var GAME_UPDATE_CHECK_EVERY_X_MILIS = 7000;
+
 	var soundRootPath = "sounds/"
 	if (window.location.protocol == "file:") soundRootPath = "../../../sounds/";
 		
@@ -147,7 +149,7 @@ app.factory('announcerService', [ function announcerService () {
 				//{ start: 0, end: 30000, file: "music/Thunderstruck - ACDC215099-60f70578-2abb-4058-b400-c5d4c5191dbc.mp3" },
 			],
 			awayGoal : [
-				{ start: 0, end: 8000, file: "music/Away Goal - It Doesnt Matter217844-d4fc0f49-3808-43cf-a972-8df7ab0f1fb4.mp3" },
+				{ start: 0, end: 8500, file: "music/Away Goal - It Doesnt Matter217844-d4fc0f49-3808-43cf-a972-8df7ab0f1fb4.mp3" },
 				{ start: 0, file: "music/SIP - Wheres your head at217844-7401f6ee-6bfa-4e05-a98c-06fcb53ca51d.mp3" },
 				{ start: 0, end: 21000, file: "music/SIP - Fight for Your Right217844-04310f82-b577-482b-a6a8-6e73b4a79179.mp3" },
 				//{ start: 0, end: 15000, file: "music/" },
@@ -164,18 +166,18 @@ app.factory('announcerService', [ function announcerService () {
 			someoneDoSomethingNow : [
 				{ start: 0, end: 16500, file: "music/Pump The Crowd - Get Ready For This215099-120fa195-6fa0-463f-b003-9fb4d99dc5f3.mp3"},
 				{ start: 0, end: 19000, file: "music/everybody-dance-now-NzQ3NDQ5NTQ3NDc1MjM_c28jQ4MF8M0.mp3" },
-				{ start: 0, end: 19000, file: "music/SIP - Blitzkrieg Bop217844-4c64f818-88bc-4cc1-b6b7-dc77ba241e81.mp3" },
+				{ start: 0, end: 19500, file: "music/SIP - Blitzkrieg Bop217844-4c64f818-88bc-4cc1-b6b7-dc77ba241e81.mp3" },
 
 			]
 		},
 		score : {
 			point : [
-				"score-1.mp3", 
+//				"score-1.mp3", 
 				"score-2.mp3", 
-				"score-3.mp3", 
-				"score-4.mp3", 				
-				"score-5.mp3", 
-				"score-6.wav"
+//				"score-3.mp3", 
+//				"score-4.mp3", 				
+//				"score-5.mp3", 
+//				"score-6.wav"
 			]
 		},
 		organ : {
@@ -388,9 +390,9 @@ app.factory('announcerService', [ function announcerService () {
 	];
 
 	var sayThis_PlayerScores_Team_3PointStreak = [
-		"That's three in a row by {{name}}"
-		,"{{name}} with another goal. 3 point streak."
-		,"And he sinks another one. Three in a row by {{name}}"
+		"That's three in a row by {{team}}"
+		,"{{team}} with another goal. 3 point streak."
+		,"And they sink another one. Three in a row by {{team}}"
 		//,"wav:and_another_one.wav"
 	];
 
@@ -595,7 +597,7 @@ app.factory('announcerService', [ function announcerService () {
 		if (weather.condition.length > 0) {
 			weather.condition.forEach(function(c) {
 				if (/overcast/.test(c.description)) cond.push("overcast"); 
-				else if (/cloud/.test(c.description)) cond.push("partly cloduy"); 
+				else if (/cloud/.test(c.description)) cond.push("partly cloudy"); 
 				else if (/clear sky/.test(c.description)) cond.push("sunny");
 				else if (/heavy.*snow/.test(c.description)) cond.push("riduclusly snowy");
 				else if (/snow/.test(c.description)) cond.push("snowy");
@@ -879,7 +881,7 @@ app.factory('announcerService', [ function announcerService () {
 				sayThis(m);
 			})
 
-			tmrGameUpdates = setInterval(giveGameUpdates, 7000);
+			tmrGameUpdates = setInterval(giveGameUpdates, GAME_UPDATE_CHECK_EVERY_X_MILIS);
 		});
 	}
 
@@ -888,7 +890,15 @@ app.factory('announcerService', [ function announcerService () {
 		return (now.getTime() - dateSinceWhen.getTime()) / 1000;
 	}
 
+	var waitABit = 0;
+
 	var giveGameUpdates = function() {
+		if (waitABit > 0) {
+			waitABit = waitABit - GAME_UPDATE_CHECK_EVERY_X_MILIS;
+			debug("exit giveGameUpdates: "+ waitABit);
+			return; //exit
+		}
+
 		var secondsSinceLastAnnouncement = getSecondSince(config.timeLastAnnouncementWasMade);
 		if (secondsSinceLastAnnouncement > 15) {
 			var secondsSinceLastScore = getSecondSince(config.timeLastGoalWasScored);
@@ -1024,6 +1034,9 @@ app.factory('announcerService', [ function announcerService () {
 		}
 		sound.play();
 		if (endTimeMiliseconds > 0) {
+			if (endTimeMiliseconds > 0) {
+				waitABit = endTimeMiliseconds;
+			}
 			setTimeout(function() { sound.pause(); },  endTimeMiliseconds);
 		}
 	}
