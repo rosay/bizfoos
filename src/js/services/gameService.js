@@ -197,9 +197,11 @@ app.factory('gameService', ['rosterService', 'playerService', 'configService', '
 		}
 	};
 
-	var initializeAnnouncer = function(players){
+	var initializeAnnouncer = function(roster){
 		announcerService.init({
 			"pointsNeededToWin": configService.getScoreLimit(),
+			"roster" : roster,
+			/*
 			"teams" : [
 				{
 					"color": "black",
@@ -242,6 +244,7 @@ app.factory('gameService', ['rosterService', 'playerService', 'configService', '
 					"names": players.yellowD.names
 				}
 			], // end array of peole
+			*/
 			"useTTS": true,
 			"debug": false
 		});

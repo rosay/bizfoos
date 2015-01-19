@@ -17,6 +17,7 @@ app.factory('announcerService', [ function announcerService () {
 		"pointsNeededToWin": 5,
 		"series:": 1,
 		"useTTS": true,
+		"skipIntro": false,
 		"debug": false
 	};
 
@@ -84,9 +85,52 @@ app.factory('announcerService', [ function announcerService () {
 		music : {
 			intro : [
 				"intro.wav"
+				//, "monday-night-football-94635-4694b335-2e6b-4d16-a4a4-0c672e2eb298.mp3" // 17 seconds
 			],
 			win : [
 				"win-1.mp3", 
+			],
+			// http://www.soundboard.com/sb/CulpeperHSFootball
+			// http://www.soundboard.com/sb/ricky38501
+			// http://www.soundboard.com/sb/jimi_yorke1
+			// http://www.soundboard.com/sb/WiiHockey
+			// http://www.soundboard.com/sb/SportsChantsCharge
+			afterAwesomeGoalScored : [
+				{ start: 0, end: 13000, file: "music/Best Goal Song Ever215099-4cb8905f-a537-4486-8808-a3c6bebe64ae.mp3" },
+				{ start: 0, end: 17000, file: "music/Survivor - Eye of the Tiger215099-056b6ddb-3fe7-4e8c-981e-d9891fdf3d96.mp3" },
+				{ start: 0, file: "music/Oh Yeah (music track)215099-a10d5348-5d2a-4393-b54f-f9da2907d820.mp3" },
+				{ start: 0, end: 12000, file: "music/Crazy Train215099-fc7de501-18e1-42e7-8a88-640fab289954.mp3" },
+				{ start: 0, end: 13000, file: "music/Pump the Crowd - Rock 'n' Roll215099-44b24e25-71af-458a-beff-bab3959b7128.mp3"},
+				{ start: 0, end: 16000, file: "music/U Cant Touch This -MC Hammer215099-a9933f26-50cb-4ce3-adb4-c1d515b5f7f5.mp3" },
+				{ start: 0, end: 14000, file: "music/We Like To Party215099-1f217a9a-02fb-4238-b4a1-ba4ee81c3c33.mp3" },
+				{ start: 0, end: 14000, file: "music/I Got You I Feel Good - James Brown 215099-0cfa60a5-7be1-4a96-9c45-55a46b631b0e.mp3" },
+				{ start: 0, end: 30000, file: "music/Thunderstruck - ACDC215099-60f70578-2abb-4058-b400-c5d4c5191dbc.mp3" },
+				{ start: 0, end: 17000, file: "music/Jump Around215099-cd384755-b62e-4b1d-a8ab-89883d05b17d.mp3" },
+				{ start: 0, end: 14000, file: "music/Who Let the Dog's Out215099-3db7ba1f-03df-46d4-8c6d-9def824ae3f0.mp3"},
+				{ start: 0, end: 15000, file: "music/94635-e820d841-f42d-46b9-b44f-ae625f2ffe96.mp3" },
+				{ start: 0, end: 20000, file: "music/mission-impossible-94635-b2ea9d6e-2499-4f60-917d-51acb04f5435.mp3" },
+				{ start: 0, file: "music/air-raid-94635-0a641a78-6ba9-4821-83ce-9226b4807edc.mp3" },
+				{ start: 0, file: "music/queen-we-are-the-champions-94635-2fa5f86e-5441-4722-970d-319a174f76f3.mp3" },
+				{ start: 0, end: 35000, file: "music/queen-we-will-rock-you-94635-35e3e035-af81-41df-ac46-238d653c1b99.mp3" },
+				{ start: 0, file: "music/jaws-94635-6312a539-9fd3-4105-9e9c-33f174cee965.mp3" },
+				{ start: 0, end: 8000, file: "music/knight-rider-94635-4cb99e76-8e98-4cc2-9cf3-703627666c35.mp3" },
+				{ start: 0, end: 33000, file: "music/whoomp-there-it-is-OTY3NzQ5NTQ5Njc4Mzk_VoEy4AVVJjA.mp3" },
+				{ start: 33, end: 10000, file: "music/whoomp-there-it-is-OTY3NzQ5NTQ5Njc4Mzk_VoEy4AVVJjA.mp3" },
+				{ start: 0, end: 12000, file: "music/wild-side-65515-a0b7e206-156f-40c5-83cd-1ee87ae17371.mp3" },
+				{ start: 0, end: 28000, file: "music/welcome-to-the-jungle-65515-97fe62cd-746b-4265-9bac-805acd86e252.mp3" },
+				{ start: 0, end: 17000, file: "music/goal-siren-prodigy-65515-bb8ef7ea-86e5-40aa-a03f-e83b3e8c5c53.mp3" },
+				//{ start: 0, end: 15000, file: "music/" },
+				//{ start: 0, end: 15000, file: "music/" },
+				//{ start: 0, end: 15000, file: "music/" },
+				//{ start: 0, end: 15000, file: "music/" },
+				//{ start: 0, end: 15000, file: "music/" },
+				//{ start: 0, end: 15000, file: "music/" },
+				//{ start: 0, end: 30000, file: "music/Thunderstruck - ACDC215099-60f70578-2abb-4058-b400-c5d4c5191dbc.mp3" },
+
+			],
+			getTheCrowdPumped : [
+				{ start: 0, end: 16500, file: "music/Pump The Crowd - Get Ready For This215099-120fa195-6fa0-463f-b003-9fb4d99dc5f3.mp3"},
+				{ start: 0, end: 19000, file: "music/everybody-dance-now-NzQ3NDQ5NTQ3NDc1MjM_c28jQ4MF8M0.mp3" },
 			]
 		},
 		score : {
@@ -430,6 +474,8 @@ app.factory('announcerService', [ function announcerService () {
 	var getPlayer = function(oFilter) {
 		var matchingPlayer;
 		config.players.forEach(function(player) {
+		    if (player.color == oFilter.color && player.position == oFilter.position)
+		    	matchingPlayer = player;
 		    if (player.playerid == oFilter.playerid)
 		    	matchingPlayer = player;
 		});
@@ -638,6 +684,13 @@ app.factory('announcerService', [ function announcerService () {
 		config.timeLastGoalWasScored = config.gameStartTime;
 		config.timeLastAnnouncementWasMade = config.gameStartTime;
 
+		console.log(typeof config.roster == "object")
+		if (typeof config.roster == "object") {
+			//alert("INIT THE NEW WAY");
+			initPlayersAndTeamViaRoster();
+		}
+
+
 		config.teams.forEach(function(team) {
 			team.score = 0;
 			team.pointStreak = 0;
@@ -649,6 +702,74 @@ app.factory('announcerService', [ function announcerService () {
 		});
 	}
 
+	var initPlayersAndTeamViaRoster = function () {
+		//TODO: Cody, there may be some fixing needed here to get the roster lined up properly
+		config.teams = [
+				{
+					"color": "black",
+					"team": "The Black Team"
+					//"probabilty": .80
+				},
+				{
+					"color": "yellow",
+					"team": "The Yellow Team"
+					//"probabilty": .20
+				}
+		];
+		config.players = [
+			{	//0
+				"playerid": config.roster.teamBlack.offense._id,
+				"color": "black",
+				"position": "o",
+				"team": "The Black Team",
+				"names": createNameList(config.roster.teamBlack.offense)
+			},
+			{	//1
+				"playerid": config.roster.teamBlack.defense._id,
+				"color": "black",
+				"position": "d",
+				"team": "The Black Team",
+				"names": createNameList(config.roster.teamBlack.defense)
+			},
+			{	//2
+				"playerid": config.roster.teamOrange.offense._id,
+				"color": "yellow",
+				"position": "o",
+				"team": "The Yellow Team",
+				"names": createNameList(config.roster.teamOrange.offense)
+			},
+			{	//3
+				"playerid": config.roster.teamOrange.defense._id,
+				"color": "yellow",
+				"position": "d",
+				"team": "The Yellow Team",
+				"names": createNameList(config.roster.teamOrange.defense)
+			}
+		] // end array of peole
+	}
+
+	var createNameList = function(playerFromRoster) {
+		var aryNames = [];
+		// if no first and last name.... make em....
+		if (!(playerFromRoster.firstName && playerFromRoster.lastName)) {
+			var aNames = playerFromRoster.name.split(" ", 2);
+			playerFromRoster.firstName = aNames[0];
+			playerFromRoster.lastName  = aNames[1];
+		}
+		aryNames.push(playerFromRoster.firstName);
+		aryNames.push(playerFromRoster.lastName);
+
+		if (playerFromRoster.nicknames) {
+			playerFromRoster.nicknames.split(",").forEach(function(n) {
+				aryNames.push($.trim(n));
+			});
+		}
+
+		debug(playerFromRoster);
+		debug(aryNames);
+		return aryNames;
+	}
+
 	var endGame = function() {
 
 	}
@@ -658,10 +779,12 @@ app.factory('announcerService', [ function announcerService () {
 		// do sound effects
 		crowdControl.startCrowd();
 		
-		playSound(soundsToMake.music.intro);
+		if (!config.skipIntro)
+			playSound(soundsToMake.music.intro);
 
 		// give it a small delay to the the intro play
-		setTimeout(speakOpeningMessage, 5000);
+		if (!config.skipIntro)
+			setTimeout(speakOpeningMessage, 5000);
 	}
 
 	var speakOpeningMessage = function() {
@@ -674,16 +797,17 @@ app.factory('announcerService', [ function announcerService () {
 
 			//todo, also announce player positions and team names and colors/sides
 			message = getRandomItem(thingsToSay.newGame.teamsAndPlayersIntro);
+			debug(getPlayer({"color": "yellow", "position": "o"}))
 			message = updateMessageReplacements(message, {
 				// yellow-team, black-team, yellow-d, yellow-o, black-d, black-o
 				"yellow-team": getTeam("yellow").team,
-				"yellow-o": "Mark",
-				"yellow-d": "Sterling",
+				"yellow-o": getRandomItem(getPlayer({"color": "yellow", "position": "o"}).names),
+				"yellow-d": getRandomItem(getPlayer({"color": "yellow", "position": "d"}).names),
 				"black-team": getTeam("black").team,
-				"black-o": "Adam",
-				"black-d": "Albert",
+				"black-o": getRandomItem(getPlayer({"color": "black", "position": "o"}).names),
+				"black-d": getRandomItem(getPlayer({"color": "black", "position": "d"}).names),
 			});
-			//sayThis(message);
+			sayThis(message);
 
 			tmrGameUpdates = setInterval(giveGameUpdates, 7000);
 		});
@@ -767,9 +891,14 @@ app.factory('announcerService', [ function announcerService () {
 				}
 			} else {
 				// if it is an object of arrays, we need to concat
-				//debug("I AM AN OBJECT WITH ARRAYS")
-				for (var key in whichSound) {
-					aryChooseFrom = aryChooseFrom.concat(whichSound[key]);
+				debug("I AM AN OBJECT WITH ARRAYS")
+				debug(whichSound)
+				if (whichSound.file) {
+					aryChooseFrom.push(whichSound);
+				} else {
+					for (var key in whichSound) {
+						aryChooseFrom = aryChooseFrom.concat(whichSound[key]);
+					}
 				}
 			}
 			fileName = getRandomItem(aryChooseFrom);
@@ -787,14 +916,41 @@ app.factory('announcerService', [ function announcerService () {
 				default: fileName = whichSound;
 			}
 		}
-		debug("getSoundFile: "+ fileName); 
-		return soundRootPath + fileName;
+		if (typeof fileName == "string") {
+			debug("getSoundFile: "+ fileName); 
+			return soundRootPath + fileName;
+		} else {
+			var returnThis = {
+				file: soundRootPath + fileName.file,
+				start: fileName.start,
+				end: fileName.end
+			}
+			debug("getSoundFile:"); 
+			debug(returnThis);
+			return returnThis;
+		}
 	}
 
-	var playSound = function(soundType) {
-		var sound = new Audio(getSoundFile(soundType));
+	var playSound = function(soundType, startTimeSeconds, endTimeMiliseconds) {
+		var playThisFile = getSoundFile(soundType);
+		debug("playThisFile:");
+		debug(playThisFile);
+		if (typeof playThisFile == "object") {
+			startTimeSeconds = playThisFile.start;
+			endTimeMiliseconds = playThisFile.end;
+			playThisFile = playThisFile.file;			
+		}
+
+		var sound = new Audio(playThisFile);
+		if (startTimeSeconds > 0) {
+			sound.currentTime = startTimeSeconds;
+		}
 		sound.play();
+		if (endTimeMiliseconds > 0) {
+			setTimeout(function() { sound.pause(); },  endTimeMiliseconds);
+		}
 	}
+
 
 	var playChargeSound = function(allowNegative, delayIt) {
 		var playCharge = function() {
@@ -820,6 +976,28 @@ app.factory('announcerService', [ function announcerService () {
 
 		oTeam.score++;   // update team score
 		oPlayer.score++; // update player score
+
+		var doThisAfterwards;
+
+		updateStreaks(oPlayer, oTeam, oOtherTeam);
+
+		var playAwesomeGoalMusic = false;
+		if (oTeam.pointStreak >= 3 && oTeam.score < config.pointsNeededToWin) {
+			// if it is more than a 3 point streak
+			playAwesomeGoalMusic = true;
+		} else if (oTeam.pointStreak >= 2 && getSecondSince(oTeam.timeLastGoalWasScored) < 20) {
+			// 2 points in a quick about of time by the same team
+			playAwesomeGoalMusic = true;
+		} else if (oTeam.score >= 2 && oOtherTeam.score == 0) {
+			// 2 - 0 or more
+			playAwesomeGoalMusic = true;
+		}
+		if (playAwesomeGoalMusic) {
+			doThisAfterwards = function() {
+				playSound(getRandomItem(soundsToMake.music.afterAwesomeGoalScored));
+			}
+		}
+
 
 		config.timeLastGoalWasScored = new Date(); // update last point
 		oTeam.timeLastGoalWasScored = config.timeLastGoalWasScored;
@@ -858,7 +1036,6 @@ app.factory('announcerService', [ function announcerService () {
 		}
 
 
-		updateStreaks(oPlayer, oTeam, oOtherTeam);
 		
 
 		// array to be used to load random options of messages
@@ -986,7 +1163,7 @@ app.factory('announcerService', [ function announcerService () {
 
 		// put a slight delay on the announcement
 		setTimeout(function() {
-			doThis(returnMessage);
+			doThis(returnMessage, doThisAfterwards);
 		}, (1500 + (shotPowerLevel * 3000)));
 
 		// return to user
@@ -1006,19 +1183,21 @@ app.factory('announcerService', [ function announcerService () {
 		return msg.replace(/BizStream/g, "Biz Stream")
 			.replace(/The Sterl/g, "The Sturl")
 			.replace(/Beukema/g, "Beukuma")
+			.replace(/defense/g, "D-fence")
+			//.replace(/offense/g, "D-fence")
 		;
 	}
 
-	var doThis = function(doThisThing) {
+	var doThis = function(doThisThing, doThisAfterwards) {
 		if (/sound\:/.test(doThisThing)) {
 			playSound(doThisThing.replace("sound:", ""));
 		} else {
 			// assume it is text that needs to be spoken
-			sayThis(doThisThing);
+			sayThis(doThisThing, doThisAfterwards);
 		}
 	}
 
-	var sayThis = function(message) {
+	var sayThis = function(message, doThisAfterwards) {
 		//alert(config.useTTS)
 		if (config.useTTS) {
 			debug("sayThis: "+ message);
@@ -1031,6 +1210,7 @@ app.factory('announcerService', [ function announcerService () {
 			msg.onend = function(e) {
 				debug("restore the volume...");
 				crowdControl.setVolume(originalVolume);
+				if (doThisAfterwards) doThisAfterwards();
 			};
 
 
