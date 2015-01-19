@@ -270,8 +270,8 @@ app.factory('announcerService', [ function announcerService () {
 			],
 			// yellow-team, black-team, yellow-d, yellow-o, black-d, black-o
 			teamsAndPlayersIntro : [
-				"For today's match-up we have {{{yellow-team}}/{{yellow-o}} and {{yellow-d}}} on the {yellow/home} team. And on the {black/away} team we have {{black-o}} and {{black-d}}. {{black-o}} will be playing offense for the yellow team and {{yellow-d}} will be {playing defense/defending the goals}"
-				//,""
+				"For today's match-up we have {{{yellow-team}}/{{yellow-o}} and {{yellow-d}}} on the {yellow/home} team. And on the {black/away} team we have {{black-o}} and {{black-d}}. {{black-o}} will be playing offense for the black team and {{yellow-d}} will be {playing defense/defending the goals} for {{yellow-team}}"
+				,"{This match up of/Our match up for today of} {{yellow-team}} and {{black-team}} {will/should} be {great/incredible/entertaining/interesting/fun}. On {{black-team}}, We have {{black-d}} on defense. and {{black-o}} on Oh. For the home team, {{yellow-team}}, It will be {{yellow-o}} {doing the scoring/on offense/on Oh}. {while/and} {{yellow-d}} {will be/is} {D-fending/on defense}."
 			]
 		},
 
@@ -282,7 +282,7 @@ app.factory('announcerService', [ function announcerService () {
 				"First point of the game by {{name}}"
 				,"{{name}} {with the/starts us off with the/knocks in the/puts in the} first {score/score of the game/shot on the table}"
 				,"{{name}} with the first {score/ball in the hole}"
-				,"{{team}} breaks{{team{s|}}} the ice with a 1 to 0 lead. {Great/excellent/nice} {shot/goal/point/score} {by/from} {{name}}."
+				,"{{team}} break{{team{s|}}} the ice with a 1 to 0 lead. {Great/excellent/nice} {shot/goal/point/score} {by/from} {{name}}."
 				,"{{name}} breaks the ice with a 1 to 0 lead"
 				,"And now {{team}} {{team{is|are}}} in the lead thanks to {{name}} with the first point"
 				//,"wav:and_another_one.wav"
@@ -290,13 +290,13 @@ app.factory('announcerService', [ function announcerService () {
 			ofTheTeam : [
 				"And now {{team}} {{team{is|are}}} on the board with 1 point by {{name}}"
 				,"{{name}} with the first goal for {{team}}"
-				,"{{name}} put {{team}} on the board"
+				,"{{name}} puts {{team}} on the {score/}board"
 				//,"wav:and_another_one.wav"
 			],
 			ofThePlayer : [
 				"And no} {{name}} is scoring points for {{team}}"
 				,"{{name}} {has put in/with/puts in/scores/drops/sinks} his first goal for {{team}}"
-				,"{{name}} put {{team}} on the board"
+				,"{{name}} puts {{team}} on the {score/}board"
 				//,"wav:and_another_one.wav"
 			]
 		},
@@ -319,6 +319,7 @@ app.factory('announcerService', [ function announcerService () {
 				//,"wav:and_another_one.wav"
 			]
 		},
+
 
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// Options for annoncing throughout the game
@@ -735,6 +736,7 @@ app.factory('announcerService', [ function announcerService () {
 			team.score = 0;
 			team.pointStreak = 0;
 			team.timeLastGoalWasScored = config.gameStartTime;
+			team.team = setTeamName(team.color, config.players)
 		});
 
 		config.players.forEach(function(player) {
@@ -812,6 +814,28 @@ app.factory('announcerService', [ function announcerService () {
 		return aryNames;
 	}
 
+	var specialTeamNames = [
+		{ name: "The Avengers", players : ["sheibeck@bizstream.com", "mschmidt@bizstream.com"]},
+		{ name: "The Dream Team", players : ["areece@bizstream.com", "ahovingh@bizstream.com"]},
+		{ name: "Team Brark", players : ["mschmidt@bizstream.com", "bmckeiver@bizstream.com"]},
+		{ name: "Team Co Co", players : ["crose@bizstream.com", "cvandenbout@bizstream.com"]},
+	]
+
+	var setTeamName = function(color, players) {
+		var pOffense = getPlayer({color: color, position: "o"});
+		var pDefense = getPlayer({color: color, position: "d"});
+
+		var returnTeamName = "The "+ color +" Team";
+		specialTeamNames.forEach(function(st) {
+			if (st.players.indexOf(pOffense.playerid) >= 0 && st.players.indexOf(pDefense.playerid) >= 0) {
+				returnTeamName = st.name;
+				return;
+			}
+		});
+
+		return returnTeamName;
+	}
+
 	var endGame = function() {
 
 	}
@@ -849,7 +873,11 @@ app.factory('announcerService', [ function announcerService () {
 				"black-o": getRandomItem(getPlayer({"color": "black", "position": "o"}).names),
 				"black-d": getRandomItem(getPlayer({"color": "black", "position": "d"}).names),
 			});
-			sayThis(message);
+
+			// split by ". " 
+			message.split(". ").forEach(function(m) {
+				sayThis(m);
+			})
 
 			tmrGameUpdates = setInterval(giveGameUpdates, 7000);
 		});
