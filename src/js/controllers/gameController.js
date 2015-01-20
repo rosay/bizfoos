@@ -18,32 +18,16 @@ app.controller('GameController', ['gameService', 'rosterService', 'playerService
 
 	rosterService.createRoster();
 
-	vm.players = {
-		"teamBlack": {
-			"offense": {
-				"name": "",
-				"id": "",
-				"pic": ""
-			},
-			"defense": {
-				"name": "",
-				"id": "",
-				"pic": ""
-			}
-		},
-		"teamOrange": {
-			"offense": {
-				"name": "",
-				"id": "",
-				"pic": ""
-			},
-			"defense": {
-				"name": "",
-				"id": "",
-				"pic": ""
-			}
-		}
-	};
+    vm.players = {
+        "teamBlack": {
+            "offense": {},
+            "defense": {}
+        },
+        "teamOrange": {
+            "offense": {},
+            "defense": {}
+        }
+    };
 
 	var setPlayers = function () {
 		vm.players.teamBlack.offense = rosterService.getPlayer(1, "offense");
