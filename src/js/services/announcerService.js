@@ -2,6 +2,7 @@
 // player Gender
 // player NickNames
 // Team Names
+// get random music, keep track of previous plays ,get something we haven't played in a while. on reset, make sure this array gets cleared
 
 // announce player positions and the home team (yellow) and the away team (black)
 
@@ -113,8 +114,11 @@ app.factory('announcerService', [ function announcerService () {
 		},
 		music : {
 			intro : [
-				{ vol: 0.3, file: "intro.wav" }
+				{ vol: 0.15, file: "intro.wav" }
 				//, "monday-night-football-94635-4694b335-2e6b-4d16-a4a4-0c672e2eb298.mp3" // 17 seconds
+			],
+			letsGetReadyToRumble : [
+				{ vol: .7, type: "intro", fade: true, file: "music/lets-get-ready-to-rumble-88035-f4d7d1a6-dd49-435a-955e-de52157812be.mp3" }
 			],
 			// http://www.soundboard.com/sb/CulpeperHSFootball
 			// http://www.soundboard.com/sb/ricky38501
@@ -851,9 +855,13 @@ app.factory('announcerService', [ function announcerService () {
 	}
 
 	var endGame = function() {
+		
+		playSound(getRandomItem(soundsToMake.music.finalPoint));
+		setTimeout(function() { playSound([soundsToMake.positiveCrowd.cheer, soundsToMake.positiveCrowd.chant]); }, 1000);
+		setTimeout(function() { playSound([soundsToMake.positiveCrowd.cheer, soundsToMake.positiveCrowd.chant]); }, 8000);
 		setTimeout(function() {
-			playSound(getRandomItem(soundsToMake.music.finalPoint));
-			crowdControl.fadeOut(10000, resetGame);
+			playSound([soundsToMake.positiveCrowd.cheer, soundsToMake.positiveCrowd.chant]);
+			crowdControl.fadeOut(15000, resetGame);
 		}, 5000)
 	}
 
@@ -868,6 +876,10 @@ app.factory('announcerService', [ function announcerService () {
 		config.timeLastAnnouncementWasMade = config.gameStartTime;
 
 		resetPlayersAndTeams();
+
+		// stop talking
+		window.speechSynthesis.pause();
+		window.speechSynthesis.cancel();
 	}
 
 	var resetPlayersAndTeams = function() {
@@ -902,12 +914,30 @@ app.factory('announcerService', [ function announcerService () {
 		// do sound effects
 		crowdControl.startCrowd();
 		
-		if (!config.skipIntro)
-			playSound(soundsToMake.music.intro);
+		// 1/3 of the time.
+		if (Math.random() < .333) {
+			// this will play until the first thing is said...
+			playSound(soundsToMake.music.letsGetReadyToRumble);
+			//after 15-30 seconds drop the volume
+			setTimeout(function() {
+				debug("lowering the volume")
+				if (soundPlayingStatus.intro) { // if intro is still playing...
+					$(soundPlayingStatus.introSoundObject).animate({volume: 0.2}, 3000);
+				}
+			}, 15000 + (Math.random() * 15000));
+			setTimeout(startGameUpdateTimer, 10000);
+		} else {
+			if (!config.skipIntro)
+				playSound(soundsToMake.music.intro);
 
-		// give it a small delay to the the intro play
-		if (!config.skipIntro)
-			setTimeout(speakOpeningMessage, 5000);
+			// give it a small delay to the the intro play
+			if (!config.skipIntro)
+				setTimeout(speakOpeningMessage, 5000);
+		}
+	}
+
+	var startGameUpdateTimer = function() {
+		tmrGameUpdates = setInterval(giveGameUpdates, GAME_UPDATE_CHECK_EVERY_X_MILIS);
 	}
 
 	var speakOpeningMessage = function() {
@@ -936,7 +966,7 @@ app.factory('announcerService', [ function announcerService () {
 				sayThis(m);
 			})
 
-			tmrGameUpdates = setInterval(giveGameUpdates, GAME_UPDATE_CHECK_EVERY_X_MILIS);
+			startGameUpdateTimer();
 		});
 	}
 
@@ -1134,7 +1164,7 @@ app.factory('announcerService', [ function announcerService () {
 
 		// if music is playing, and we can talk, we can fade it out later
 		if (settings.type) {
-			soundPlayingStatus[settings.type +"SoundObjectObject"] = sound;
+			soundPlayingStatus[settings.type +"SoundObject"] = sound;
 		}
 
 		if (settings.end > 0) {
@@ -1150,7 +1180,7 @@ app.factory('announcerService', [ function announcerService () {
 					//debug("done playing...")
 					//debug(soundPlayingStatus)
 					soundPlayingStatus[settings.type] = false;
-					soundPlayingStatus[settings.type +"SoundObjectObject"] = null;
+					soundPlayingStatus[settings.type +"SoundObject"] = null;
 					//debug(settings.type)
 					//debug(soundPlayingStatus[settings.type])
 				}); 
@@ -1207,10 +1237,10 @@ app.factory('announcerService', [ function announcerService () {
 
 			// fade out any music that is playing right now ...
 			// make sure you can here who the winners were, then play the winning music
-			if (soundPlayingStatus.music && soundPlayingStatus.musicSoundObjectObject) {
-				$(soundPlayingStatus.musicSoundObjectObject).animate({volume: 0}, 500);
+			if (soundPlayingStatus.music && soundPlayingStatus.musicSoundObject) {
+				$(soundPlayingStatus.musicSoundObject).animate({volume: 0}, 500);
 				soundPlayingStatus.music = false;
-				soundPlayingStatus.musicSoundObjectObject = null;
+				soundPlayingStatus.musicSoundObject = null;
 			}
 
 			doThisAfterwards = function() {
@@ -1469,15 +1499,26 @@ app.factory('announcerService', [ function announcerService () {
 				if (!window.speechSynthesis.pending) {
 					debug("restore the volume...");
 					crowdControl.setVolume(originalVolume);
-					if (soundPlayingStatus.music && soundPlayingStatus.musicSoundObjectObject) {
-						$(soundPlayingStatus.musicSoundObjectObject).animate({volume: 1}, 100 + (Math.random() * 400));
+					if (soundPlayingStatus.music && soundPlayingStatus.musicSoundObject) {
+						$(soundPlayingStatus.musicSoundObject).animate({volume: 1}, 100 + (Math.random() * 400));
 					}
 				}
 				if (doThisAfterwards) doThisAfterwards();
 			};
 
-			if (soundPlayingStatus.music && soundPlayingStatus.musicSoundObjectObject) {
-				$(soundPlayingStatus.musicSoundObjectObject).animate({volume: .1}, 500);
+			// if the intro music is still playing, KILL IT
+			if (soundPlayingStatus.intro && soundPlayingStatus.introSoundObject) {
+				$(soundPlayingStatus.introSoundObject).animate({volume: 0}, 100 + (Math.random() * 400), function() {
+					soundPlayingStatus.introSoundObject.pause();
+					soundPlayingStatus.intro = false;
+					soundPlayingStatus.introSoundObject = null;
+				});
+			}
+
+
+			// if there is music playing, lower it so we can hear the announcer
+			if (soundPlayingStatus.music && soundPlayingStatus.musicSoundObject) {
+				$(soundPlayingStatus.musicSoundObject).animate({volume: .15}, 500);
 			}
 
 			//msg.volume = 1; // 0 to 1
