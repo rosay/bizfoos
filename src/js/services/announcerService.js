@@ -59,8 +59,11 @@ app.factory('announcerService', [ function announcerService () {
 		getVolume: function() { return crowdControl.audioElement.volume; },
 		setVolume: function(level) {
 		    debug("crowdControl.audioElement.volume:pre  = "+ crowdControl.audioElement.volume);
-		    crowdControl.audioElement.volume = crowdControl.ensureSafeVolume(level, .05);
-		    debug("crowdControl.audioElement.volume:post = "+ crowdControl.audioElement.volume);
+		    //crowdControl.audioElement.volume = crowdControl.ensureSafeVolume(level, .05);
+		    $(crowdControl.audioElement).animate({volume: crowdControl.ensureSafeVolume(level, .05)}, 750, function() {
+		    	debug("crowdControl.audioElement.volume:post = "+ crowdControl.audioElement.volume);
+		    });
+		    
 		},
 		adjustVolume: function(changeBy) {
 			var changeTo = crowdControl.audioElement.volume + changeBy;
@@ -184,9 +187,9 @@ app.factory('announcerService', [ function announcerService () {
 				//{ type: "music", fade: true,  start: 0, end: 15000, file: "music/" },
 			],
 			someoneDoSomethingNow : [
-				{ type: "music", fade: true,  start: 0, end: 16500, file: "music/Pump The Crowd - Get Ready For This215099-120fa195-6fa0-463f-b003-9fb4d99dc5f3.mp3"},
+				{ vol: .4, type: "music", fade: true,  start: 0, end: 16500, file: "music/Pump The Crowd - Get Ready For This215099-120fa195-6fa0-463f-b003-9fb4d99dc5f3.mp3"},
 				{ type: "music", fade: true,  start: 0, end: 19000, file: "music/everybody-dance-now-NzQ3NDQ5NTQ3NDc1MjM_c28jQ4MF8M0.mp3" },
-				{ vol: .5, type: "music", fade: true,  start: 0, end: 19500, file: "music/SIP - Blitzkrieg Bop217844-4c64f818-88bc-4cc1-b6b7-dc77ba241e81.mp3" },
+				{ vol: .4, type: "music", fade: true,  start: 0, end: 19500, file: "music/SIP - Blitzkrieg Bop217844-4c64f818-88bc-4cc1-b6b7-dc77ba241e81.mp3" },
 			],
 			shutOutAlert : [
 				{ type: "music", fade: true,  colstart: 1, start: 0, end: 10000, file: "music/air-raid-94635-0a641a78-6ba9-4821-83ce-9226b4807edc.mp3" },
@@ -238,7 +241,7 @@ app.factory('announcerService', [ function announcerService () {
 				"cheer-crowd-scream-goal_Myqs-u4_.mp3", 
 				"cheer-crowd-scream-hooray_z1g3W_4d.mp3", 
 				"cheer-crowd-scream-oh-yeah_MyNnbuEd.mp3", 
-				"cheer-crowd-scream-ohh_zJL3bO4u.mp3", 
+				"cheer-crowd-scream-ohh_zJL3bO4u.mp3",
 				"cheer-crowd-scream-shocked-whoa_fkd3-dN_.mp3", 
 				"cheer-crowd-scream-yes_MykaZO4O.mp3", 
 				"cheer-crowd-tongue-rolls_Gy9aZuVd.mp3", 
@@ -249,7 +252,20 @@ app.factory('announcerService', [ function announcerService () {
 				"crowd-cheer-baseball-game_M1WXv2Nd.mp3", 
 				"crowd-cheer-baseball-game_z1IbPhE_.mp3",
 				"crowd-scream-go-go-go_zJ6Kb_Nu.mp3", 
-				"crowd-scream-whoa_MJAnZO4O.mp3"
+				"crowd-scream-whoa_MJAnZO4O.mp3",
+				"crowd-clap-unison-pattern-loop_zJG5ZOV_.mp3",
+				"crowd-cheers-and-whistles_MyWbxfVu.mp3", 
+				"crowd-applaud-cheer-scream_GyrL-d4O.mp3",
+				"crowd-cheer-clap-scream_fJkt-OV_.mp3",
+				"crowd-scream-oh-yeah_MyNnbuEd.mp3",
+				"huge-crowd-response_Mys7gfEu.mp3",
+				"large-audience-medium-applause_MyTixHNO.mp3",
+				"screaming-teenage-girls-short_zJmNSSEu.mp3",
+				"stadium-applause_GJxblfEd.mp3",
+				"stadium-crowd-cheer-1_fJJQlMVu.mp3",
+				"stadium-crowd-cheer-2_zJ7SezVu.mp3",
+				"stadium-reaction-3_fkr4lG4u.mp3",
+				"",	
 			],
 			chant : [
 				"chant-chanting-concert-applause_zyGZ-HE_.mp3", 
@@ -262,7 +278,8 @@ app.factory('announcerService', [ function announcerService () {
 				"aww-crowd-aww_GJKdZ_Nu.mp3", 
 				"aww-crowd-disgusted-aww_G1qd-OVd.mp3", 
 				"aww-crowd-disgusted-aww_zkuqZdN_.mp3", 
-				"aww-crowd-scream-aww_fJa9Z_V_.mp3"
+				"aww-crowd-scream-aww_fJa9Z_V_.mp3",
+				"crowd-aww-disappointed_G1SdWOVd.mp3",
 			],
 			boo : [
 				"boo-1.wav", 
@@ -271,6 +288,9 @@ app.factory('announcerService', [ function announcerService () {
 				"boo-4.wav", 
 				"boo-5.wav", 
 				"boo-crowd-boo_fkA_ZONd.mp3", 
+				"crowd-boos-2_MJcMezVu.mp3",
+				"crowd-boo_fkA_ZONd.mp3",
+				"crowd-boos-1_G1amezEd.mp3",
 			],
 			ohno : [
 				"oh-no-crowd-scream-oh-no_fkm3Zu4_.mp3", 
@@ -1056,7 +1076,8 @@ app.factory('announcerService', [ function announcerService () {
 	}
 
 	var soundPlayingStatus = {
-		music: false
+		music: false,
+		musicSoundObject: null
 	}
 
 	var playSound = function(soundType) {
@@ -1109,6 +1130,12 @@ app.factory('announcerService', [ function announcerService () {
 			sound.volume = settings.vol;
 			sound.play();
 		}
+
+		// if music is playing, and we can talk, we can fade it out later
+		if (settings.type) {
+			soundPlayingStatus[settings.type +"SoundObjectObject"] = sound;
+		}
+
 		if (settings.end > 0) {
 			if (settings.end > 0) {
 				waitABit = settings.end;
@@ -1119,6 +1146,7 @@ app.factory('announcerService', [ function announcerService () {
 					debug("done playing...")
 					debug(soundPlayingStatus)
 					soundPlayingStatus[settings.type] = false;
+					soundPlayingStatus[settings.type +"SoundObjectObject"] = null;
 					debug(settings.type)
 					debug(soundPlayingStatus[settings.type])
 				}); 
@@ -1208,37 +1236,41 @@ app.factory('announcerService', [ function announcerService () {
 		var sayThisOptions = [];
 		var sayThisAlsoOptions = [];
 
+		// only play awesome goal music for the home team
+		// if (oTeam.color == "yellow")		
 
 
 		var playMusicAfterTalking;
-		//TODO
-		//if (oTeam.collor == "yellow")
 		if (oTeam.pointStreak >= 3 && oTeam.score < config.pointsNeededToWin) {
 			// if it is more than a 3 point streak
-			playMusicAfterTalking = soundsToMake.music.afterAwesomeGoalScored;
+			if (oTeam.color == "yellow") playMusicAfterTalking = soundsToMake.music.afterAwesomeGoalScored;
 		} else if (oPlayer.pointStreak >= 2 && getSecondSince(oTeam.timeLastGoalWasScored) < 20) {
 			// 2 points in a quick about of time by the same team
 			sayThisOptions = thingsToSay.playerStreak.onfire;
 			// Wow, another one, rapid fire...
-			playMusicAfterTalking = soundsToMake.music.afterAwesomeGoalScored;
+			if (oTeam.color == "yellow") playMusicAfterTalking = soundsToMake.music.afterAwesomeGoalScored;
 		} else if (oTeam.pointStreak >= 2 && getSecondSince(oTeam.timeLastGoalWasScored) < 20) {
 			// 2 points in a quick about of time by the same team
-			playMusicAfterTalking = soundsToMake.music.afterAwesomeGoalScored;
+			if (oTeam.color == "yellow") playMusicAfterTalking = soundsToMake.music.afterAwesomeGoalScored;
 		} else if (oTeam.score >= 2 && oOtherTeam.score == 0) {
 			// 2 - 0 or more, working on a shut out
 			playMusicAfterTalking = soundsToMake.music.afterAwesomeGoalScored;
 		} else if (getSecondSince(oTeam.timeLastGoalWasScored) > 120) {
 			// if it took a ridiculously long time to score ...
 			// TODO: IF THe score took more than 120 seconds
-			// FINALLY SOMEONE SCORED
+			// FINALLY SOMEONE SCORED, even if it is the black team, it's ok, ...
 			playMusicAfterTalking = soundsToMake.music.afterAwesomeGoalScored;
 		} else if (oTeam.color == "yellow" && oTeam.score < oOtherTeam.score && Math.random() > .5) {
 			// if the home team just score, yet still behind, ... and don't do it every time
 			playMusicAfterTalking = soundsToMake.music.startingAComeback;
-		} else if (oTeam.color == "black" && oOtherTeam.score == (oTeam.score + 1)) {
+		} 
+
+		if (oTeam.color == "black" && oOtherTeam.score == (oTeam.score + 1)) {
 			// if the away team JUST passed the home team
 			playMusicAfterTalking = soundsToMake.music.awayGoal;
 		}
+
+
 
 
 		config.timeLastGoalWasScored = new Date(); // update last point
@@ -1412,6 +1444,7 @@ app.factory('announcerService', [ function announcerService () {
 	}
 
 	var sayThis = function(message, doThisAfterwards, bCancelPrevious) {
+		// http://blog.teamtreehouse.com/getting-started-speech-synthesis-api
 		//alert(config.useTTS)
 		if (config.useTTS) {
 			debug("sayThis: "+ message);
@@ -1422,11 +1455,20 @@ app.factory('announcerService', [ function announcerService () {
 
 			var originalVolume = crowdControl.getVolume();
 			msg.onend = function(e) {
-				debug("restore the volume...");
-				crowdControl.setVolume(originalVolume);
+				// if there is something queued to say, do not restore it, and make a "blip" sound...
+				if (!window.speechSynthesis.pending) {
+					debug("restore the volume...");
+					crowdControl.setVolume(originalVolume);
+					if (soundPlayingStatus.music && soundPlayingStatus.musicSoundObjectObject) {
+						$(soundPlayingStatus.musicSoundObjectObject).animate({volume: 1}, 750);
+					}
+				}
 				if (doThisAfterwards) doThisAfterwards();
 			};
 
+			if (soundPlayingStatus.music && soundPlayingStatus.musicSoundObjectObject) {
+				$(soundPlayingStatus.musicSoundObjectObject).animate({volume: .1}, 500);
+			}
 
 			//msg.volume = 1; // 0 to 1
 			//msg.rate = 1; // 0.1 to 10
