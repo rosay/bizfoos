@@ -1,5 +1,5 @@
 var a;
-app.controller('GameController', ['gameService', 'rosterService', 'playerService', '$location','$document', '$scope', '$interval', function(gameService, rosterService, playerService, $location, $document, $scope, $interval) {
+app.controller('GameController', ['gameService', 'rosterService', 'playerService', 'configService', 'announcerService', '$location','$document', '$scope', '$interval', function(gameService, rosterService, playerService, configService, announcerService, $location, $document, $scope, $interval) {
 	"use strict";
 
 	var vm = this;
@@ -54,7 +54,12 @@ app.controller('GameController', ['gameService', 'rosterService', 'playerService
 
 		// intialize the smart announcer everytime a game starts
 
-		gameService.initializeAnnouncer(vm.players);
+		announcerService.init({
+			"pointsNeededToWin": configService.getScoreLimit(),
+			"roster" : vm.players,
+			"useTTS": true,
+			"debug": false
+		});
 	};
 
 	setPlayers();
