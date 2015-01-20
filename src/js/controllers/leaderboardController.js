@@ -1,4 +1,4 @@
-app.controller('LeaderboardController', ['$http', 'statisticsService', 'playerService', '$q', function($http, statisticsService, playerService, $q) {
+app.controller('LeaderboardController', ['$http', 'statisticsService', 'playerService', function($http, statisticsService, playerService) {
 	"use strict";
 
 	var vm = this;

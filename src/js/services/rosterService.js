@@ -56,15 +56,6 @@ app.factory('rosterService', ['playerService', function rosterService (playerSer
 				newPlayers[i].position = positions[i];
 
 				roster.push(newPlayers[i]);
-
-				//for (var j = 0; j < roster.length; j++) {
-				//	if (_.isEmpty(roster[j])) {
-				//		newPlayers[i].team = emptyTeam;
-				//		newPlayers[i].position = positions[i];
-                //
-				//		roster[j] = newPlayers[i];
-				//	}
-				//}
 			}
 		}
 	};
