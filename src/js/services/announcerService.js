@@ -132,7 +132,7 @@ app.factory('announcerService', [ function announcerService () {
 
 				{ type: "music", fade: true,  start: 0, end: 13000, file: "music/Best Goal Song Ever215099-4cb8905f-a537-4486-8808-a3c6bebe64ae.mp3" },
 				{ type: "music", fade: true,  start: 0, end: 17000, file: "music/Survivor - Eye of the Tiger215099-056b6ddb-3fe7-4e8c-981e-d9891fdf3d96.mp3" },
-				{ type: "music", fade: true,  start: 0, end: 42000, file: "music/Oh Yeah (music track)215099-a10d5348-5d2a-4393-b54f-f9da2907d820.mp3" },
+				{ type: "music", fade: true,  start: 0, end: 15000, file: "music/Oh Yeah (music track)215099-a10d5348-5d2a-4393-b54f-f9da2907d820.mp3" },
 				{ type: "music", fade: true,  start: 0, end: 12000, file: "music/Crazy Train215099-fc7de501-18e1-42e7-8a88-640fab289954.mp3" },
 				{ type: "music", fade: true,  start: 0, end: 13000, file: "music/Pump the Crowd - Rock 'n' Roll215099-44b24e25-71af-458a-beff-bab3959b7128.mp3"},
 				{ type: "music", fade: true,  start: 0, end: 16000, file: "music/U Cant Touch This -MC Hammer215099-a9933f26-50cb-4ce3-adb4-c1d515b5f7f5.mp3" },
@@ -144,8 +144,8 @@ app.factory('announcerService', [ function announcerService () {
 				{ type: "music", fade: true,  start: 0, end: 15000, file: "music/94635-e820d841-f42d-46b9-b44f-ae625f2ffe96.mp3" },
 				{ type: "music", fade: true,  start: 0, end: 20000, file: "music/mission-impossible-94635-b2ea9d6e-2499-4f60-917d-51acb04f5435.mp3" },
 				{ type: "music", fade: true,  start: 0, end: 35000, file: "music/queen-we-will-rock-you-94635-35e3e035-af81-41df-ac46-238d653c1b99.mp3" },
-				{ type: "music", fade: true,  start: 0, end: 42000, file: "music/jaws-94635-6312a539-9fd3-4105-9e9c-33f174cee965.mp3" },
-				{ type: "music", fade: true,  start: 0, end: 8000, file: "music/knight-rider-94635-4cb99e76-8e98-4cc2-9cf3-703627666c35.mp3" },
+				{ type: "music", fade: true,  start: 0, end:  6000, file: "music/jaws-94635-6312a539-9fd3-4105-9e9c-33f174cee965.mp3" },
+				{ type: "music", fade: true,  start: 0, end:  8000, file: "music/knight-rider-94635-4cb99e76-8e98-4cc2-9cf3-703627666c35.mp3" },
 				{ type: "music", fade: true,  volstart: 1, start: 0, end: 33000, file: "music/whoomp-there-it-is-OTY3NzQ5NTQ5Njc4Mzk_VoEy4AVVJjA.mp3" },
 				{ type: "music", fade: true,  volstart: 1, start: 33000, end: 10000, file: "music/whoomp-there-it-is-OTY3NzQ5NTQ5Njc4Mzk_VoEy4AVVJjA.mp3" },
 				{ type: "music", fade: true,  start: 0, end: 12000, file: "music/wild-side-65515-a0b7e206-156f-40c5-83cd-1ee87ae17371.mp3" },
@@ -173,7 +173,7 @@ app.factory('announcerService', [ function announcerService () {
 			],
 			awayGoal : [
 				{ type: "music", fade: true,  start: 0, end: 8500, file: "music/Away Goal - It Doesnt Matter217844-d4fc0f49-3808-43cf-a972-8df7ab0f1fb4.mp3" },
-				{ type: "music", fade: true,  start: 0, end: 42000, file: "music/SIP - Wheres your head at217844-7401f6ee-6bfa-4e05-a98c-06fcb53ca51d.mp3" },
+				{ type: "music", fade: true,  start: 0, end: 21000, file: "music/SIP - Wheres your head at217844-7401f6ee-6bfa-4e05-a98c-06fcb53ca51d.mp3" },
 				{ type: "music", fade: true,  start: 0, end: 21000, file: "music/SIP - Fight for Your Right217844-04310f82-b577-482b-a6a8-6e73b4a79179.mp3" },
 				//{ type: "music", fade: true,  start: 0, end: 15000, file: "music/" },
 				//{ type: "music", fade: true,  start: 0, end: 15000, file: "music/" },
@@ -192,7 +192,7 @@ app.factory('announcerService', [ function announcerService () {
 				{ vol: .4, type: "music", fade: true,  start: 0, end: 19500, file: "music/SIP - Blitzkrieg Bop217844-4c64f818-88bc-4cc1-b6b7-dc77ba241e81.mp3" },
 			],
 			shutOutAlert : [
-				{ type: "music", fade: true,  colstart: 1, start: 0, end: 10000, file: "music/air-raid-94635-0a641a78-6ba9-4821-83ce-9226b4807edc.mp3" },
+				{ type: "fx", fade: true,  colstart: 1, start: 0, end: 10000, file: "music/air-raid-94635-0a641a78-6ba9-4821-83ce-9226b4807edc.mp3" },
 			],
 			finalPoint : [
 				{ type: "music", fade: true,  start: 0, file: "music/queen-we-are-the-champions-94635-2fa5f86e-5441-4722-970d-319a174f76f3.mp3" },
@@ -383,6 +383,7 @@ app.factory('announcerService', [ function announcerService () {
 				 "And we are still {tied/all tied} up at {{winning-score}} to {{losing-score}}"
 				 ,"{And we are/The scores are/It's all} tied up at {{winning-score}} to {{losing-score}}"
 				 ,"And the scores are at {{winning-score}} and {{losing-score}}"
+				 ,"This is a {tight/close/tough} {game/match-up} with the {scores at/score board showing} {{winning-score}} to {{losing-score}}"
 				 ,"{All tied up at/we're even with a score of/It's anyones game with a score of} {{winning-score}} and {{losing-score}}"				
 			]
 		},
@@ -518,6 +519,7 @@ app.factory('announcerService', [ function announcerService () {
 	var sayThis_PlayerScores_ReportTiedScoreNextPointWins = [
 		"{And now/OK boys and girls,} it just got real {{team-score}} to {{other-team-score}}"
 		,"{We have/And now it's} fours all around, next point wins"
+		,"It's on. It's on like donkey kong. The Next {point/score/goal} ends {the game/this battle}."
 		,"And fours all around, next point wins"
 	]
 
@@ -943,12 +945,9 @@ app.factory('announcerService', [ function announcerService () {
 		return (now.getTime() - dateSinceWhen.getTime()) / 1000;
 	}
 
-	var waitABit = 0;
-
 	var giveGameUpdates = function() {
-		if (waitABit > 0) {
-			waitABit = waitABit - GAME_UPDATE_CHECK_EVERY_X_MILIS;
-			debug("exit giveGameUpdates: "+ waitABit);
+		if (soundPlayingStatus.music) {
+			debug("exit giveGameUpdates: "+ soundPlayingStatus.music);
 			return; //exit
 		}
 
@@ -1107,6 +1106,8 @@ app.factory('announcerService', [ function announcerService () {
 			if (soundPlayingStatus[settings.type]) {
 				//bail
 				debug("NOT GOING TO PLAY THIS SONG... busy playing something else...")
+				// try again in 4 seconds? This is questionable, Not sure if I want to do this, might get out of control
+				setTimeout(function() { playSound(soundType) }, 4000);
 				return false;
 			}
 			soundPlayingStatus[settings.type] = true;
@@ -1137,20 +1138,23 @@ app.factory('announcerService', [ function announcerService () {
 		}
 
 		if (settings.end > 0) {
-			if (settings.end > 0) {
-				waitABit = settings.end;
-			}
+
+			var endAfter = settings.end;
+			// put a little variation into it
+			if (endAfter > 10000) // if more than 10 seconds, let's make the length variable
+				endAfter = (endAfter - 7000) + (Math.random() * 11000); //So, we are going to -7 or +4 seconds
+
 			setTimeout(function() { 
 				$(sound).animate({volume: 0}, 750 + (Math.random() * 2000), function() { 
 					sound.pause(); 
-					debug("done playing...")
-					debug(soundPlayingStatus)
+					//debug("done playing...")
+					//debug(soundPlayingStatus)
 					soundPlayingStatus[settings.type] = false;
 					soundPlayingStatus[settings.type +"SoundObjectObject"] = null;
-					debug(settings.type)
-					debug(soundPlayingStatus[settings.type])
+					//debug(settings.type)
+					//debug(soundPlayingStatus[settings.type])
 				}); 
-			},  settings.end);
+			},  endAfter);
 		}
 
 
@@ -1201,10 +1205,16 @@ app.factory('announcerService', [ function announcerService () {
 			playSound(soundsToMake.fx.win);
 			crowdControl.playApplause(soundsToMake.positiveCrowd, shotPowerLevel); //FUTURE: Pass level 0-1 based on strength of shot
 
-			// TODO: fade out any music that is playing right now ...
+			// fade out any music that is playing right now ...
 			// make sure you can here who the winners were, then play the winning music
+			if (soundPlayingStatus.music && soundPlayingStatus.musicSoundObjectObject) {
+				$(soundPlayingStatus.musicSoundObjectObject).animate({volume: 0}, 500);
+				soundPlayingStatus.music = false;
+				soundPlayingStatus.musicSoundObjectObject = null;
+			}
+
 			doThisAfterwards = function() {
-				debug("end of game!")
+				debug("end of game!");
 				endGame();
 			}
 
@@ -1460,7 +1470,7 @@ app.factory('announcerService', [ function announcerService () {
 					debug("restore the volume...");
 					crowdControl.setVolume(originalVolume);
 					if (soundPlayingStatus.music && soundPlayingStatus.musicSoundObjectObject) {
-						$(soundPlayingStatus.musicSoundObjectObject).animate({volume: 1}, 750);
+						$(soundPlayingStatus.musicSoundObjectObject).animate({volume: 1}, 100 + (Math.random() * 400));
 					}
 				}
 				if (doThisAfterwards) doThisAfterwards();
