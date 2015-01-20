@@ -51,15 +51,6 @@ app.controller('GameController', ['gameService', 'rosterService', 'playerService
 
 		vm.players.teamOrange.offense = rosterService.getPlayer(2, "offense");
 		vm.players.teamOrange.defense = rosterService.getPlayer(2, "defense");
-
-		// intialize the smart announcer everytime a game starts
-
-		announcerService.init({
-			"pointsNeededToWin": configService.getScoreLimit(),
-			"roster" : vm.players,
-			"useTTS": true,
-			"debug": false
-		});
 	};
 
 	setPlayers();
@@ -128,6 +119,7 @@ app.controller('GameController', ['gameService', 'rosterService', 'playerService
 		$location.path('/player');
 
 		gameService.clearScores();
+
 	};
 
 	vm.swapTeamPositions = function (teamNum) {
@@ -155,6 +147,8 @@ app.controller('GameController', ['gameService', 'rosterService', 'playerService
 		vm.rematchCount += 1;
 		startClock();
 		vm.startEffect();
+
+		vm.startAnnounce();
 	};
 
 	vm.scoreEffect = function(){
@@ -183,6 +177,19 @@ app.controller('GameController', ['gameService', 'rosterService', 'playerService
 		var audio = new Audio('sounds/start.mp3');
 		audio.play();
 	};
+
+	vm.startAnnounce = function(){
+		// intialize the smart announcer everytime a game starts
+		announcerService.init({
+			"pointsNeededToWin": configService.getScoreLimit(),
+			"roster" : vm.players,
+			"useTTS": true,
+			"debug": false
+		});
+	}
+
+	// This will be called from the new game, or keep winners (On page load)
+	vm.startAnnounce();
 
 	vm.startEffect();
 
