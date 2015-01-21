@@ -144,7 +144,6 @@ app.factory('announcerService', [ function announcerService () {
 				{ type: "music", fade: true,  start: 0, end: 14000, file: "music/I Got You I Feel Good - James Brown 215099-0cfa60a5-7be1-4a96-9c45-55a46b631b0e.mp3" },
 				{ type: "music", fade: true,  start: 0, end: 30000, file: "music/Thunderstruck - ACDC215099-60f70578-2abb-4058-b400-c5d4c5191dbc.mp3" },
 				{ type: "music", fade: true,  start: 0, end: 17000, file: "music/Jump Around215099-cd384755-b62e-4b1d-a8ab-89883d05b17d.mp3" },
-				{ type: "music", fade: true,  start: 0, end: 14000, file: "music/Who Let the Dog's Out215099-3db7ba1f-03df-46d4-8c6d-9def824ae3f0.mp3"},
 				{ type: "music", fade: true,  start: 0, end: 15000, file: "music/94635-e820d841-f42d-46b9-b44f-ae625f2ffe96.mp3" },
 				{ type: "music", fade: true,  start: 0, end: 20000, file: "music/mission-impossible-94635-b2ea9d6e-2499-4f60-917d-51acb04f5435.mp3" },
 				{ type: "music", fade: true,  start: 0, end: 35000, file: "music/queen-we-will-rock-you-94635-35e3e035-af81-41df-ac46-238d653c1b99.mp3" },
@@ -167,6 +166,7 @@ app.factory('announcerService', [ function announcerService () {
 				{ type: "music", fade: true,  start: 0, end: 16000, file: "music/SIP - Call Me Maybe217844-b6c75657-5b9e-4009-b18b-7a1d066d56a1.mp3" },
 				{ type: "music", fade: true,  start: 0, end: 16000, file: "music/SIP - Break Your Heart217844-fcad0017-8fb7-462a-b563-836c8b4dfb57.mp3" },
 				{ type: "music", fade: true,  volstart: 1, start: 0, end: 15000, file: "music/I'm-to-sexy-NjMxMTQxNzE2MzExNjQ_0VP46tDcKEc.mp3" },
+				{ type: "music", fade: true,  start: 0, end: 14000, file: "music/Who Let the Dog's Out215099-3db7ba1f-03df-46d4-8c6d-9def824ae3f0.mp3"},
 				//{ type: "music", fade: true,  start: 0, end: 15000, file: "music/" },
 				//{ type: "music", fade: true,  start: 0, end: 15000, file: "music/" },
 				//{ type: "music", fade: true,  start: 0, end: 15000, file: "music/" },
@@ -203,6 +203,7 @@ app.factory('announcerService', [ function announcerService () {
 				{ type: "music", fade: true,  start: 0, end: 19000, file: "music/all-i-do-is-one-201470-165d44eb-ead6-4e1a-ab44-e822a15237c6.mp3" },
 				{ type: "music", fade: true,  start: 0, end: 16000, file: "music/U Cant Touch This -MC Hammer215099-a9933f26-50cb-4ce3-adb4-c1d515b5f7f5.mp3" },
 				{ type: "music", fade: true,  start: 0, end: 13000, file: "music/Best Goal Song Ever215099-4cb8905f-a537-4486-8808-a3c6bebe64ae.mp3" },
+				"announcer/be-post-game-show-NTg3MTU4OTM5NTg3MjAx_9RYro5iSkmA.MP3"
 			]
 		},
 		organ : {
@@ -705,7 +706,6 @@ app.factory('announcerService', [ function announcerService () {
 			.replace(/{{black\-d}}/g, oValues["black-d"])
 			.replace(/{{yellow\-o}}/g, oValues["yellow-o"])
 			.replace(/{{black\-o}}/g, oValues["black-o"])
-			.replace(/{{name}}/g, playerName)
 			.replace(/{{name}}/g, playerName)
 			.replace(/{{team}}/g, teamName)
 			.replace(/{{other\-team}}/g, otherTeamName)
