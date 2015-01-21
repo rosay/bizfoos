@@ -34,7 +34,7 @@ app.factory('gameService', ['rosterService', 'playerService', 'configService', '
 		}
 
 		var oMessage = announcerService.scorePoint({
-			"playerid": playerId, 
+			"playerid": playerId,
 			"power":  -42 /* should be a number 0-9. -42 == random */
 		})
 	};
@@ -189,12 +189,14 @@ app.factory('gameService', ['rosterService', 'playerService', 'configService', '
 	/**
 	 * Sends player back to players screen if the game is not ready.
 	 */
-	var checkGameReady = function () {
+	var isGameReady = function () {
 		var bullpen = _.where(playerService.players, { 'inBullpen': true });
 
 		if (bullpen.length !== 4) {
-			$location.path( "/players" );
+			return false;
 		}
+
+		return true;
 	};
 
 	return {
@@ -203,7 +205,7 @@ app.factory('gameService', ['rosterService', 'playerService', 'configService', '
 		getScoresCount: getScoresCount,
 		isGameOver: isGameOver,
 		setStartTime: setStartTime,
-		checkGameReady: checkGameReady,
+		isGameReady: isGameReady,
 		getLoserPlayerIds: getLoserPlayerIds,
 		getWinnerPlayerIds: getWinnerPlayerIds,
 		getWinningTeam: getWinningTeam,

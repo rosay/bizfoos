@@ -9,11 +9,11 @@ app.factory('configService', [ function configService () {
 	var setScoreLimit = function(amount){
 		scoreLimit = amount;
 		return scoreLimit;
-	}
+	};
 
 	var getScoreLimit = function(){
 		return scoreLimit;
-	}
+	};
 
 
 	return {
