@@ -3,7 +3,7 @@
 
 <div class="row">
 	<!--<h1>{{ title }}</h1>-->
-	
+
 	<div class="go-wrap">
 	<div class="container">
 	<h2 class="game-over"ng-show="ctrl.gameOver">Good game!</h2>
@@ -17,9 +17,9 @@
 				<div class="col-lg-8 col-md-8 col-sm-8 col-xs-12 col-centered">
 				<button type="button" class="remove-button" ng-disabled="ctrl.gameOver || (ctrl.scores[1] === 0 && ctrl.scores[2] === 0)" ng-click="ctrl.removeLastScore()">Remove Last Score</button>
 					<h1 style="display: inline; float: right; margin: 0 0 0 15px;">{{ ctrl.gameClock }}</h1>
-				<button type="button" class="new-button" ng-click="ctrl.startNewGame()">Start New Game</button>
-				<button type="button" class="winner-button" ng-disabled="!ctrl.gameOver" ng-click="ctrl.keepWinners()">Keep Winners</button>
-				<button type="button" class="rematch-button" ng-disabled="!ctrl.gameOver" ng-click="ctrl.rematch()" >Rematch</button>
+				<button type="button" class="new-button" ng-click="ctrl.newGameButton()">Start New Game</button>
+				<button type="button" class="winner-button" ng-disabled="!ctrl.gameOver" ng-click="ctrl.keepWinnersButton()">Keep Winners</button>
+				<button type="button" class="rematch-button" ng-disabled="!ctrl.gameOver" ng-click="ctrl.rematchButton()" >Rematch</button>
 			</div><!-- end container -->
 		</div><!-- end remove wrap -->
 	</div><!-- end remove wrap -->
@@ -29,16 +29,16 @@
 				<button type="button" class="btn btn-default" ng-click="ctrl.swapTeamPositions(1)">Swap positions</button>
 			</div>
 		</div>
-	
-	
+
+
 	<div class="row table-row"><!-- this is the row that contains all gameboard interactive elements -->
-	
+
 		<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 left-side"><!-- this is the left side of table -->
-		
-		
-		
+
+
+
 			<div class="team-player">
-			
+
 				<button type="button" class="player-button team-yellow" ng-click="ctrl.addScore(ctrl.players.teamOrange.defense._id)">
 					<span class="img-bg"></span>
 					<img src="{{ ctrl.players.teamOrange.defense.pic }}" />
@@ -46,15 +46,15 @@
 				</button>
 				<div class="player-pos-yellow"><span>Defense</span></div>
 			</div><!-- end team-player -->
-		
-	
+
+
 			<div class="score-box t1-score">
 				<!--<h1>{{ ctrl.teamNames["teamOne"][0] }} & {{ ctrl.teamNames["teamOne"][1] }}</h1>-->
 				<div class="score-count">{{ ctrl.scores[2] }}</div>
 			</div><!-- end score-box, t1-score -->
-			
-			
-			
+
+
+
 			<div class="team-player">
 			<div class="player-pos-yellow"><span>Offense</span></div>
 				<button type="button" class="player-button team-yellow" ng-click="ctrl.addScore(ctrl.players.teamOrange.offense._id)">
@@ -63,29 +63,29 @@
 					<span class="pname">{{ ctrl.players.teamOrange.offense.name }}</span>
 				</button>
 			</div><!-- end team-player -->
-		
-			
-		
-			
-			
+
+
+
+
+
 		</div><!-- this ends the left side of table -->
-		
-		
-		
-	
-	
+
+
+
+
+
 		<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 table-wrap">
 		<div class="table"><img src="/img/foosball-table[vert].png" /></div>
 		</div>
-		
-		
-		
-		
-		
-		
+
+
+
+
+
+
 		<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4"><!-- this is the right side of table -->
-		
-		
+
+
 		<div class="team-player">
 				<button type="button" class="player-button team-black" ng-click="ctrl.addScore(ctrl.players.teamBlack.offense._id)">
 					<span class="img-bg"></span>
@@ -95,14 +95,14 @@
 				<div class="player-pos-black"><span>Offense</span></div>
 
 			</div><!-- end team-player -->
-		
-		
+
+
 			<div class="score-box t1-score">
 				<!--<h1>{{ ctrl.teamNames["teamOne"][0] }} & {{ ctrl.teamNames["teamOne"][1] }}</h1>-->
-				<div class="score-count">{{ ctrl.scores[1] }}</div>			
+				<div class="score-count">{{ ctrl.scores[1] }}</div>
 			</div><!-- end score-box, t1-score -->
-			
-			
+
+
 			<div class="team-player">
 			<div class="player-pos-black"><span>Defense</span></div>
 				<button type="button" class="player-button team-black" ng-click="ctrl.addScore(ctrl.players.teamBlack.defense._id)">
@@ -110,14 +110,14 @@
 					<img src="{{ ctrl.players.teamBlack.defense.pic }}" />
 					<span class="pname">{{ ctrl.players.teamBlack.defense.name }}</span>
 				</button>
-				
+
 			</div><!-- end team-player -->
-			
-			
-	
-			
+
+
+
+
 		</div><!-- this ends the right side of table -->
-		
+
 	</div><!-- end table row -->
 
 	<div class="row t1-row crap-div" ng-show="ctrl.rematchCount > 1 && (ctrl.scores[1] === 0 && ctrl.scores[2] === 0)">
@@ -125,7 +125,7 @@
 			<button type="button" class="btn btn-default" ng-click="ctrl.swapTeamPositions(2)">Swap positions</button>
 		</div>
 	</div>
-	
+
 	</div><!-- end container -->
 	</div><!-- end game-board -->
 </div><!-- end game-screen -->

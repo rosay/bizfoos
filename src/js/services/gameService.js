@@ -34,7 +34,7 @@ app.factory('gameService', ['rosterService', 'playerService', 'configService', '
 		}
 
 		var oMessage = announcerService.scorePoint({
-			"playerid": playerId, 
+			"playerid": playerId,
 			"power":  -42 /* should be a number 0-9. -42 == random */
 		})
 	};
@@ -189,66 +189,15 @@ app.factory('gameService', ['rosterService', 'playerService', 'configService', '
 	/**
 	 * Sends player back to players screen if the game is not ready.
 	 */
-	var checkGameReady = function () {
+	var isGameReady = function () {
 		var bullpen = _.where(playerService.players, { 'inBullpen': true });
 
 		if (bullpen.length !== 4) {
-			$location.path( "/players" );
+			return false;
 		}
-	};
 
-	var initializeAnnouncer = function(roster){
-		announcerService.init({
-			"pointsNeededToWin": configService.getScoreLimit(),
-			"roster" : roster,
-			/*
-			"teams" : [
-				{
-					"color": "black",
-					"team": "The Black Team", // eventually Team names: The Dream Team
-					//"probabilty": .80
-				},
-				{
-					"color": "yellow",
-					"team": "The Yellow Team", // eventually team names: The Avengers
-					//"probabilty": .20
-				}
-			],
-			"players" : [
-				{	//0
-					"playerid": players.blackO.id,
-					"color": "black",
-					"position": "o",
-					"team": "The Black Team",
-					"names": players.blackO.names
-				},
-				{	//1
-					"playerid": players.blackD.id,
-					"color": "black",
-					"position": "d",
-					"team": "The Dream Team",
-					"names": players.blackD.names
-				},
-				{	//2
-					"playerid": players.yellowO.id,
-					"color": "yellow",
-					"position": "o",
-					"team": "The Avengers",
-					"names": players.yellowO.names
-				},
-				{	//3
-					"playerid": players.yellowD.id,
-					"color": "yellow",
-					"position": "d",
-					"team": "The Avengers",
-					"names": players.yellowD.names
-				}
-			], // end array of peole
-			*/
-			"useTTS": true,
-			"debug": false
-		});
-	}
+		return true;
+	};
 
 	return {
 		addScore: addScore,
@@ -256,12 +205,11 @@ app.factory('gameService', ['rosterService', 'playerService', 'configService', '
 		getScoresCount: getScoresCount,
 		isGameOver: isGameOver,
 		setStartTime: setStartTime,
-		checkGameReady: checkGameReady,
+		isGameReady: isGameReady,
 		getLoserPlayerIds: getLoserPlayerIds,
 		getWinnerPlayerIds: getWinnerPlayerIds,
 		getWinningTeam: getWinningTeam,
 		getLosingTeam: getLosingTeam,
-		clearScores: clearScores,
-		initializeAnnouncer: initializeAnnouncer
+		clearScores: clearScores
 	};
 }]);

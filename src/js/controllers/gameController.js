@@ -1,49 +1,26 @@
 var a;
-app.controller('GameController', ['gameService', 'rosterService', 'playerService', '$location','$document', '$scope', '$interval', function(gameService, rosterService, playerService, $location, $document, $scope, $interval) {
+app.controller('GameController', ['gameService', 'rosterService', 'playerService', 'configService', 'announcerService', '$location','$document', '$scope', '$interval', function(gameService, rosterService, playerService, configService, announcerService, $location, $document, $scope, $interval) {
 	"use strict";
 
 	var vm = this;
 
-	gameService.checkGameReady();
-
-	vm.rematchCount = 0;
-
 	vm.title = "Let's play!";
-	vm.scores = { 1: gameService.getScoresCount(1), 2: gameService.getScoresCount(2) };
-	vm.gameOver = gameService.isGameOver();
+	vm.scores = { 1: 0, 2: 0 };
+	vm.gameOver = false;
+	vm.rematchCount = 0;
 	var timePlayed = 0;
 	var clock = null;
 	vm.gameClock = "0:00";
-
-
-	rosterService.createRoster();
-
-	vm.players = {
-		"teamBlack": {
-			"offense": {
-				"name": "",
-				"id": "",
-				"pic": ""
-			},
-			"defense": {
-				"name": "",
-				"id": "",
-				"pic": ""
-			}
-		},
-		"teamOrange": {
-			"offense": {
-				"name": "",
-				"id": "",
-				"pic": ""
-			},
-			"defense": {
-				"name": "",
-				"id": "",
-				"pic": ""
-			}
-		}
-	};
+    vm.players = {
+        "teamBlack": {
+            "offense": {},
+            "defense": {}
+        },
+        "teamOrange": {
+            "offense": {},
+            "defense": {}
+        }
+    };
 
 	var setPlayers = function () {
 		vm.players.teamBlack.offense = rosterService.getPlayer(1, "offense");
@@ -51,15 +28,7 @@ app.controller('GameController', ['gameService', 'rosterService', 'playerService
 
 		vm.players.teamOrange.offense = rosterService.getPlayer(2, "offense");
 		vm.players.teamOrange.defense = rosterService.getPlayer(2, "defense");
-
-		// intialize the smart announcer everytime a game starts
-
-		gameService.initializeAnnouncer(vm.players);
 	};
-
-	setPlayers();
-
-	gameService.setStartTime();
 
 	var startClock = function () {
 		vm.gameClock = "0:00";
@@ -73,8 +42,6 @@ app.controller('GameController', ['gameService', 'rosterService', 'playerService
 			vm.gameClock = min + ":" + sec;
 		}, 1000);
 	};
-
-	startClock();
 
 	vm.addScore = function(playerId) {
 
@@ -94,6 +61,12 @@ app.controller('GameController', ['gameService', 'rosterService', 'playerService
 		//sound.play();
 	};
 
+	vm.swapTeamPositions = function (teamNum) {
+		rosterService.swapTeamPositions(teamNum);
+
+		setPlayers();
+	};
+
 	vm.removeLastScore = function() {
 		gameService.removeLastScore();
 		vm.scores[1] = gameService.getScoresCount(1);
@@ -101,14 +74,52 @@ app.controller('GameController', ['gameService', 'rosterService', 'playerService
 		vm.gameOver = gameService.isGameOver();
 	};
 
-	vm.startNewGame = function() {
+	$document.unbind('keypress').bind('keypress', function(event){
+
+		var kc = event.keyCode;
+
+		$scope.$apply(function(){
+			if(kc === 113){ // Keypress "q" for Orange D
+				vm.addScore(vm.players.teamOrange.defense._id);
+			}else if(kc === 97){ // Keypress "a" for Orange O
+				vm.addScore(vm.players.teamOrange.offense._id);
+			}else if(kc === 119){ // Keypress "w" for Black O
+				vm.addScore(vm.players.teamBlack.offense._id);
+			}else if(kc === 115){ // Keypress "s" for Black D
+				vm.addScore(vm.players.teamBlack.defense._id);
+			}
+		});
+	});
+
+	vm.scoreEffect = function(){
+		return 'sounds/score-' + (Math.floor(Math.random() * 5) + 1 )+ '.mp3';
+	};
+
+	vm.startEffect = function(){
+		var audio = new Audio('sounds/start.mp3');
+		audio.play();
+	};
+
+	vm.startAnnounce = function(){
+		var rosterClone = _.cloneDeep(vm.players);
+
+		// intialize the smart announcer everytime a game starts
+		announcerService.init({
+			"pointsNeededToWin": configService.getScoreLimit(),
+			"roster" : rosterClone,
+			"useTTS": true,
+			"debug": false
+		});
+	};
+
+	vm.newGameButton = function() {
 		playerService.clearBullpen();
 		rosterService.clearRoster();
 		gameService.clearScores();
 		$location.path('/player');
 	};
 
-	vm.keepWinners = function() {
+	vm.keepWinnersButton = function() {
 		var losers = gameService.getLoserPlayerIds();
 		var winningTeam = gameService.getWinningTeam();
 		var losingTeam = gameService.getLosingTeam();
@@ -123,15 +134,10 @@ app.controller('GameController', ['gameService', 'rosterService', 'playerService
 		$location.path('/player');
 
 		gameService.clearScores();
+
 	};
 
-	vm.swapTeamPositions = function (teamNum) {
-		rosterService.swapTeamPositions(teamNum);
-
-		setPlayers();
-	};
-
-	vm.rematch = function() {
+	vm.rematchButton = function() {
 		// Swap players positions
 		rosterService.swapPositions();
 
@@ -150,36 +156,26 @@ app.controller('GameController', ['gameService', 'rosterService', 'playerService
 		vm.rematchCount += 1;
 		startClock();
 		vm.startEffect();
+
+		vm.startAnnounce();
 	};
 
-	vm.scoreEffect = function(){
-		return 'sounds/score-' + (Math.floor(Math.random() * 5) + 1 )+ '.mp3';
-	};
+	if (gameService.isGameReady()) {
+		rosterService.createRoster();
 
-	$document.unbind('keypress').bind('keypress', function(event){
+		setPlayers();
 
-		var kc = event.keyCode;
+		gameService.setStartTime();
 
-		$scope.$apply(function(){
-			if(kc === 113){ // Keypress "q" for Orange D 
-				vm.addScore(vm.players.teamOrange.defense._id);
-			}else if(kc === 97){ // Keypress "a" for Orange O
-				vm.addScore(vm.players.teamOrange.offense._id);
-			}else if(kc === 119){ // Keypress "w" for Black O
-				vm.addScore(vm.players.teamBlack.offense._id);
-			}else if(kc === 115){ // Keypress "s" for Black D
-				vm.addScore(vm.players.teamBlack.defense._id);
-			}
-		});
-		
-	});
+		startClock();
 
-	vm.startEffect = function(){
-		var audio = new Audio('sounds/start.mp3');
-		audio.play();
-	};
+		// This will be called from the new game, or keep winners (On page load)
+		vm.startAnnounce();
 
-	vm.startEffect();
+		vm.startEffect();
+	} else {
+		$location.path( "/players" );
+	}
 
 }]);
 
