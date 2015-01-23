@@ -12,12 +12,12 @@ mongoose.connect("mongodb://localhost:27017/bizfoos"); // Connect to the db
 app.use(express.static(__dirname + '/src'));
 
 // routes ======================================================================
-require('./app/routes.js')(app);
+require('./server/routes.js')(app);
 
 // listen (start app with node server.js) ======================================
 var server = app.listen(app.get('port'), function () {
 	var host = server.address().address;
 	var port = server.address().port;
 
-	console.log('Example app listening at http://%s:%s', host, port);
+	console.log('Bizfoos listening at http://%s:%s', host, port);
 });
