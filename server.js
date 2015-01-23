@@ -9,7 +9,7 @@ app.set('port', (process.env.PORT || 3000))
 
 // configuration ===============================================================
 mongoose.connect("mongodb://localhost:27017/bizfoos"); // Connect to the db
-app.use(express.static(__dirname + '/src'));
+app.use(express.static(__dirname + '/client'));
 
 // routes ======================================================================
 require('./server/routes.js')(app);
