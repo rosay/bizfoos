@@ -1,14 +1,11 @@
 var Player = require('./models/Player');
 var Game = require('./models/Game');
-
 var async = require('async');
 
-var getDuration = require('./QueryHelpers/Duration');
-var PlayerGames = require('./Queries/AllPlayerGames');
-var PlayerPoints = require('./Queries/AllPlayerPoints');
-var GamesCount = require('./Queries/GamesCount');
-var GamesByPlayerId = require('./Queries/GamesByPlayerId');
-var PlayerPointsById = require('./Queries/PlayerPointsById');
+var QueryHelper = require('./QueryHelpers/QueryHelper');
+var PlayerGamesQuery = require('./Queries/PlayerGames');
+var PlayerPointsQuery = require('./Queries/PlayerPoints');
+var GamesCountQuery = require('./Queries/GamesCount');
 
 module.exports = function(app) {
 	// Routes
@@ -51,105 +48,79 @@ module.exports = function(app) {
 		});
 	});
 
+	app.get('/api/stats/players', function (req, res) {
+		var playerGamesQuery = PlayerGamesQuery();
+		var playerPointsQuery = PlayerPointsQuery();
+		var queryHelper = QueryHelper();
+
+		async.parallel({
+			playerGames: function(callback) {
+				playerGamesQuery.getQuery().exec(callback);
+			},
+			playerPoints: function(callback) {
+				playerPointsQuery.getQuery().exec(callback);
+			},
+			gamesCount: function(callback) {
+				GamesCountQuery.exec(callback);
+			}
+		}, function (err, results) {
+			var playerResults = [];
+
+			results.playerGames.forEach(function(player) {
+				var playerPointData = results.playerPoints.filter(function(entry) {
+					return (entry._id == player._id)
+				});
+
+				var playerResult = queryHelper.getPlayerResults(player, playerPointData[0], results.gamesCount);
+
+				playerResults.push(playerResult);
+			});
+
+			res.send(
+				// sort the results and send
+				playerResults.sort(function(a, b) {
+					return (b.AveragePointsPerGame > a.AveragePointsPerGame) ? 1 : ((b.AveragePointsPerGame < a.AveragePointsPerGame) ? -1 : 0);
+				})
+			);
+		});
+	});
+
 	app.get('/api/stats/players/:player_id', function (req, res) {
 		var player_id = req.params.player_id;
 
-		var gamesByPlayerId = GamesByPlayerId();
-		var playerPointsById = PlayerPointsById();
+		var playerGamesQuery = PlayerGamesQuery();
+		var playerPointsQuery = PlayerPointsQuery();
+		var queryHelper = QueryHelper();
 
 		async.parallel({
-			playerPoints: function(callback) {
-				playerPointsById.getQuery(player_id).exec(callback);
-			},
 			playerGames: function(callback) {
-				gamesByPlayerId.getQuery(player_id).exec(callback);
+				playerGamesQuery.getQuery(player_id).exec(callback);
+			},
+			playerPoints: function(callback) {
+				playerPointsQuery.getQuery(player_id).exec(callback);
 			},
 			gamesCount: function(callback) {
-				GamesCount.exec(callback);
+				GamesCountQuery.exec(callback);
 			}
 		}, function (err, results) {
-			results.playerGames.forEach(function(item) {
+			var playerResults = [];
 
+			results.playerGames.forEach(function(player) {
 				var playerPointData = results.playerPoints.filter(function(entry) {
-					return (entry._id == item._id)
+					return (entry._id == player._id)
 				});
 
-				item.AllGames = results.gamesCount;
-				item.TotalOffensivePoints = playerPointData[0].TotalPointsOnOffense;
-				item.TotalDefensivePoints = playerPointData[0].TotalPointsOnDefense;
-				item.TotalPoints = item.TotalOffensivePoints + item.TotalDefensivePoints;
+				var playerResult = queryHelper.getPlayerResults(player, playerPointData[0], results.gamesCount);
 
-				item.AverageOffensivePointsPerGame = item.TotalOffensivePoints / item.TotalGamesPlayed;
-				item.AverageDefensivePointsPerGame = item.TotalDefensivePoints / item.TotalGamesPlayed;
-				item.AveragePointsPerGame          = item.TotalPoints          / item.TotalGamesPlayed;
-
-				item.TotalGameTime = getDuration(item.TotalGameTimeMS, false);
-				item.TotalOffensiveGameTime = getDuration(item.TotalOffensiveGameTimeMS, false);
-				item.TotalDefensiveGameTime = getDuration(item.TotalDefensiveGameTimeMS, false);
-				item.AverageGameTime = getDuration(item.TotalGameTimeMS / item.TotalGamesPlayed, false, true, true, false, false, false);
-				item.AverageOffensiveGameTime = getDuration(item.TotalOffensiveGameTimeMS / item.TotalGamesOnOffense, false, true, true, false, false, false);
-				item.AverageDefensiveGameTime = getDuration(item.TotalDefensiveGameTimeMS / item.TotalGamesOnDefense, false, true, true, false, false, false);
-				item.AverageOffensiveGameTimeAfterLoss = getDuration(item.TotalOffensiveGameTimeAfterLossMS / item.TotalGamesLostOnOffense, false, true, true, false, false, false);
-				item.AverageOffensiveGameTimeAfterWin = getDuration(item.TotalOffensiveGameTimeAfterWinMS / item.TotalGamesWonOnOffense, false, true, true, false, false, false);
-				item.AverageDefensiveGameTimeAfterLoss = getDuration(item.TotalDefensiveGameTimeAfterLossMS / item.TotalGamesLostOnDefense, false, true, true, false, false, false);
-				item.AverageDefensiveGameTimeAfterWin = getDuration(item.TotalDefensiveGameTimeAfterWinMS / item.TotalGamesWonOnDefense, false, true, true, false, false, false);
+				playerResults.push(playerResult);
 			});
 
-			//sort it
-			var sorted = results.playerGames.sort(function(a, b) {
-				return (b.AveragePointsPerGame > a.AveragePointsPerGame) ? 1 : ((b.AveragePointsPerGame < a.AveragePointsPerGame) ? -1 : 0);
-			});
-
-			res.send(sorted);
-		});
-
-	});
-
-	app.get('/api/stats/players', function (req, res) {
-		async.parallel({
-			playerPoints: function(callback) {
-				PlayerPoints.exec(callback);
-			},
-			playerGames: function(callback) {
-				PlayerGames.exec(callback);
-			},
-			gamesCount: function(callback) {
-				GamesCount.exec(callback);
-			}
-		}, function (err, results) {
-			results.playerGames.forEach(function(item) {
-
-				var playerPointData = results.playerPoints.filter(function(entry) {
-					return (entry._id == item._id)
-				});
-
-				item.AllGames = results.gamesCount;
-				item.TotalOffensivePoints = playerPointData[0].TotalPointsOnOffense;
-				item.TotalDefensivePoints = playerPointData[0].TotalPointsOnDefense;
-				item.TotalPoints = item.TotalOffensivePoints + item.TotalDefensivePoints;
-
-				item.AverageOffensivePointsPerGame = item.TotalOffensivePoints / item.TotalGamesPlayed;
-				item.AverageDefensivePointsPerGame = item.TotalDefensivePoints / item.TotalGamesPlayed;
-				item.AveragePointsPerGame          = item.TotalPoints          / item.TotalGamesPlayed;
-
-				item.TotalGameTime = getDuration(item.TotalGameTimeMS, false);
-				item.TotalOffensiveGameTime = getDuration(item.TotalOffensiveGameTimeMS, false);
-				item.TotalDefensiveGameTime = getDuration(item.TotalDefensiveGameTimeMS, false);
-				item.AverageGameTime = getDuration(item.TotalGameTimeMS / item.TotalGamesPlayed, false, true, true, false, false, false);
-				item.AverageOffensiveGameTime = getDuration(item.TotalOffensiveGameTimeMS / item.TotalGamesOnOffense, false, true, true, false, false, false);
-				item.AverageDefensiveGameTime = getDuration(item.TotalDefensiveGameTimeMS / item.TotalGamesOnDefense, false, true, true, false, false, false);
-				item.AverageOffensiveGameTimeAfterLoss = getDuration(item.TotalOffensiveGameTimeAfterLossMS / item.TotalGamesLostOnOffense, false, true, true, false, false, false);
-				item.AverageOffensiveGameTimeAfterWin = getDuration(item.TotalOffensiveGameTimeAfterWinMS / item.TotalGamesWonOnOffense, false, true, true, false, false, false);
-				item.AverageDefensiveGameTimeAfterLoss = getDuration(item.TotalDefensiveGameTimeAfterLossMS / item.TotalGamesLostOnDefense, false, true, true, false, false, false);
-				item.AverageDefensiveGameTimeAfterWin = getDuration(item.TotalDefensiveGameTimeAfterWinMS / item.TotalGamesWonOnDefense, false, true, true, false, false, false);
-			});
-
-			//sort it
-			var sorted = results.playerGames.sort(function(a, b) {
-				return (b.AveragePointsPerGame > a.AveragePointsPerGame) ? 1 : ((b.AveragePointsPerGame < a.AveragePointsPerGame) ? -1 : 0);
-			});
-
-			res.send(sorted);
+			res.send(
+				// sort the results and send
+				playerResults.sort(function(a, b) {
+					return (b.AveragePointsPerGame > a.AveragePointsPerGame) ? 1 : ((b.AveragePointsPerGame < a.AveragePointsPerGame) ? -1 : 0);
+				})
+			);
 		});
 	});
 

@@ -1,6 +1,6 @@
 var Game = require('../models/Game');
 
-var PlayerPointsById = function () {
+var PlayerPoints = function () {
     var query = [
         { $unwind: "$roster" }
         ,{ $unwind: "$scores" }
@@ -55,4 +55,4 @@ var PlayerPointsById = function () {
     }
 };
 
-module.exports = PlayerPointsById;
+module.exports = PlayerPoints;

@@ -1,6 +1,6 @@
 var Game = require('../models/Game');
 
-var GamesByPlayerId = function () {
+var PlayerGames = function () {
     var query = [
         { $unwind: "$roster" }
         ,{ $group: {
@@ -124,5 +124,5 @@ var GamesByPlayerId = function () {
     }
 };
 
-module.exports = GamesByPlayerId;
+module.exports = PlayerGames;
 
