@@ -8,11 +8,13 @@
 					<tr>
 						<th></td>
 						<th>Player</th>
+						<th>Win %</th>
 						<th>RPI</th>
 					</tr>
 					<tr ng-repeat="player in ctrl.playerRpi">
 						<td>{{ $index + 1 }}</td>
 						<td>{{ player.name }}</td>
+						<td>{{ player.WP }}</td>
 						<td>{{ player.RPI }}</td>
 					</tr>
 				</table>

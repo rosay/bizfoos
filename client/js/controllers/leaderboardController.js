@@ -20,7 +20,7 @@ app.controller('LeaderboardController', ['$http', 'statisticsService', 'playerSe
 					});
 
 					for (var i = 0; i < mergedList.length; i++) {
-						var p = mergedList[i].WinningPercentage * 100;
+						var p = mergedList[i].WinningPercentage * 100
 						mergedList[i].WinningPercentage = p.toFixed(2);
 					}
 
