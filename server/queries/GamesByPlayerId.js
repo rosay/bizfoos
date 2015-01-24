@@ -1,7 +1,7 @@
 var Game = require('../models/Game');
 
-module.exports = function () {
-    var queryArray = [
+var GamesByPlayerId = function () {
+    var query = [
         { $unwind: "$roster" }
         ,{ $group: {
             _id: "$roster.player_id" ,
@@ -108,19 +108,21 @@ module.exports = function () {
     ];
 
     var matchPlayer = function (playerId) {
-        queryArray.splice(1, 0, { $match: { "roster.player_id" : playerId } });
+        query.splice(1, 0, { $match: { "roster.player_id" : playerId } });
     };
 
-    var buildQuery = function (playerId) {
+    var getQuery = function (playerId) {
         if (playerId != null && playerId != "") {
             matchPlayer(playerId)
         }
 
-        return Game.aggregate(queryArray);
+        return Game.aggregate(query);
     };
 
     return {
-        buildQuery: buildQuery
+        getQuery: getQuery
     }
 };
+
+module.exports = GamesByPlayerId;
 
