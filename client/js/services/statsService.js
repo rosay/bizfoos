@@ -9,7 +9,7 @@ app.factory('statisticsService', ['$rootScope', '$http', function statisticsServ
 	 * @returns {*}
 	 */
 	statisticsService.getTopPlayers = function () {
-		return $http.get('/api/lb/topplayers')
+		return $http.get('/api/stats/topplayers')
 			.success(function (data, status, headers, config) {
 				statisticsService.topPlayers = data;
 			})

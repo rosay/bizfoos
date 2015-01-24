@@ -156,7 +156,6 @@ app.controller('GameController', ['gameService', 'rosterService', 'playerService
 		vm.rematchCount += 1;
 		startClock();
 		vm.startEffect();
-
 		vm.startAnnounce();
 	};
 
@@ -169,9 +168,7 @@ app.controller('GameController', ['gameService', 'rosterService', 'playerService
 
 		startClock();
 
-		// This will be called from the new game, or keep winners (On page load)
 		vm.startAnnounce();
-
 		vm.startEffect();
 	} else {
 		$location.path( "/players" );
