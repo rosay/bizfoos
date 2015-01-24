@@ -20,11 +20,11 @@ app.controller('StatsController', ['$http', 'statisticsService', 'playerService'
                     });
 
                     for (var i = 0; i < mergedList.length; i++) {
-                        var p = mergedList[i].RPI * 100;
-                        mergedList[i].RPI = p.toFixed(2);
+                        var rpi = mergedList[i].RPI * 100;
+                        mergedList[i].RPI = rpi.toFixed(2);
 
-                        var p = mergedList[i].WP * 100;
-                        mergedList[i].WP = p.toFixed(2)
+                        var wp = mergedList[i].WP * 100;
+                        mergedList[i].WP = wp.toFixed(2)
                     }
 
                     vm.playerRpi = mergedList;
