@@ -178,16 +178,16 @@ Players.result.forEach(function(player) {
 });
 
 Players.result.forEach(function(player) {
-
-    player.RPI = ((player.WP * 0.25) + (player.OWP * 0.25) + (player.OOWP * 0.25) + ((1-player.TWP) * 0.25)).toFixed(3);
-    player.WP = (player.WP.toFixed(5) * 100) + "%";
     
     PlayerNames.result.forEach(function(playername) {
         if (playername._id.player_id == player._id)
         {
             player.Name = playername._id.name;
         }    
-    });
+    });    
+
+    player.RPI = ((player.WP * 0.25) + (player.OWP * 0.25) + (player.OOWP * 0.25) + ((1-player.TWP) * 0.25)).toFixed(3);
+    player.WP = (player.WP.toFixed(5) * 100) + "%";
     
 });
 
