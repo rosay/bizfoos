@@ -3,9 +3,10 @@ app.factory('statisticsService', ['$rootScope', '$http', function statisticsServ
 	"use strict";
 
 	statisticsService.topPlayers = [];
+	statisticsService.playerRpi = [];
 
 	/**
-	 * Server call to get all players from server.
+	 * Gets basic player stats
 	 * @returns {*}
 	 */
 	statisticsService.getTopPlayers = function () {
@@ -18,6 +19,19 @@ app.factory('statisticsService', ['$rootScope', '$http', function statisticsServ
 			});
 	};
 
-	return statisticsService;
+	/**
+	 * Gets player RPI
+	 * @returns {*}
+	 */
+	statisticsService.getPlayerRpi = function () {
+		return $http.get('/api/stats/rpi')
+			.success(function (data, status, headers, config) {
+				statisticsService.playerRpi = data;
+			})
+			.error(function (data, status, headers, config) {
+				console.log("No players showed up! Status: " + status);
+			});
+	};
 
+	return statisticsService;
 }]);

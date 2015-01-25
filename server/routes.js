@@ -2,10 +2,9 @@ var Player = require('./models/Player');
 var Game = require('./models/Game');
 var async = require('async');
 
-var QueryHelper = require('./QueryHelpers/QueryHelper');
-var PlayerGamesQuery = require('./Queries/PlayerGames');
-var PlayerPointsQuery = require('./Queries/PlayerPoints');
 var GamesCountQuery = require('./Queries/GamesCount');
+var Rpi = require('./Queries/PlayerRpi');
+var PlayerStats = require('./Queries/PlayerStats');
 
 module.exports = function(app) {
 	// Routes
@@ -20,7 +19,6 @@ module.exports = function(app) {
 	});
 
 	app.get('/api/stats/topplayers', function (req, res) {
-
 		Game.aggregate([
 			{ $unwind: "$roster" }
 				,{ $group: {
@@ -48,79 +46,65 @@ module.exports = function(app) {
 		});
 	});
 
-	app.get('/api/stats/players', function (req, res) {
-		var playerGamesQuery = PlayerGamesQuery();
-		var playerPointsQuery = PlayerPointsQuery();
-		var queryHelper = QueryHelper();
+	app.get('/api/stats/rpi', function (req, res) {
+
+		var rpi = Rpi();
 
 		async.parallel({
-			playerGames: function(callback) {
-				playerGamesQuery.getQuery().exec(callback);
+			player: function(callback) {
+				rpi.getPlayerQuery().exec(callback);
 			},
-			playerPoints: function(callback) {
-				playerPointsQuery.getQuery().exec(callback);
+			games: function(callback) {
+				rpi.getGameQuery().exec(callback);
+			}
+		}, function (err, results) {
+
+			var rpiResults = rpi.processResults(results.player, results.games);
+
+			res.send(rpiResults);
+		});
+	});
+
+	app.get('/api/stats/players', function (req, res) {
+		var playerStats = PlayerStats();
+
+		async.parallel({
+			games: function(callback) {
+				playerStats.getGamesQuery().exec(callback);
+			},
+			players: function(callback) {
+				playerStats.getPlayersQuery().exec(callback);
 			},
 			gamesCount: function(callback) {
 				GamesCountQuery.exec(callback);
 			}
 		}, function (err, results) {
-			var playerResults = [];
+			var playerStatsResults = playerStats.processResults(results.games, results.players, results.gamesCount);
 
-			results.playerGames.forEach(function(player) {
-				var playerPointData = results.playerPoints.filter(function(entry) {
-					return (entry._id == player._id)
-				});
+			res.send(playerStatsResults);
 
-				var playerResult = queryHelper.getPlayerResults(player, playerPointData[0], results.gamesCount);
-
-				playerResults.push(playerResult);
-			});
-
-			res.send(
-				// sort the results and send
-				playerResults.sort(function(a, b) {
-					return (b.AveragePointsPerGame > a.AveragePointsPerGame) ? 1 : ((b.AveragePointsPerGame < a.AveragePointsPerGame) ? -1 : 0);
-				})
-			);
 		});
 	});
 
 	app.get('/api/stats/players/:player_id', function (req, res) {
 		var player_id = req.params.player_id;
 
-		var playerGamesQuery = PlayerGamesQuery();
-		var playerPointsQuery = PlayerPointsQuery();
-		var queryHelper = QueryHelper();
+		var playerStats = PlayerStats();
 
 		async.parallel({
-			playerGames: function(callback) {
-				playerGamesQuery.getQuery(player_id).exec(callback);
+			games: function(callback) {
+				playerStats.getGamesQuery(player_id).exec(callback);
 			},
-			playerPoints: function(callback) {
-				playerPointsQuery.getQuery(player_id).exec(callback);
+			players: function(callback) {
+				playerStats.getPlayersQuery(player_id).exec(callback);
 			},
 			gamesCount: function(callback) {
 				GamesCountQuery.exec(callback);
 			}
 		}, function (err, results) {
-			var playerResults = [];
+			var playerStatsResults = playerStats.processResults(results.games, results.players, results.gamesCount);
 
-			results.playerGames.forEach(function(player) {
-				var playerPointData = results.playerPoints.filter(function(entry) {
-					return (entry._id == player._id)
-				});
-
-				var playerResult = queryHelper.getPlayerResults(player, playerPointData[0], results.gamesCount);
-
-				playerResults.push(playerResult);
-			});
-
-			res.send(
-				// sort the results and send
-				playerResults.sort(function(a, b) {
-					return (b.AveragePointsPerGame > a.AveragePointsPerGame) ? 1 : ((b.AveragePointsPerGame < a.AveragePointsPerGame) ? -1 : 0);
-				})
-			);
+			res.send(playerStatsResults);
 		});
 	});
 
@@ -146,16 +130,6 @@ module.exports = function(app) {
 		} else {
 			res.status(500).send(err);
 		}
-	});
-
-	// accept PUT request at /user
-	app.put('/api/user', function (req, res) {
-		res.send('Got a PUT request at /user');
-	});
-
-	// accept DELETE request at /user
-	app.delete('/api/user', function (req, res) {
-		res.send('Got a DELETE request at /user');
 	});
 
 	app.get('*', function(req, res) {
