@@ -15,7 +15,9 @@ jQuery(function($) {
 	$("#doVoiceTest").click(function() {
 		smartAnnouncer.voiceTest();
 	});
-
+	$("#stopGame").click(function() {
+		smartAnnouncer.stop();
+	});
 	$("#newGame").click(function() {
 		gameSeconds = 0;
 		addToLog("New Game Started");
