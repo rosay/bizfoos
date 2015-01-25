@@ -13,10 +13,14 @@ var Games = db.games.aggregate([
     
 var Players = db.players.aggregate([
      { $group: { 
-        _id: "$_id" ,        
+        _id: "$_id" ,
         } 
-     }
+     }    
 ])   
+     
+var PlayerNames = db.players.aggregate( [
+   { $group : { _id : { player_id : "$_id", name : "$name" } } },
+] )     
 
 // Create an array of teamates and opponents for each player
 Players.result.forEach(function(player) {
@@ -175,8 +179,15 @@ Players.result.forEach(function(player) {
 
 Players.result.forEach(function(player) {
 
-    player.RPI = (player.WP * 0.25) + (player.OWP * 0.25) + (player.OOWP * 0.25) + ((1-player.TWP) * 0.25);
-    player.WP = (player.WP * 100) + "%";
+    player.RPI = ((player.WP * 0.25) + (player.OWP * 0.25) + (player.OOWP * 0.25) + ((1-player.TWP) * 0.25)).toFixed(3);
+    player.WP = (player.WP.toFixed(5) * 100) + "%";
+    
+    PlayerNames.result.forEach(function(playername) {
+        if (playername._id.player_id == player._id)
+        {
+            player.Name = playername._id.name;
+        }    
+    });
     
 });
 
