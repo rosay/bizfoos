@@ -1,4 +1,5 @@
 // TO DO
+// deal with allowMultiple's 
 // player Gender
 // player NickNames
 // Team Names
@@ -7,6 +8,10 @@
 // announce player positions and the home team (yellow) and the away team (black)
 
 // todo: simulate noise levels
+
+//  GameUpdates: if one team is 1 point away from winning, crowd gets crazy
+//  GameUpdates: if tied up and 1 point away from winning, crowd gets even crazier
+
 
 app.factory('announcerService', [ function announcerService () {
 	"use strict";
@@ -30,38 +35,57 @@ app.factory('announcerService', [ function announcerService () {
 		wind: 42
 	}
 
-	var tmrGameUpdates = null; // just a timer/interval that we can turn on or off if needed
+	var stadiumTimers = {
+		GameUpdates : null, // just a timer/interval that we can turn on or off if needed
+
+		stopAll : function() {
+			for (var tmr in this) {
+				var thisTimer = this[tmr];
+				if (thisTimer != null)
+					try { 
+						clearInterval(thisTimer);
+					} catch(err) {
+						clearTimeout(thisTimer);
+					};
+			}
+		}
+	}
+
 
 	var crowdControl = {
+		minVolume : .03,
+		maxVolume : .75,
+
 		audioElement : null,
 		audioApplause : null,
 		startCrowd: function() {
 			var crowd = getSoundFile("crowd");
 			if ($("#bgCrowdAudio").length == 0) {
 				$("body").append('<audio id="bgCrowdAudio" loop="loop" src="'+ crowd +'"></audio>')
+				$("body").append('<audio id="fgApplauseAudio" loop="loop" src=""></audio>')
 			}
 			crowdControl.audioElement = document.getElementById("bgCrowdAudio");
-			crowdControl.audioElement.volume = .05;
+			crowdControl.audioElement.volume = crowdControl.minVolume;
 			crowdControl.audioElement.play();
+
+			crowdControl.audioApplause = document.getElementById("fgApplauseAudio");
 		},
 		stopCrowd: function() {
 			$("#bgCrowdAudio").remove();
 		},
 		playApplause: function(soundType, volumeLevel) {
-			crowdControl.audioApplause = new Audio(getSoundFile(soundType));
-			crowdControl.audioApplause.volume = crowdControl.ensureSafeVolume(volumeLevel, crowdControl.audioElement.volume); // volumeLevel
-			crowdControl.audioApplause.play();
+			playSound(soundType, {vol: volumeLevel});
 		},
 		ensureSafeVolume: function(level, min) {
 			if (level < min) level = min;
-			if (level > 1) level = 1;
+			if (level > crowdControl.maxVolume) level = crowdControl.maxVolume;
 			return level
 		},
 		getVolume: function() { return crowdControl.audioElement.volume; },
 		setVolume: function(level) {
 		    debug("crowdControl.audioElement.volume:pre  = "+ crowdControl.audioElement.volume);
 		    //crowdControl.audioElement.volume = crowdControl.ensureSafeVolume(level, .05);
-		    $(crowdControl.audioElement).animate({volume: crowdControl.ensureSafeVolume(level, .05)}, 750, function() {
+		    $(crowdControl.audioElement).animate({volume: crowdControl.ensureSafeVolume(level, crowdControl.minVolume)}, 750, function() {
 		    	debug("crowdControl.audioElement.volume:post = "+ crowdControl.audioElement.volume);
 		    });
 		    
@@ -70,6 +94,12 @@ app.factory('announcerService', [ function announcerService () {
 			var changeTo = crowdControl.audioElement.volume + changeBy;
 		 	debug("adjustVolume "+ changeBy + " == "+ changeTo);
 		    crowdControl.setVolume(changeTo);
+		},
+		randomAdjustment: function() {
+			//var adjustTo = (Math.random() - .4) * .1; // add a random value between -.04 to +.06 (technically, should always be moving up...)
+			// make the crowd change less
+			var adjustTo = ((Math.random() - .4) * .1) / 2; // add a random value between -.02 to +.03 (technically, should always be moving up...)
+		 	crowdControl.adjustVolume(adjustTo);
 		},
 		fadeOut: function(delay, callback) {
 			$("#bgCrowdAudio").animate({ volume: 0 }, delay, callback)
@@ -112,13 +142,16 @@ app.factory('announcerService', [ function announcerService () {
 	//				"score-6.wav"
 			]
 		},
+
+		// http://www.letsgowings.com/forums/topic/76330-songs-played-at-joe-louis-arena/
+
 		music : {
 			intro : [
-				{ vol: 0.15, file: "intro.wav" }
+				{ type: "intro", vol: 0.15, file: "intro.wav" }
 				//, "monday-night-football-94635-4694b335-2e6b-4d16-a4a4-0c672e2eb298.mp3" // 17 seconds
 			],
 			letsGetReadyToRumble : [
-				{ vol: .7, type: "intro", fade: true, file: "music/lets-get-ready-to-rumble-88035-f4d7d1a6-dd49-435a-955e-de52157812be.mp3" }
+				{ type: "intro", vol: 1, fade: true, file: "music/lets-get-ready-to-rumble-88035-f4d7d1a6-dd49-435a-955e-de52157812be.mp3" }
 			],
 			// http://www.soundboard.com/sb/CulpeperHSFootball
 			// http://www.soundboard.com/sb/ricky38501
@@ -153,7 +186,6 @@ app.factory('announcerService', [ function announcerService () {
 				{ type: "music", fade: true,  volstart: 1, start: 33000, end: 10000, file: "music/whoomp-there-it-is-OTY3NzQ5NTQ5Njc4Mzk_VoEy4AVVJjA.mp3" },
 				{ type: "music", fade: true,  start: 0, end: 12000, file: "music/wild-side-65515-a0b7e206-156f-40c5-83cd-1ee87ae17371.mp3" },
 				{ type: "music", fade: true,  start: 0, end: 28000, file: "music/welcome-to-the-jungle-65515-97fe62cd-746b-4265-9bac-805acd86e252.mp3" },
-				{ type: "music", fade: true,  start: 0, end: 17000, file: "music/goal-siren-prodigy-65515-bb8ef7ea-86e5-40aa-a03f-e83b3e8c5c53.mp3" },
 				{ type: "music", fade: true,  start: 0, end: 19000, file: "music/all-i-do-is-one-201470-165d44eb-ead6-4e1a-ab44-e822a15237c6.mp3" },
 				{ type: "music", fade: true,  start: 0, end: 30000, file: "music/Song - Happy217844-7f887dc7-c5cf-48ea-ac47-0a6795f7c7ea.mp3" },
 				{ type: "music", fade: true,  start: 0, end: 13000, file: "music/Song - Ive Got the Power217844-d57ada2a-3597-480e-b991-b9faf3ffce7a.mp3" },
@@ -176,6 +208,13 @@ app.factory('announcerService', [ function announcerService () {
 				//{ type: "music", fade: true,  start: 0, end: 30000, file: "music/Thunderstruck - ACDC215099-60f70578-2abb-4058-b400-c5d4c5191dbc.mp3" },
 			],
 			awayGoal : [
+				/*
+				Away Team Goals
+				No More Mr. Nice Guy - Alice Cooper
+				Uprising - Muse
+				One is the Loneliest Number - Three Dog Night
+				*/
+
 				{ type: "music", fade: true,  start: 0, end: 8500, file: "music/Away Goal - It Doesnt Matter217844-d4fc0f49-3808-43cf-a972-8df7ab0f1fb4.mp3" },
 				{ type: "music", fade: true,  start: 0, end: 21000, file: "music/SIP - Wheres your head at217844-7401f6ee-6bfa-4e05-a98c-06fcb53ca51d.mp3" },
 				{ type: "music", fade: true,  start: 0, end: 21000, file: "music/SIP - Fight for Your Right217844-04310f82-b577-482b-a6a8-6e73b4a79179.mp3" },
@@ -191,12 +230,13 @@ app.factory('announcerService', [ function announcerService () {
 				//{ type: "music", fade: true,  start: 0, end: 15000, file: "music/" },
 			],
 			someoneDoSomethingNow : [
-				{ vol: .4, type: "music", fade: true,  start: 0, end: 16500, file: "music/Pump The Crowd - Get Ready For This215099-120fa195-6fa0-463f-b003-9fb4d99dc5f3.mp3"},
-				{ type: "music", fade: true,  start: 0, end: 19000, file: "music/everybody-dance-now-NzQ3NDQ5NTQ3NDc1MjM_c28jQ4MF8M0.mp3" },
-				{ vol: .4, type: "music", fade: true,  start: 0, end: 19500, file: "music/SIP - Blitzkrieg Bop217844-4c64f818-88bc-4cc1-b6b7-dc77ba241e81.mp3" },
+				{ type: "music", vol: 0.4, fade: true,  start: 0, end: 16500, file: "music/Pump The Crowd - Get Ready For This215099-120fa195-6fa0-463f-b003-9fb4d99dc5f3.mp3"},
+				{ type: "music", vol: 1.0, fade: true,  start: 0, end: 19000, file: "music/everybody-dance-now-NzQ3NDQ5NTQ3NDc1MjM_c28jQ4MF8M0.mp3" },
+				{ type: "music", vol: 0.4, fade: true,  start: 0, end: 19500, file: "music/SIP - Blitzkrieg Bop217844-4c64f818-88bc-4cc1-b6b7-dc77ba241e81.mp3" },
 			],
 			shutOutAlert : [
 				{ type: "fx", fade: true,  colstart: 1, start: 0, end: 10000, file: "music/air-raid-94635-0a641a78-6ba9-4821-83ce-9226b4807edc.mp3" },
+				{ type: "music", fade: true,  start: 0, end: 17000, file: "music/goal-siren-prodigy-65515-bb8ef7ea-86e5-40aa-a03f-e83b3e8c5c53.mp3" },
 			],
 			finalPoint : [
 				{ type: "music", fade: true,  start: 0, file: "music/queen-we-are-the-champions-94635-2fa5f86e-5441-4722-970d-319a174f76f3.mp3" },
@@ -208,18 +248,18 @@ app.factory('announcerService', [ function announcerService () {
 		},
 		organ : {
 			charge : [
-				"cheering-charge-1.wav", 
-				"organ-hockey-organ-charge_GkVzP3EO.mp3", 
-				"organ-hockey-organ-melody-in-stadium-arena_M17SP3EO.mp3", 
-				"organ-hockey-organ-melody-lets-go_fJT8P3N_.mp3", 
+				{ type: "organ", file: "cheering-charge-1.wav" }, 
+				{ type: "organ", file: "organ-hockey-organ-charge_GkVzP3EO.mp3" }, 
+				{ type: "organ", file: "organ-hockey-organ-melody-in-stadium-arena_M17SP3EO.mp3" }, 
+				{ type: "organ", file: "organ-hockey-organ-melody-lets-go_fJT8P3N_.mp3" }, 
 			],
 			chargeLong : [
-				"organ-sports-arena-music-organ-charge-ascend-reverb.mp3", // 18s
-				"organ-sports-arena-music-organ-melody-ascend-reverb_M1ptqYEu.mp3", // 16s
-				"organ-sports-arena-music-mexican-hat-dance-organ-clap_fyxsqtNu.mp3", // 11s
+				{ type: "organ", file: "organ-sports-arena-music-organ-charge-ascend-reverb.mp3" }, // 18s
+				{ type: "organ", file: "organ-sports-arena-music-organ-melody-ascend-reverb_M1ptqYEu.mp3" }, // 16s
+				{ type: "organ", file: "organ-sports-arena-music-mexican-hat-dance-organ-clap_fyxsqtNu.mp3" }, // 11s
 			],
 			cheer : [
-				"organ-short-single-chord-sports-arena-music-organ-chord-stab-reverb_Gkn29tNu.mp3", 
+				{ type: "organ", file: "organ-short-single-chord-sports-arena-music-organ-chord-stab-reverb_Gkn29tNu.mp3" }, 
 			]
 		},
 		background : {
@@ -229,79 +269,78 @@ app.factory('announcerService', [ function announcerService () {
 		},
 		positiveCrowd : {
 			airhorn : [
-				"air-horn_Mka55z4u.mp3", 
-				"airhorn.wav"
+				{ type: "cheer", file: "air-horn_Mka55z4u.mp3" }, 
+				{ type: "cheer", file: "airhorn.wav" }
 			],
 			cheer : [
-				"applause-1.mp3", 
-				"applause-1.wav", 
-				"applause-2.wav", 
-				"applause-3.wav", 
-				"applause-4.wav", 
-				"applause-5.wav", 
-				"cheer-crowd-battle-cry-ahhhoh_M1S_ZOV_.mp3", 
-				"cheer-crowd-cheer-clap-scream_fJkt-OV_.mp3", 
-				"cheer-crowd-hooray_MJzKZ_4_.mp3", 
-				"cheer-crowd-loud-ohh_zyqq-uEd.mp3", 
-				"cheer-crowd-scream-goal_Myqs-u4_.mp3", 
-				"cheer-crowd-scream-hooray_z1g3W_4d.mp3", 
-				"cheer-crowd-scream-oh-yeah_MyNnbuEd.mp3", 
-				"cheer-crowd-scream-ohh_zJL3bO4u.mp3",
-				"cheer-crowd-scream-shocked-whoa_fkd3-dN_.mp3", 
-				"cheer-crowd-scream-yes_MykaZO4O.mp3", 
-				"cheer-crowd-tongue-rolls_Gy9aZuVd.mp3", 
-				"cheer-crowd-vocal-element-goal-long_G1j6-ON_.mp3", 
-				"cheer-crowd-yes-unison_MkhTW_V_.mp3", 
-				"cheer-sports-event_MJoQI64u.mp3",
-				"crowd-cheer-baseball-game.mp3", 
-				"crowd-cheer-baseball-game_M1WXv2Nd.mp3", 
-				"crowd-cheer-baseball-game_z1IbPhE_.mp3",
-				"crowd-scream-go-go-go_zJ6Kb_Nu.mp3", 
-				"crowd-scream-whoa_MJAnZO4O.mp3",
-				"crowd-clap-unison-pattern-loop_zJG5ZOV_.mp3",
-				"crowd-cheers-and-whistles_MyWbxfVu.mp3", 
-				"crowd-applaud-cheer-scream_GyrL-d4O.mp3",
-				"crowd-cheer-clap-scream_fJkt-OV_.mp3",
-				"crowd-scream-oh-yeah_MyNnbuEd.mp3",
-				"huge-crowd-response_Mys7gfEu.mp3",
-				"large-audience-medium-applause_MyTixHNO.mp3",
-				"screaming-teenage-girls-short_zJmNSSEu.mp3",
-				"stadium-applause_GJxblfEd.mp3",
-				"stadium-crowd-cheer-1_fJJQlMVu.mp3",
-				"stadium-crowd-cheer-2_zJ7SezVu.mp3",
-				"stadium-reaction-3_fkr4lG4u.mp3",
-				"",	
+				{ type: "cheer", volMax: .75, file: "applause-1.mp3" }, 
+				{ type: "cheer", volMax: .75, file: "applause-1.wav" },
+				{ type: "cheer", volMax: .75, file: "applause-2.wav" },
+				{ type: "cheer", volMax: .75, file: "applause-3.wav" },
+				{ type: "cheer", volMax: .75, file: "applause-4.wav" },
+				{ type: "cheer", volMax: .75, file: "applause-5.wav" },
+				{ type: "cheer", volMax: .75, file: "cheer-crowd-battle-cry-ahhhoh_M1S_ZOV_.mp3" },
+				{ type: "cheer", volMax: .75, file: "cheer-crowd-cheer-clap-scream_fJkt-OV_.mp3" },
+				{ type: "cheer", volMax: .75, file: "cheer-crowd-hooray_MJzKZ_4_.mp3" },
+				{ type: "cheer", volMax: .75, file: "cheer-crowd-loud-ohh_zyqq-uEd.mp3" }, 
+				{ type: "cheer", volMax: .75, file: "cheer-crowd-scream-goal_Myqs-u4_.mp3" }, 
+				{ type: "cheer", volMax: .75, file: "cheer-crowd-scream-hooray_z1g3W_4d.mp3" }, 
+				{ type: "cheer", volMax: .75, file: "cheer-crowd-scream-oh-yeah_MyNnbuEd.mp3" },
+				{ type: "cheer", volMax: .75, file: "cheer-crowd-scream-ohh_zJL3bO4u.mp3" },
+				{ type: "cheer", volMax: .75, file: "cheer-crowd-scream-shocked-whoa_fkd3-dN_.mp3" },
+				{ type: "cheer", volMax: .75, file: "cheer-crowd-scream-yes_MykaZO4O.mp3" },
+				{ type: "cheer", volMax: .75, file: "cheer-crowd-tongue-rolls_Gy9aZuVd.mp3" }, 
+				{ type: "cheer", volMax: .75, file: "cheer-crowd-vocal-element-goal-long_G1j6-ON_.mp3" },
+				{ type: "cheer", volMax: .75, file: "cheer-crowd-yes-unison_MkhTW_V_.mp3" },
+				{ type: "cheer", volMax: .75, file: "cheer-sports-event_MJoQI64u.mp3" },
+				{ type: "cheer", volMax: .75, file: "crowd-cheer-baseball-game.mp3" },
+				{ type: "cheer", volMax: .75, file: "crowd-cheer-baseball-game_M1WXv2Nd.mp3" },
+				{ type: "cheer", volMax: .75, file: "crowd-cheer-baseball-game_z1IbPhE_.mp3" },
+				{ type: "cheer", volMax: .75, file: "crowd-scream-go-go-go_zJ6Kb_Nu.mp3" },
+				{ type: "cheer", volMax: .75, file: "crowd-scream-whoa_MJAnZO4O.mp3" },
+				{ type: "cheer", volMax: .75, file: "crowd-clap-unison-pattern-loop_zJG5ZOV_.mp3" },
+				{ type: "cheer", volMax: .75, file: "crowd-cheers-and-whistles_MyWbxfVu.mp3" },
+				{ type: "cheer", volMax: .75, file: "crowd-applaud-cheer-scream_GyrL-d4O.mp3" },
+				{ type: "cheer", volMax: .75, file: "crowd-cheer-clap-scream_fJkt-OV_.mp3" },
+				{ type: "cheer", volMax: .75, file: "crowd-scream-oh-yeah_MyNnbuEd.mp3" },
+				{ type: "cheer", volMax: .75, file: "huge-crowd-response_Mys7gfEu.mp3" },
+				{ type: "cheer", volMax: .75, file: "large-audience-medium-applause_MyTixHNO.mp3" },
+				{ type: "cheer", volMax: .75, file: "screaming-teenage-girls-short_zJmNSSEu.mp3" },
+				{ type: "cheer", volMax: .75, file: "stadium-applause_GJxblfEd.mp3" },
+				{ type: "cheer", volMax: .75, file: "stadium-crowd-cheer-1_fJJQlMVu.mp3" },
+				{ type: "cheer", volMax: .75, file: "stadium-crowd-cheer-2_zJ7SezVu.mp3" },
+				{ type: "cheer", volMax: .75, file: "stadium-reaction-3_fkr4lG4u.mp3" },
 			],
 			chant : [
-				"chant-chanting-concert-applause_zyGZ-HE_.mp3", 
-				"chant-male-crowd-chanting-solidarnosc_MknsmSNu.mp3", 
+				{ type: "cheer", file: "chant-chanting-concert-applause_zyGZ-HE_.mp3" }, 
+				{ type: "cheer", file: "chant-male-crowd-chanting-solidarnosc_MknsmSNu.mp3" }, 
 			]
 		},
 		negativeCrowd : {
 			aww : [
-				"aww-crowd-aww-disappointed_G1SdWOVd.mp3", 
-				"aww-crowd-aww_GJKdZ_Nu.mp3", 
-				"aww-crowd-disgusted-aww_G1qd-OVd.mp3", 
-				"aww-crowd-disgusted-aww_zkuqZdN_.mp3", 
-				"aww-crowd-scream-aww_fJa9Z_V_.mp3",
-				"crowd-aww-disappointed_G1SdWOVd.mp3",
+				{ type: "cheer", file: "aww-crowd-aww-disappointed_G1SdWOVd.mp3"}, 
+				{ type: "cheer", file: "aww-crowd-aww_GJKdZ_Nu.mp3"}, 
+				{ type: "cheer", file: "aww-crowd-disgusted-aww_G1qd-OVd.mp3"}, 
+				{ type: "cheer", file: "aww-crowd-disgusted-aww_zkuqZdN_.mp3"}, 
+				{ type: "cheer", file: "aww-crowd-scream-aww_fJa9Z_V_.mp3"},
+				{ type: "cheer", file: "crowd-aww-disappointed_G1SdWOVd.mp3" },
 			],
 			boo : [
-				"boo-1.wav", 
-				"boo-2.wav", 
-				"boo-3.wav", 
-				"boo-4.wav", 
-				"boo-5.wav", 
-				"boo-crowd-boo_fkA_ZONd.mp3", 
-				"crowd-boos-2_MJcMezVu.mp3",
-				"crowd-boo_fkA_ZONd.mp3",
-				"crowd-boos-1_G1amezEd.mp3",
+				{ type: "cheer", file: "boo-1.wav" }, 
+				{ type: "cheer", file: "boo-2.wav" }, 
+				{ type: "cheer", file: "boo-3.wav" }, 
+				{ type: "cheer", file: "boo-4.wav" }, 
+				{ type: "cheer", file: "boo-5.wav" }, 
+				{ type: "cheer", file: "boo-crowd-boo_fkA_ZONd.mp3" }, 
+				{ type: "cheer", file: "crowd-boos-2_MJcMezVu.mp3" },
+				{ type: "cheer", file: "crowd-boo_fkA_ZONd.mp3" },
+				{ type: "cheer", file: "crowd-boos-1_G1amezEd.mp3" },
 			],
 			ohno : [
-				"oh-no-crowd-scream-oh-no_fkm3Zu4_.mp3", 
-				"crowd-painful-ohh_fkmKbONO.mp3",
-				"boo-crowd-scream-no-different-times_My-nZdNu.mp3", 
-				"boo-crowd-scream-no_M1xhZ_Nd.mp3"
+				{ type: "cheer", file: "oh-no-crowd-scream-oh-no_fkm3Zu4_.mp3" }, 
+				{ type: "cheer", file: "crowd-painful-ohh_fkmKbONO.mp3" },
+				{ type: "cheer", file: "boo-crowd-scream-no-different-times_My-nZdNu.mp3" }, 
+				{ type: "cheer", file: "boo-crowd-scream-no_M1xhZ_Nd.mp3" }
 			]
 		}
 	}
@@ -759,8 +798,23 @@ app.factory('announcerService', [ function announcerService () {
 		debug(config.players);
 	}
 
+	var itemsAlreadyUsed = [];
+	var maxUniqueRetryAttempts = 0;
 	var getRandomItem = function(aData) {
-		return aData[Math.floor(Math.random()*aData.length)];
+		var returnThis = aData[Math.floor(Math.random()*aData.length)];
+		var indexAlreadyUsed = itemsAlreadyUsed.indexOf(returnThis);
+		debug("already used it?  "+ indexAlreadyUsed +" ... retries: "+ maxUniqueRetryAttempts)
+		if (indexAlreadyUsed >= 0 && maxUniqueRetryAttempts < 5) {
+			debug("already used it, try again...")
+			debug(returnThis);
+			// call it again
+			maxUniqueRetryAttempts++;
+			return getRandomItem(aData);
+		} else {
+			maxUniqueRetryAttempts = 0;
+			itemsAlreadyUsed.push(returnThis);
+			return returnThis;
+		}
 	}
 
 	var initPlayersAndTeamViaRoster = function () {
@@ -856,20 +910,34 @@ app.factory('announcerService', [ function announcerService () {
 
 	var endGame = function() {
 		
-		playSound(getRandomItem(soundsToMake.music.finalPoint));
-		setTimeout(function() { playSound([soundsToMake.positiveCrowd.cheer, soundsToMake.positiveCrowd.chant]); }, 1000);
-		setTimeout(function() { playSound([soundsToMake.positiveCrowd.cheer, soundsToMake.positiveCrowd.chant]); }, 8000);
-		setTimeout(function() {
+		playSound(soundsToMake.music.finalPoint);
+		stadiumTimers.endGame1 = setTimeout(function() { playSound([soundsToMake.positiveCrowd.cheer, soundsToMake.positiveCrowd.chant]); }, 1000);
+		stadiumTimers.endGame2 = setTimeout(function() { playSound([soundsToMake.positiveCrowd.cheer, soundsToMake.positiveCrowd.chant]); }, 8000);
+		stadiumTimers.endGame3 = setTimeout(function() {
 			playSound([soundsToMake.positiveCrowd.cheer, soundsToMake.positiveCrowd.chant]);
-			crowdControl.fadeOut(15000, resetGame);
+			crowdControl.fadeOut(30000, stopGame);
 		}, 5000)
 	}
 
-	var resetGame = function() {
+	var stopGame = function() {
 		crowdControl.stopCrowd();
+		stadiumSounds.stopAll();
 
-		if (tmrGameUpdates != null)
-			clearInterval(tmrGameUpdates);
+		// clear all timers
+		stadiumTimers.stopAll();
+
+		// stop talking
+		window.speechSynthesis.cancel();
+		//window.speechSynthesis.pause();
+
+		//reset "get random item array"
+		itemsAlreadyUsed = [];
+		maxUniqueRetryAttempts = 0;
+		debug("GAME OVER!!!!!!!!!!!!!");
+	}
+
+	var resetGame = function() {
+		stopGame();
 
 		config.gameStartTime = new Date();
 		config.timeLastGoalWasScored = config.gameStartTime;
@@ -877,9 +945,6 @@ app.factory('announcerService', [ function announcerService () {
 
 		resetPlayersAndTeams();
 
-		// stop talking
-		window.speechSynthesis.pause();
-		window.speechSynthesis.cancel();
 	}
 
 	var resetPlayersAndTeams = function() {
@@ -919,25 +984,31 @@ app.factory('announcerService', [ function announcerService () {
 			// this will play until the first thing is said...
 			playSound(soundsToMake.music.letsGetReadyToRumble);
 			//after 15-30 seconds drop the volume
-			setTimeout(function() {
+			stadiumTimers.lowerReadyToRumbleTimer1 = setTimeout(function() {
 				debug("lowering the volume")
-				if (soundPlayingStatus.intro) { // if intro is still playing...
-					$(soundPlayingStatus.introSoundObject).animate({volume: 0.2}, 3000);
+				if (stadiumSounds.intro.isPlaying) { // if intro is still playing...
+					$(stadiumSounds.intro.audioElement).animate({volume: 0.2}, 3000);
+				}
+			}, 7000);
+			stadiumTimers.lowerReadyToRumbleTimer2 = setTimeout(function() {
+				debug("lowering the volume")
+				if (stadiumSounds.intro.isPlaying) { // if intro is still playing...
+					$(stadiumSounds.intro.audioElement).animate({volume: 0.1}, 3000);
 				}
 			}, 15000 + (Math.random() * 15000));
-			setTimeout(startGameUpdateTimer, 10000);
+			stadiumTimers.startGameTimerSoon = setTimeout(startGameUpdateTimer, 10000);
 		} else {
 			if (!config.skipIntro)
 				playSound(soundsToMake.music.intro);
 
 			// give it a small delay to the the intro play
 			if (!config.skipIntro)
-				setTimeout(speakOpeningMessage, 5000);
+				stadiumTimers.openingMessage = setTimeout(speakOpeningMessage, 5000);
 		}
 	}
 
 	var startGameUpdateTimer = function() {
-		tmrGameUpdates = setInterval(giveGameUpdates, GAME_UPDATE_CHECK_EVERY_X_MILIS);
+		stadiumTimers.GameUpdates = setInterval(giveGameUpdates, GAME_UPDATE_CHECK_EVERY_X_MILIS);
 	}
 
 	var speakOpeningMessage = function() {
@@ -976,8 +1047,8 @@ app.factory('announcerService', [ function announcerService () {
 	}
 
 	var giveGameUpdates = function() {
-		if (soundPlayingStatus.music) {
-			debug("exit giveGameUpdates: "+ soundPlayingStatus.music);
+		if (stadiumSounds.music.isPlaying) {
+			debug("exit giveGameUpdates: "+ stadiumSounds.music.isPlaying);
 			return; //exit
 		}
 
@@ -1010,7 +1081,7 @@ app.factory('announcerService', [ function announcerService () {
 							playChargeSound(bLetSeeSomeActionAllowBoos, false);
 						} else {
 							// play pump up the table music
-							playSound(getRandomItem(soundsToMake.music.someoneDoSomethingNow));
+							playSound(soundsToMake.music.someoneDoSomethingNow);
 						}
 					}
 				} else {
@@ -1026,11 +1097,12 @@ app.factory('announcerService', [ function announcerService () {
 
 		}
 		// goal -.04 to .06
-	 	crowdControl.adjustVolume((Math.random() - .4) * .1);
+		crowdControl.randomAdjustment();
 	}
 
 	// this function will take in anything you throw at it. string, array of arrays, a single array, or an object of arrays
 	var getSoundFile = function(whichSound) {
+
 		var fileName = "";
 		//debug(whichSound)
 		//debug("type of: "+ (typeof whichSound))
@@ -1070,7 +1142,8 @@ app.factory('announcerService', [ function announcerService () {
 					}
 				}
 			}
-			fileName = getRandomItem(aryChooseFrom);
+			// get randome Item
+			fileName = getRandomItem(aryChooseFrom, true);
 		} else {
 			switch (whichSound) {
 				// http://soundbible.com/tags-crowd.html
@@ -1104,12 +1177,39 @@ app.factory('announcerService', [ function announcerService () {
 		}
 	}
 
-	var soundPlayingStatus = {
-		music: false,
-		musicSoundObject: null
+	var stadiumSounds = {
+		music: { allowMultiple: false, isPlaying : false, audioElement: null },
+		intro: { allowMultiple: false, isPlaying : false, audioElement: null },
+		organ: { allowMultiple: false, isPlaying : false, audioElement: null },
+		cheer: { allowMultiple: true },
+		fx:    { allowMultiple: true },
+		
+		fadeOut : function(whichChannel, delay) {
+			var thisChannel = this[whichChannel];
+			if (thisChannel.isPlaying && thisChannel.audioElement) {
+				$(thisChannel.audioElement).animate({volume: 0}, delay, function() {
+					thisChannel.isPlaying = false;
+					thisChannel.audioElement = null;
+				});
+			}
+		},
+		stop : function(whichChannel) {
+			var thisChannel = this[whichChannel];
+			if (thisChannel.audioElement != null) {
+				thisChannel.audioElement.pause();
+				$(thisChannel.audioElement).remove();
+				thisChannel.audioElement = null;
+			}
+			thisChannel.isPlaying = false;
+		},
+		stopAll : function() {
+			for (var sound in this) {
+				this.stop(sound);
+			}
+		}
 	}
 
-	var playSound = function(soundType) {
+	var playSound = function(soundType, settingsParam) {
 		var playThisFile = getSoundFile(soundType);
 		var settings = {
 			file: "",
@@ -1119,28 +1219,39 @@ app.factory('announcerService', [ function announcerService () {
 			start: 0,
 			end: null,
 		}
-
-		debug("playThisFile:");
-		debug(playThisFile);
+		//debug("playThisFile:");
+		//debug(playThisFile);
 		if (typeof playThisFile == "string") {
 			// it's just a file path
 			settings.file = playThisFile; 
 		} else if (typeof playThisFile == "object") {
 			// it's a full object
-			settings = playThisFile; 
+			settings = MergeRecursive(settings, playThisFile); 
 		}
 
-		debug(soundPlayingStatus);
-		debug(settings.type +" = "+ soundPlayingStatus[settings.type]);
+		if (settingsParam) {
+			//debug("settingsParam:");
+			//debug(settingsParam);
+			settings = MergeRecursive(settings, settingsParam); 
+			//debug(settings);
+		}
+
+		//debug("final settings:");
+		debug(settings);
+
+		//debug(stadiumSounds.intro);
+		//debug(settings.type +" = "+ stadiumSounds[settings.type]);
 		if (settings.type) {
-			if (soundPlayingStatus[settings.type]) {
-				//bail
-				debug("NOT GOING TO PLAY THIS SONG... busy playing something else...")
-				// try again in 4 seconds? This is questionable, Not sure if I want to do this, might get out of control
-				setTimeout(function() { playSound(soundType) }, 4000);
-				return false;
+			if (!stadiumSounds[settings.type].allowMultiple) {
+				if (stadiumSounds[settings.type].isPlaying) {
+					//bail
+					debug("NOT GOING TO PLAY THIS SONG... busy playing something else...")
+					// try again in 4 seconds? This is questionable, Not sure if I want to do this, might get out of control
+					stadiumTimers.queueSongForLater = setTimeout(function() { playSound(soundType) }, 4000);
+					return false;
+				}
+				stadiumSounds[settings.type].isPlaying = true;
 			}
-			soundPlayingStatus[settings.type] = true;
 		}
 
 
@@ -1162,9 +1273,13 @@ app.factory('announcerService', [ function announcerService () {
 			sound.play();
 		}
 
+		// save this volume as the MAX volume
+		$(sound).attr("data-max-vol", sound.volume);
+
 		// if music is playing, and we can talk, we can fade it out later
 		if (settings.type) {
-			soundPlayingStatus[settings.type +"SoundObject"] = sound;
+			debug(settings.type)
+			stadiumSounds[settings.type].audioElement = sound;
 		}
 
 		if (settings.end > 0) {
@@ -1175,20 +1290,12 @@ app.factory('announcerService', [ function announcerService () {
 				endAfter = (endAfter - 7000) + (Math.random() * 11000); //So, we are going to -7 or +4 seconds
 
 			setTimeout(function() { 
-				$(sound).animate({volume: 0}, 750 + (Math.random() * 2000), function() { 
-					sound.pause(); 
-					//debug("done playing...")
-					//debug(soundPlayingStatus)
-					soundPlayingStatus[settings.type] = false;
-					soundPlayingStatus[settings.type +"SoundObject"] = null;
-					//debug(settings.type)
-					//debug(soundPlayingStatus[settings.type])
-				}); 
+				stadiumSounds.fadeOut(settings.type, 750 + (Math.random() * 2000));
 			},  endAfter);
 		}
 
-
-
+		// add to body to make my life easier
+		$("body").append(sound);
 	}
 
 
@@ -1204,7 +1311,7 @@ app.factory('announcerService', [ function announcerService () {
 			playSound(soundList);			
 		}
 		if (delayIt)
-			setTimeout(playCharge, (5000 + (Math.random() * 15000)));
+			stadiumTimers.queueChargeForLater = setTimeout(playCharge, (5000 + (Math.random() * 15000)));
 		else
 			playCharge();
 	}
@@ -1237,11 +1344,7 @@ app.factory('announcerService', [ function announcerService () {
 
 			// fade out any music that is playing right now ...
 			// make sure you can here who the winners were, then play the winning music
-			if (soundPlayingStatus.music && soundPlayingStatus.musicSoundObject) {
-				$(soundPlayingStatus.musicSoundObject).animate({volume: 0}, 500);
-				soundPlayingStatus.music = false;
-				soundPlayingStatus.musicSoundObject = null;
-			}
+			stadiumSounds.fadeOut("music");
 
 			doThisAfterwards = function() {
 				debug("end of game!");
@@ -1260,7 +1363,7 @@ app.factory('announcerService', [ function announcerService () {
 				// occasionally, play another random sound
 				if (Math.random() <.2) {
 					//10 to 20 secnds in the future
-					setTimeout(function() { playSound(soundsToMake.positiveCrowd) }, 10000 + (Math.random() * 10000));
+					stadiumTimers.queuePositiveCrowd = setTimeout(function() { playSound(soundsToMake.positiveCrowd) }, 10000 + (Math.random() * 10000));
 				}
 			} else { // if you are the away team/black
 				crowdControl.playApplause(soundsToMake.negativeCrowd, shotPowerLevel); //FUTURE: Pass level 0-1 based on strength of shot
@@ -1402,7 +1505,7 @@ app.factory('announcerService', [ function announcerService () {
 		// if there is music to play AND doThisAfterwards IS NOT ALREADY SET (end of game)
 		if (playMusicAfterTalking && !doThisAfterwards) {
 			doThisAfterwards = function() {
-				playSound(getRandomItem(playMusicAfterTalking));
+				playSound(playMusicAfterTalking);
 			}
 		}
 
@@ -1448,7 +1551,7 @@ app.factory('announcerService', [ function announcerService () {
 		pointHistory.push({ "player": oPlayer, "time": gameTime});
 
 		// put a slight delay on the announcement
-		setTimeout(function() {
+		stadiumTimers.pointScoredAnnouncement = setTimeout(function() {
 			doThis(returnMessage, doThisAfterwards);
 		}, (1500 + (shotPowerLevel * 3000)));
 
@@ -1491,6 +1594,7 @@ app.factory('announcerService', [ function announcerService () {
 			message = doWordFixes(message);
 			debug("sayThis: "+ message);
 			var msg = new SpeechSynthesisUtterance(message);
+			msg.volume = 1;
 			msg.lang = 'en-GB'; //translates on the fly - soooo awesome (japanese is the funniest)
 
 			var originalVolume = crowdControl.getVolume();
@@ -1499,26 +1603,25 @@ app.factory('announcerService', [ function announcerService () {
 				if (!window.speechSynthesis.pending) {
 					debug("restore the volume...");
 					crowdControl.setVolume(originalVolume);
-					if (soundPlayingStatus.music && soundPlayingStatus.musicSoundObject) {
-						$(soundPlayingStatus.musicSoundObject).animate({volume: 1}, 100 + (Math.random() * 400));
+
+					if (stadiumSounds.music.isPlaying && stadiumSounds.music.audioElement) {
+						$(stadiumSounds.music.audioElement).animate({volume: 1}, 100 + (Math.random() * 400));
 					}
 				}
 				if (doThisAfterwards) doThisAfterwards();
 			};
 
 			// if the intro music is still playing, KILL IT
-			if (soundPlayingStatus.intro && soundPlayingStatus.introSoundObject) {
-				$(soundPlayingStatus.introSoundObject).animate({volume: 0}, 100 + (Math.random() * 400), function() {
-					soundPlayingStatus.introSoundObject.pause();
-					soundPlayingStatus.intro = false;
-					soundPlayingStatus.introSoundObject = null;
+			if (stadiumSounds.intro.isPlaying && stadiumSounds.intro.audioElement) {
+				$(stadiumSounds.intro.audioElement).animate({volume: 0}, 100 + (Math.random() * 400), function() {
+					stadiumSounds.stop("intro");
 				});
 			}
 
 
 			// if there is music playing, lower it so we can hear the announcer
-			if (soundPlayingStatus.music && soundPlayingStatus.musicSoundObject) {
-				$(soundPlayingStatus.musicSoundObject).animate({volume: .15}, 500);
+			if (stadiumSounds.music.isPlaying && stadiumSounds.music.audioElement) {
+				$(stadiumSounds.music.audioElement).animate({volume: .15}, 500);
 			}
 
 			//msg.volume = 1; // 0 to 1
@@ -1563,15 +1666,16 @@ app.factory('announcerService', [ function announcerService () {
 
 
 	return {
-		getPlayer: getPlayer,
-		getTeam: getTeam,
-		updateMessageReplacements: updateMessageReplacements,
-		updateStreaks: updateStreaks,
-		getRandomItem: getRandomItem,
+		//getPlayer: getPlayer,
+		//getTeam: getTeam,
+		//updateMessageReplacements: updateMessageReplacements,
+		//updateStreaks: updateStreaks,
+		//getRandomItem: getRandomItem,
+		//sayThis: sayThis,
 		scorePoint: scorePoint,
-		sayThis: sayThis,
 		voiceTest: voiceTest,
 		textExport: textExport,
+		stop: stopGame,
 		init: init
 	};
 
