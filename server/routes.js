@@ -2,9 +2,9 @@ var Player = require('./models/Player');
 var Game = require('./models/Game');
 var async = require('async');
 
-var GamesCountQuery = require('./Queries/GamesCount');
-var Rpi = require('./Queries/PlayerRpi');
-var PlayerStats = require('./Queries/PlayerStats');
+var GamesCountQuery = require('./queries/GamesCount');
+var Rpi = require('./queries/PlayerRpi');
+var PlayerStats = require('./queries/PlayerStats');
 
 module.exports = function(app) {
 	// Routes
