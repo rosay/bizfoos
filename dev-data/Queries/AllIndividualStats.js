@@ -292,25 +292,25 @@ PlayerGames.result.forEach(function(item) {
     item.AverageDefensiveGameTimeAfterLoss = getDuration(item.TotalDefensiveGameTimeAfterLossMS / item.TotalGamesLostOnDefense, false, true, true, false, false, false);
     item.AverageDefensiveGameTimeAfterWin = getDuration(item.TotalDefensiveGameTimeAfterWinMS / item.TotalGamesWonOnDefense, false, true, true, false, false, false);
 
-   // Longest and Shortest Game Time Stats
-   item.LongestGame = getDuration(item.LongestGameMS, false, true, true, false, false, false);
-   item.ShortestGame = getDuration(item.ShortestGameMS, false, true, true, false, false, false);
-   item.LongestGameOnOffense = getDuration(item.LongestGameOnOffenseMS, false, true, true, false, false, false);
-   item.LongestGameOnDefense = getDuration(item.LongestGameOnDefenseMS, false, true, true, false, false, false);
-   item.ShortestGameOnOffense = getDuration(item.ShortestGameOnOffenseMS, false, true, true, false, false, false);
-   item.ShortestGameOnDefense = getDuration(item.ShortestGameOnDefenseMS, false, true, true, false, false, false);
+    // Longest and Shortest Game Time Stats
+    item.LongestGame = getDuration(item.LongestGameMS, false, true, true, false, false, false);
+    item.ShortestGame = getDuration(item.ShortestGameMS, false, true, true, false, false, false);
+    item.LongestGameOnOffense = getDuration(item.LongestGameOnOffenseMS, false, true, true, false, false, false);
+    item.LongestGameOnDefense = getDuration(item.LongestGameOnDefenseMS, false, true, true, false, false, false);
+    item.ShortestGameOnOffense = getDuration(item.ShortestGameOnOffenseMS, false, true, true, false, false, false);
+    item.ShortestGameOnDefense = getDuration(item.ShortestGameOnDefenseMS, false, true, true, false, false, false);
    
-   // Longest Game Time Stats
-   item.LongestGameAfterWinOnOffense = getDuration(item.LongestGameAfterWinOnOffenseMS, false, true, true, false, false, false);
-   item.LongestGameAfterLossOnOffense = getDuration(item.LongestGameAfterLossOnOffenseMS, false, true, true, false, false, false);
-   item.LongestGameAfterWinOnDefense = getDuration(item.LongestGameAfterWinOnDefenseMS, false, true, true, false, false, false);
-   item.LongestGameAfterLossOnDefense = getDuration(item.LongestGameAfterLossOnDefenseMS, false, true, true, false, false, false);
+    // Longest Game Time Stats
+    item.LongestGameAfterWinOnOffense = getDuration(item.LongestGameAfterWinOnOffenseMS, false, true, true, false, false, false);
+    item.LongestGameAfterLossOnOffense = getDuration(item.LongestGameAfterLossOnOffenseMS, false, true, true, false, false, false);
+    item.LongestGameAfterWinOnDefense = getDuration(item.LongestGameAfterWinOnDefenseMS, false, true, true, false, false, false);
+    item.LongestGameAfterLossOnDefense = getDuration(item.LongestGameAfterLossOnDefenseMS, false, true, true, false, false, false);
    
-   // Shortest Game Time Stats
-   item.ShortestGameAfterWinOnOffense = getDuration(item.ShortestGameAfterWinOnOffenseMS, false, true, true, false, false, false);
-   item.ShortestGameAfterLossOnOffense = getDuration(item.ShortestGameAfterLossOnOffenseMS, false, true, true, false, false, false);
-   item.ShortestGameAfterWinOnDefense = getDuration(item.ShortestGameAfterWinOnDefenseMS, false, true, true, false, false, false);
-   item.ShortestGameAfterLossOnDefense = getDuration(item.ShortestGameAfterLossOnDefenseMS, false, true, true, false, false, false);
+    // Shortest Game Time Stats
+    item.ShortestGameAfterWinOnOffense = getDuration(item.ShortestGameAfterWinOnOffenseMS, false, true, true, false, false, false);
+    item.ShortestGameAfterLossOnOffense = getDuration(item.ShortestGameAfterLossOnOffenseMS, false, true, true, false, false, false);
+    item.ShortestGameAfterWinOnDefense = getDuration(item.ShortestGameAfterWinOnDefenseMS, false, true, true, false, false, false);
+    item.ShortestGameAfterLossOnDefense = getDuration(item.ShortestGameAfterLossOnDefenseMS, false, true, true, false, false, false);
    
 });
 
