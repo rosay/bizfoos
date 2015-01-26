@@ -1,4 +1,4 @@
-app.controller('StatsController', ['$http', 'statisticsService', 'playerService', function($http, statisticsService, playerService) {
+app.controller('StatsController', ['$http', 'statisticsService', function($http, statisticsService) {
     "use strict";
 
     var vm = this;
@@ -7,27 +7,14 @@ app.controller('StatsController', ['$http', 'statisticsService', 'playerService'
     vm.playerRpi = [];
     vm.players = [];
 
-    playerService.getPlayers()
+    statisticsService.getPlayerRpi()
         .then(function() {
-            vm.players = playerService.players;
+            var results = statisticsService.playerRpi;
 
-            statisticsService.getPlayerRpi()
-                .then(function() {
-                    var results = statisticsService.playerRpi;
+            for (var i = 0; i < results.length; i++) {
+                results[i].WP = (results[i].WP * 100).toFixed(2);
+            }
 
-                    var mergedList = _.map(results, function(item){
-                        return _.extend(item, _.findWhere(playerService.players, { _id: item._id }));
-                    });
-
-                    for (var i = 0; i < mergedList.length; i++) {
-                        var rpi = mergedList[i].RPI * 100;
-                        mergedList[i].RPI = rpi.toFixed(2);
-
-                        var wp = mergedList[i].WP * 100;
-                        mergedList[i].WP = wp.toFixed(2)
-                    }
-
-                    vm.playerRpi = mergedList;
-                });
+            vm.playerRpi = results;
         });
 }]);
