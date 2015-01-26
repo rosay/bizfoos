@@ -13,6 +13,11 @@
 						controller: 'PlayerController',
 						controllerAs: 'ctrl'
 					}).
+					when('/player/:id', {
+						templateUrl: 'partials/player-profile.html',
+						controller: 'PlayerProfileController',
+						controllerAs: 'ctrl'
+					}).
 					when('/game', {
 						templateUrl: 'partials/game.html',
 						controller: 'GameController',
