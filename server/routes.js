@@ -1,5 +1,10 @@
 var Player = require('./models/Player');
 var Game = require('./models/Game');
+var async = require('async');
+
+var GamesCountQuery = require('./queries/GamesCount');
+var Rpi = require('./queries/PlayerRpi');
+var PlayerStats = require('./queries/PlayerStats');
 
 module.exports = function(app) {
 	// Routes
@@ -13,8 +18,7 @@ module.exports = function(app) {
 		});
 	});
 
-	app.get('/api/lb/topplayers', function (req, res) {
-
+	app.get('/api/stats/topplayers', function (req, res) {
 		Game.aggregate([
 			{ $unwind: "$roster" }
 				,{ $group: {
@@ -42,6 +46,68 @@ module.exports = function(app) {
 		});
 	});
 
+	app.get('/api/stats/rpi', function (req, res) {
+
+		var rpi = Rpi();
+
+		async.parallel({
+			player: function(callback) {
+				rpi.getPlayerQuery().exec(callback);
+			},
+			games: function(callback) {
+				rpi.getGameQuery().exec(callback);
+			}
+		}, function (err, results) {
+
+			var rpiResults = rpi.processResults(results.player, results.games);
+
+			res.send(rpiResults);
+		});
+	});
+
+	app.get('/api/stats/players', function (req, res) {
+		var playerStats = PlayerStats();
+
+		async.parallel({
+			games: function(callback) {
+				playerStats.getGamesQuery().exec(callback);
+			},
+			players: function(callback) {
+				playerStats.getPlayersQuery().exec(callback);
+			},
+			gamesCount: function(callback) {
+				GamesCountQuery.exec(callback);
+			}
+		}, function (err, results) {
+			var playerStatsResults = playerStats.processResults(results.games, results.players, results.gamesCount);
+
+			res.send(playerStatsResults);
+
+		});
+	});
+
+	app.get('/api/stats/players/:player_id', function (req, res) {
+		var player_id = req.params.player_id;
+
+		var playerStats = PlayerStats();
+
+		async.parallel({
+			games: function(callback) {
+				playerStats.getGamesQuery(player_id).exec(callback);
+			},
+			players: function(callback) {
+				playerStats.getPlayersQuery(player_id).exec(callback);
+			},
+			gamesCount: function(callback) {
+				GamesCountQuery.exec(callback);
+			}
+		}, function (err, results) {
+			var playerStatsResults = playerStats.processResults(results.games, results.players, results.gamesCount);
+
+			res.send(playerStatsResults);
+		});
+	});
+
 	app.post('/api/game/save', function(req, res) {
 
 		var game = new Game(req.body.gameData);
@@ -64,16 +130,6 @@ module.exports = function(app) {
 		} else {
 			res.status(500).send(err);
 		}
-	});
-
-	// accept PUT request at /user
-	app.put('/api/user', function (req, res) {
-		res.send('Got a PUT request at /user');
-	});
-
-	// accept DELETE request at /user
-	app.delete('/api/user', function (req, res) {
-		res.send('Got a DELETE request at /user');
 	});
 
 	app.get('*', function(req, res) {

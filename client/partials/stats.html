@@ -1,0 +1,24 @@
+<div class="container">
+	<div class="row">
+
+		<div class="col-lg-offset-2 col-md-offset-2 col-sm-offset-1 col-lg-8 col-md-8 col-sm-10 col-xs-12">
+			<div class="lboard-single">
+				<h2>Leaderboard</h2>
+				<table class="table table-striped">
+					<tr>
+						<th></td>
+						<th>Player</th>
+						<th>Win %</th>
+						<th>RPI</th>
+					</tr>
+					<tr ng-repeat="player in ctrl.playerRpi">
+						<td>{{ $index + 1 }}</td>
+						<td>{{ player.name }}</td>
+						<td>{{ player.WP }}</td>
+						<td>{{ player.RPI }}</td>
+					</tr>
+				</table>
+			</div><!-- end lboard-single -->
+		</div>
+	</div>
+</div>

@@ -24,8 +24,8 @@
 						controllerAs: 'ctrl'
 					}).
 					when('/leaderboard', {
-						templateUrl: 'partials/leaderboard.html',
-						controller: 'LeaderboardController',
+						templateUrl: 'partials/stats.html',
+						controller: 'StatsController',
 						controllerAs: 'ctrl'
 					}).
 					otherwise({

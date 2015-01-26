@@ -1,6 +1,6 @@
 jQuery(function($) {
 
-	var gameSpeedSimulator = 5;// 5 times faster
+	var gameSpeedSimulator = 1;// 5 times faster
 
 	var gameSeconds = 0;
 	var tmrGameClock = null;
@@ -16,6 +16,15 @@ jQuery(function($) {
 		smartAnnouncer.voiceTest();
 	});
 
+	$("#doMusicTest").click(function() {
+		smartAnnouncer.musicTest();
+	});
+
+	
+
+	$("#stopGame").click(function() {
+		smartAnnouncer.stop();
+	});
 	$("#newGame").click(function() {
 		gameSeconds = 0;
 		addToLog("New Game Started");

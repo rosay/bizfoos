@@ -13,11 +13,16 @@ var Games = db.games.aggregate([
     
 var Players = db.players.aggregate([
      { $group: { 
-        _id: "$_id" ,        
+        _id: "$_id" ,
         } 
-     }
+     }    
 ])   
+     
+var PlayerNames = db.players.aggregate( [
+   { $group : { _id : { player_id : "$_id", name : "$name" } } },
+] )     
 
+// Create an array of teamates and opponents for each player
 Players.result.forEach(function(player) {
     
     player.Teammates = [];
@@ -56,17 +61,21 @@ Players.result.forEach(function(player) {
         }
         
     });
-    
+    
 });
 
+// Calculate each player's 
+//      wp = winning percentage
+//      owp = opponents winning percentage
+//      twp = teammates winning percentage
 Players.result.forEach(function(player) {
     
     player.WP = 0;
-    player.TotalWP = 0;
+    player.TotalGames = 0;
     player.OWP = 0;
-    player.TotalOWP = 0;
+    TotalOWP = 0;
     player.TWP = 0;
-    player.TotalTWP = 0;
+    TotalTWP = 0;
     
     Games.result.forEach(function(game) {
         
@@ -83,7 +92,7 @@ Players.result.forEach(function(player) {
                     player.WP += 1;
                 }
                 
-                player.TotalWP += 1;
+                player.TotalGames += 1;
             }
         }
         
@@ -97,7 +106,7 @@ Players.result.forEach(function(player) {
                     {
                          player.TWP += 1;
                     }
-                    player.TotalTWP += 1;
+                    TotalTWP += 1;
                 }
                 if (player.Opponents.indexOf(game.Players[i].player_id) != -1)
                 {
@@ -105,26 +114,28 @@ Players.result.forEach(function(player) {
                     {
                          player.OWP += 1;
                     }
-                    player.TotalOWP += 1;
+                    TotalOWP += 1;
                 }
             }  
         }
         
     });
     
-    if (player.TotalWP != 0)
+    if (player.TotalGames != 0)
     {
-        player.WP  = player.WP  / player.TotalWP;
-        player.TWP = player.TWP / player.TotalTWP;
-        player.OWP = player.OWP / player.TotalOWP;
+        player.WP  = player.WP  / player.TotalGames;
+        player.TWP = player.TWP / TotalTWP;
+        player.OWP = player.OWP / TotalOWP;
     }
     
 });
 
+// Calculate each player's 
+//      oowp = opponent's opponent's winning percentage
 Players.result.forEach(function(player) {
     
     player.OOWP = 0;
-    player.TotalOOWP = 0;
+    TotalOOWP = 0;
     
     Games.result.forEach(function(game) {
         
@@ -152,23 +163,31 @@ Players.result.forEach(function(player) {
                         }
                     });
                     
-                    player.TotalOOWP += 1;
+                    TotalOOWP += 1;
                 }
             }  
         }
         
     });
     
-    if (player.TotalOOWP != 0)
+    if (TotalOOWP != 0)
     {
-        player.OOWP = player.OOWP / player.TotalOOWP;
+        player.OOWP = player.OOWP / TotalOOWP;
     }
     
 });
 
 Players.result.forEach(function(player) {
+    
+    PlayerNames.result.forEach(function(playername) {
+        if (playername._id.player_id == player._id)
+        {
+            player.Name = playername._id.name;
+        }    
+    });    
 
-    player.RPI = (player.WP * 0.25) + (player.OWP * 0.50) + (player.OOWP * 0.25) + ((1-player.TWP) * 0);
+    player.RPI = ((player.WP * 0.25) + (player.OWP * 0.25) + (player.OOWP * 0.25) + ((1-player.TWP) * 0.25)).toFixed(3);
+    player.WP = (player.WP.toFixed(5) * 100) + "%";
     
 });
 
