@@ -179,7 +179,7 @@ var PlayerRpi = function () {
 
         });
         playerResults.forEach(function(player) {
-            player.RPI = (player.WP * 0.25) + (player.OWP * 0.50) + (player.OOWP * 0.25) + ((1 - player.TWP) *.25);
+            player.RPI = (player.WP * 0.25) + (player.OWP * 0.25) + (player.OOWP * 0.25) + ((1 - player.TWP) * 0.25);
 
         });
 
