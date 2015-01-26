@@ -22,7 +22,7 @@ var PlayerNames = db.players.aggregate( [
    { $group : { _id : { player_id : "$_id", name : "$name" } } },
 ] )       
 
-// Create an array of teamates and opponents for each player
+// Create an array of teamates for each player that includes wins and losses
 Players.result.forEach(function(player) {
     
     var index = 0;
@@ -57,8 +57,6 @@ Players.result.forEach(function(player) {
                                 index = j;
                             }
                          }
-                         
-                         //index = player.Teammates.indexOf(game.Players[i].player_id);
                         
                          result = (team == game.Players[i].winningteam) ? 1 : 0;
 
