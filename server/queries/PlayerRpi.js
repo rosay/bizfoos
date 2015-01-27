@@ -3,11 +3,7 @@ var Player = require('../models/Player');
 
 var PlayerRpi = function () {
     var playerQuery = [
-        { $group:
-            {
-                _id: "$_id"
-            }
-        }
+        { $project : { player_id : "$_id", name : "$name", pic: "$pic" } }
     ];
 
     var gameQuery = [
@@ -74,13 +70,12 @@ var PlayerRpi = function () {
 
         });
         playerResults.forEach(function(player) {
-
             player.WP = 0;
-            player.TotalWP = 0;
+            player.TotalGames = 0;
             player.OWP = 0;
-            player.TotalOWP = 0;
+            var TotalOWP = 0;
             player.TWP = 0;
-            player.TotalTWP = 0;
+            var TotalTWP = 0;
 
             gameResults.forEach(function(game) {
 
@@ -97,7 +92,7 @@ var PlayerRpi = function () {
                             player.WP += 1;
                         }
 
-                        player.TotalWP += 1;
+                        player.TotalGames += 1;
                     }
                 }
 
@@ -111,7 +106,7 @@ var PlayerRpi = function () {
                             {
                                 player.TWP += 1;
                             }
-                            player.TotalTWP += 1;
+                            TotalTWP += 1;
                         }
                         if (player.Opponents.indexOf(game.Players[i].player_id) != -1)
                         {
@@ -119,29 +114,30 @@ var PlayerRpi = function () {
                             {
                                 player.OWP += 1;
                             }
-                            player.TotalOWP += 1;
+                            TotalOWP += 1;
                         }
                     }
                 }
 
             });
 
-            if (player.TotalWP != 0)
+            if (player.TotalGames != 0)
             {
-                player.WP  = player.WP  / player.TotalWP;
-                player.TWP = player.TWP / player.TotalTWP;
-                player.OWP = player.OWP / player.TotalOWP;
+                player.TotalGamesWon = player.WP;
+                player.WP  = player.WP  / player.TotalGames;
+                player.TWP = player.TWP / TotalTWP;
+                player.OWP = player.OWP / TotalOWP;
             }
 
         });
         playerResults.forEach(function(player) {
 
             player.OOWP = 0;
-            player.TotalOOWP = 0;
+            var TotalOOWP = 0;
 
             gameResults.forEach(function(game) {
 
-                team = 0;
+                var team = 0;
 
                 for (var i = 0; i < 4; i++)
                 {
@@ -165,21 +161,22 @@ var PlayerRpi = function () {
                                 }
                             });
 
-                            player.TotalOOWP += 1;
+                            TotalOOWP += 1;
                         }
                     }
                 }
 
             });
 
-            if (player.TotalOOWP != 0)
+            if (TotalOOWP != 0)
             {
-                player.OOWP = player.OOWP / player.TotalOOWP;
+                player.OOWP = player.OOWP / TotalOOWP;
             }
 
         });
         playerResults.forEach(function(player) {
-            player.RPI = (player.WP * 0.25) + (player.OWP * 0.50) + (player.OOWP * 0.25) + ((1 - player.TWP) *.25);
+            player.RPI = ((player.WP * 0.25) + (player.OWP * 0.25) + (player.OOWP * 0.25) + ((1-player.TWP) * 0.25)).toFixed(3);
+            player.WP = player.WP.toFixed(5);
 
         });
 

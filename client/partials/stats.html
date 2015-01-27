@@ -8,12 +8,16 @@
 					<tr>
 						<th></td>
 						<th>Player</th>
+                        <th>Played</th>
+                        <th>Won</th>
 						<th>Win %</th>
 						<th>RPI</th>
 					</tr>
 					<tr ng-repeat="player in ctrl.playerRpi">
 						<td>{{ $index + 1 }}</td>
 						<td>{{ player.name }}</td>
+                        <td>{{ player.TotalGames }}</td>
+                        <td>{{ player.TotalGamesWon }}</td>
 						<td>{{ player.WP }}</td>
 						<td>{{ player.RPI }}</td>
 					</tr>
