@@ -123,6 +123,7 @@ var PlayerRpi = function () {
 
             if (player.TotalGames != 0)
             {
+                player.TotalGamesWon = player.WP;
                 player.WP  = player.WP  / player.TotalGames;
                 player.TWP = player.TWP / TotalTWP;
                 player.OWP = player.OWP / TotalOWP;
