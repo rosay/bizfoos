@@ -124,9 +124,21 @@ var PlayerRpi = function () {
             if (player.TotalGames != 0)
             {
                 player.TotalGamesWon = player.WP;
-                player.WP  = player.WP  / player.TotalGames;
-                player.TWP = player.TWP / TotalTWP;
-                player.OWP = player.OWP / TotalOWP;
+				
+				if (player.TotalGames != 0)
+				{
+					player.WP  = player.WP  / player.TotalGames;
+				}
+				
+				if (TotalOWP != 0)
+				{
+					player.OWP = player.OWP / TotalOWP;
+				}
+				
+				if (TotalTWP != 0)
+				{
+					player.TWP = player.TWP / TotalTWP;
+				}
             }
 
         });
