@@ -344,10 +344,18 @@ var PlayerStats = function () {
         });
     };
 
+    var runQueryInMongo = function () {
+        var Players = db.games.aggregate(queries.playersQuery);
+        var Games = db.games.aggregate(queries.gamesQuery);
+
+        return processResults(Games.result, Players.result, db.games.count());
+    };
+
     return {
         getGamesQuery: getGamesQuery,
         getPlayersQuery: getPlayersQuery,
-        processResults: processResults
+        processResults: processResults,
+        runQueryInMongo: runQueryInMongo
     }
 };
 

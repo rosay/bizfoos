@@ -190,10 +190,18 @@ var PlayerRpi = function () {
         });
     };
 
+    var runQueryInMongo = function () {
+        var Players = db.players.aggregate(playerQuery);
+        var Games = db.games.aggregate(gameQuery);
+
+        return processResults(Games.result, Players.result);
+    };
+
     return {
         getPlayerQuery: getPlayerQuery,
         getGameQuery: getGameQuery,
-        processResults: processResults
+        processResults: processResults,
+        runQueryInMongo: runQueryInMongo
     }
 };
 
