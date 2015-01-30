@@ -48,7 +48,7 @@ module.exports = function(app) {
 
 	app.post('/api/stats/rpi', function (req, res) {
 
-        var from = req.body.fromDays;
+        var fromDate = req.body.fromDate;
 
 		var rpi = Rpi();
 
@@ -57,7 +57,7 @@ module.exports = function(app) {
 				rpi.getPlayerQuery().exec(callback);
 			},
 			games: function(callback) {
-				rpi.getGameQuery(from).exec(callback);
+				rpi.getGameQuery(fromDate).exec(callback);
 			}
 		}, function (err, results) {
 

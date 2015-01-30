@@ -2,13 +2,13 @@ app.controller('LeaderboardController', ['$http', 'statisticsService', function(
     "use strict";
 
     var vm = this,
-        lastNDays = 7;
+        startOfWeek = moment().utc().startOf('week').toDate();
 
     vm.title = "Leaderboard";
     vm.playerRpi = [];
     vm.players = [];
 
-    statisticsService.getPlayerRpi(lastNDays)
+    statisticsService.getPlayerRpi(startOfWeek)
         .then(function() {
             var results = statisticsService.playerRpi;
 

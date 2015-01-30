@@ -26,11 +26,11 @@ var PlayerRpi = function () {
         return Player.aggregate(playerQuery);
     };
 
-    var getGameQuery = function (from) {
+    var getGameQuery = function (fromDate) {
+        fromDate = fromDate || null;
 
-        if (from && !isNaN(from)) {
-            var fromDate = moment().utc().startOf('day').subtract(from, "days");
-            gameQuery.splice(0, 0, { $match: { dateCreated: { "$gt": fromDate._d }} });
+        if (fromDate) {
+            gameQuery.splice(0, 0, { $match: { dateCreated: { "$gt": new Date(fromDate) }} });
         }
 
         return Game.aggregate(gameQuery);

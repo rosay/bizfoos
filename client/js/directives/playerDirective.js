@@ -11,4 +11,4 @@ app.directive('foosEnter', function(){
 			}
 		});
 	};
-})
+});
