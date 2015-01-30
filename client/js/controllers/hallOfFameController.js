@@ -1,9 +1,9 @@
-app.controller('StatsController', ['$http', 'statisticsService', function($http, statisticsService) {
+app.controller('HallOfFameController', ['$http', 'statisticsService', function($http, statisticsService) {
     "use strict";
 
     var vm = this;
 
-    vm.title = "Leaderboard";
+    vm.title = "Hall of Fame";
     vm.playerRpi = [];
     vm.players = [];
 

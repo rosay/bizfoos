@@ -23,8 +23,8 @@ app.factory('statisticsService', ['$rootScope', '$http', function statisticsServ
 	 * Gets player RPI
 	 * @returns {*}
 	 */
-	statisticsService.getPlayerRpi = function () {
-		return $http.get('/api/stats/rpi')
+	statisticsService.getPlayerRpi = function (lastNDays) {
+		return $http.post('/api/stats/rpi', { "fromDays": lastNDays })
 			.success(function (data, status, headers, config) {
 				statisticsService.playerRpi = data;
 			})

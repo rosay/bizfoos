@@ -1,30 +1,21 @@
-app.controller('LeaderboardController', ['$http', 'statisticsService', 'playerService', function($http, statisticsService, playerService) {
-	"use strict";
+app.controller('LeaderboardController', ['$http', 'statisticsService', function($http, statisticsService) {
+    "use strict";
 
-	var vm = this;
+    var vm = this,
+        lastNDays = 7;
 
-	vm.title = "Leaderboard";
-	vm.topWinners = [];
-	vm.players = [];
+    vm.title = "Leaderboard";
+    vm.playerRpi = [];
+    vm.players = [];
 
-	playerService.getPlayers()
-		.then(function() {
-			vm.players = playerService.players;
+    statisticsService.getPlayerRpi(lastNDays)
+        .then(function() {
+            var results = statisticsService.playerRpi;
 
-			statisticsService.getTopPlayers()
-				.then(function() {
-					var results = statisticsService.topPlayers;
+            for (var i = 0; i < results.length; i++) {
+                results[i].WP = (results[i].WP * 100).toFixed(2);
+            }
 
-					var mergedList = _.map(results, function(item){
-						return _.extend(item, _.findWhere(playerService.players, { _id: item._id }));
-					});
-
-					for (var i = 0; i < mergedList.length; i++) {
-						var p = mergedList[i].WinningPercentage * 100
-						mergedList[i].WinningPercentage = p.toFixed(2);
-					}
-
-					vm.topWinners = mergedList;
-				});
-		});
+            vm.playerRpi = results;
+        });
 }]);

@@ -22,6 +22,10 @@ header {
 	color: #35cb71;
 }
 
+.hof {
+    padding-right: 20px;
+}
+
 .leader-link p a {
 	color: #35cb71;
 	text-decoration: none;

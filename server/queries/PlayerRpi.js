@@ -1,5 +1,6 @@
 var Game = require('../models/Game');
 var Player = require('../models/Player');
+var moment = require('moment');
 
 var PlayerRpi = function () {
     var playerQuery = [
@@ -22,11 +23,17 @@ var PlayerRpi = function () {
     ];
 
     var getPlayerQuery = function () {
-        return Game.aggregate(gameQuery);
+        return Player.aggregate(playerQuery);
     };
 
-    var getGameQuery = function () {
-        return Player.aggregate(playerQuery);
+    var getGameQuery = function (from) {
+
+        if (from && !isNaN(from)) {
+            var fromDate = moment().utc().startOf('day').subtract(from, "days");
+            gameQuery.splice(0, 0, { $match: { dateCreated: { "$gt": fromDate._d }} });
+        }
+
+        return Game.aggregate(gameQuery);
     };
 
     var processResults = function (gameResults, playerResults) {
@@ -123,14 +130,14 @@ var PlayerRpi = function () {
 
             if (player.TotalGames != 0) {
                 player.TotalGamesWon = player.WP;
-				
+
 				if (player.TotalGames != 0) {
 					player.WP  = player.WP  / player.TotalGames;
 				}
 				if (TotalOWP != 0) {
 					player.OWP = player.OWP / TotalOWP;
 				}
-				
+
 				if (TotalTWP != 0) {
 					player.TWP = player.TWP / TotalTWP;
 				}

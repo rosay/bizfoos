@@ -20,9 +20,14 @@
 					}).
 					when('/leaderboard', {
 						templateUrl: 'partials/stats.html',
-						controller: 'StatsController',
+						controller: 'LeaderboardController',
 						controllerAs: 'ctrl'
 					}).
+                    when('/hof', {
+                        templateUrl: 'partials/stats.html',
+                        controller: 'HallOfFameController',
+                        controllerAs: 'ctrl'
+                    }).
 					otherwise({
 						redirectTo: '/player'
 					});
