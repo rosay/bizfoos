@@ -3,7 +3,7 @@ var Player = require('../models/Player');
 
 var PlayerRpi = function () {
     var playerQuery = [
-        { $project : { player_id : "$_id", name : "$name", pic: "$pic" } }
+        { $project : { _id : "$_id", name : "$name", pic: "$pic" } }
     ];
 
     var gameQuery = [
@@ -121,26 +121,20 @@ var PlayerRpi = function () {
 
             });
 
-            if (player.TotalGames != 0)
-            {
+            if (player.TotalGames != 0) {
                 player.TotalGamesWon = player.WP;
 				
-				if (player.TotalGames != 0)
-				{
+				if (player.TotalGames != 0) {
 					player.WP  = player.WP  / player.TotalGames;
 				}
-				
-				if (TotalOWP != 0)
-				{
+				if (TotalOWP != 0) {
 					player.OWP = player.OWP / TotalOWP;
 				}
 				
-				if (TotalTWP != 0)
-				{
+				if (TotalTWP != 0) {
 					player.TWP = player.TWP / TotalTWP;
 				}
             }
-
         });
         playerResults.forEach(function(player) {
 
@@ -184,7 +178,6 @@ var PlayerRpi = function () {
             {
                 player.OOWP = player.OOWP / TotalOOWP;
             }
-
         });
         playerResults.forEach(function(player) {
             player.RPI = ((player.WP * 0.25) + (player.OWP * 0.25) + (player.OOWP * 0.25) + ((1-player.TWP) * 0.25)).toFixed(3);
