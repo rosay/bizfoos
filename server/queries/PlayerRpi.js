@@ -1,6 +1,5 @@
 var Game = require('../models/Game');
 var Player = require('../models/Player');
-var moment = require('moment');
 
 var PlayerRpi = function () {
     var playerQuery = [
