@@ -3,11 +3,7 @@ var Player = require('../models/Player');
 
 var PlayerRpi = function () {
     var playerQuery = [
-        { $group:
-            {
-                _id: "$_id"
-            }
-        }
+        { $project : { _id : "$_id", name : "$name", pic: "$pic" } }
     ];
 
     var gameQuery = [
@@ -26,11 +22,17 @@ var PlayerRpi = function () {
     ];
 
     var getPlayerQuery = function () {
-        return Game.aggregate(gameQuery);
+        return Player.aggregate(playerQuery);
     };
 
-    var getGameQuery = function () {
-        return Player.aggregate(playerQuery);
+    var getGameQuery = function (fromDate) {
+        fromDate = fromDate || null;
+
+        if (fromDate) {
+            gameQuery.splice(0, 0, { $match: { dateCreated: { "$gt": new Date(fromDate) }} });
+        }
+
+        return Game.aggregate(gameQuery);
     };
 
     var processResults = function (gameResults, playerResults) {
@@ -74,13 +76,12 @@ var PlayerRpi = function () {
 
         });
         playerResults.forEach(function(player) {
-
             player.WP = 0;
-            player.TotalWP = 0;
+            player.TotalGames = 0;
             player.OWP = 0;
-            player.TotalOWP = 0;
+            var TotalOWP = 0;
             player.TWP = 0;
-            player.TotalTWP = 0;
+            var TotalTWP = 0;
 
             gameResults.forEach(function(game) {
 
@@ -97,7 +98,7 @@ var PlayerRpi = function () {
                             player.WP += 1;
                         }
 
-                        player.TotalWP += 1;
+                        player.TotalGames += 1;
                     }
                 }
 
@@ -111,7 +112,7 @@ var PlayerRpi = function () {
                             {
                                 player.TWP += 1;
                             }
-                            player.TotalTWP += 1;
+                            TotalTWP += 1;
                         }
                         if (player.Opponents.indexOf(game.Players[i].player_id) != -1)
                         {
@@ -119,29 +120,36 @@ var PlayerRpi = function () {
                             {
                                 player.OWP += 1;
                             }
-                            player.TotalOWP += 1;
+                            TotalOWP += 1;
                         }
                     }
                 }
 
             });
 
-            if (player.TotalWP != 0)
-            {
-                player.WP  = player.WP  / player.TotalWP;
-                player.TWP = player.TWP / player.TotalTWP;
-                player.OWP = player.OWP / player.TotalOWP;
-            }
+            if (player.TotalGames != 0) {
+                player.TotalGamesWon = player.WP;
 
+				if (player.TotalGames != 0) {
+					player.WP  = player.WP  / player.TotalGames;
+				}
+				if (TotalOWP != 0) {
+					player.OWP = player.OWP / TotalOWP;
+				}
+
+				if (TotalTWP != 0) {
+					player.TWP = player.TWP / TotalTWP;
+				}
+            }
         });
         playerResults.forEach(function(player) {
 
             player.OOWP = 0;
-            player.TotalOOWP = 0;
+            var TotalOOWP = 0;
 
             gameResults.forEach(function(game) {
 
-                team = 0;
+                var team = 0;
 
                 for (var i = 0; i < 4; i++)
                 {
@@ -165,21 +173,21 @@ var PlayerRpi = function () {
                                 }
                             });
 
-                            player.TotalOOWP += 1;
+                            TotalOOWP += 1;
                         }
                     }
                 }
 
             });
 
-            if (player.TotalOOWP != 0)
+            if (TotalOOWP != 0)
             {
-                player.OOWP = player.OOWP / player.TotalOOWP;
+                player.OOWP = player.OOWP / TotalOOWP;
             }
-
         });
         playerResults.forEach(function(player) {
-            player.RPI = (player.WP * 0.25) + (player.OWP * 0.25) + (player.OOWP * 0.25) + ((1 - player.TWP) * 0.25);
+            player.RPI = ((player.WP * 0.25) + (player.OWP * 0.25) + (player.OOWP * 0.25) + ((1-player.TWP) * 0.25)).toFixed(3);
+            player.WP = player.WP.toFixed(5);
 
         });
 
@@ -188,10 +196,18 @@ var PlayerRpi = function () {
         });
     };
 
+    var runQueryInMongo = function () {
+        var Players = db.players.aggregate(playerQuery);
+        var Games = db.games.aggregate(gameQuery);
+
+        return processResults(Games.result, Players.result);
+    };
+
     return {
         getPlayerQuery: getPlayerQuery,
         getGameQuery: getGameQuery,
-        processResults: processResults
+        processResults: processResults,
+        runQueryInMongo: runQueryInMongo
     }
 };
 

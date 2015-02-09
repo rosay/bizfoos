@@ -46,7 +46,9 @@ module.exports = function(app) {
 		});
 	});
 
-	app.get('/api/stats/rpi', function (req, res) {
+	app.post('/api/stats/rpi', function (req, res) {
+
+        var fromDate = req.body.fromDate;
 
 		var rpi = Rpi();
 
@@ -55,11 +57,11 @@ module.exports = function(app) {
 				rpi.getPlayerQuery().exec(callback);
 			},
 			games: function(callback) {
-				rpi.getGameQuery().exec(callback);
+				rpi.getGameQuery(fromDate).exec(callback);
 			}
 		}, function (err, results) {
 
-			var rpiResults = rpi.processResults(results.player, results.games);
+			var rpiResults = rpi.processResults(results.games, results.player);
 
 			res.send(rpiResults);
 		});

@@ -39,6 +39,68 @@ var PlayerStats = function () {
                     , then: 1, else: 0 } }
                 },
                 TotalGameTimeMS: { $sum: { $subtract: ["$endTime", "$startTime"] } },
+                LongestGameMS: { $max: { $subtract: ["$endTime", "$startTime"] } },
+                ShortestGameMS: { $min: { $subtract: ["$endTime", "$startTime"] } },
+                LongestGameOnOffenseMS: { $max: { $cond: { if: { $eq: ["$roster.position", "offense"] }, then: { $subtract: ["$endTime", "$startTime"] }, else: 0 } } },
+                LongestGameOnDefenseMS: { $max: { $cond: { if: { $eq: ["$roster.position", "defense"] }, then: { $subtract: ["$endTime", "$startTime"] }, else: 0 } } },
+                ShortestGameOnOffenseMS: { $min: { $cond: { if: { $eq: ["$roster.position", "offense"] }, then: { $subtract: ["$endTime", "$startTime"] }, else: null } } },
+                ShortestGameOnDefenseMS: { $min: { $cond: { if: { $eq: ["$roster.position", "defense"] }, then: { $subtract: ["$endTime", "$startTime"] }, else: null } } },
+                LongestGameAfterWinOnOffenseMS: { $max: { $cond: { if:
+                { "$and": [
+                    { $eq: ["$roster.position", "offense"] }
+                    ,{ $eq: ["$roster.team", "$winningTeam"] }
+                ]}
+                    , then: { $subtract: ["$endTime", "$startTime"] }, else: 0 } }
+                },
+                LongestGameAfterLossOnOffenseMS: { $max: { $cond: { if:
+                { "$and": [
+                    { $eq: ["$roster.position", "offense"] }
+                    ,{ $ne: ["$roster.team", "$winningTeam"] }
+                ]}
+                    , then: { $subtract: ["$endTime", "$startTime"] }, else: 0 } }
+                },
+                LongestGameAfterWinOnDefenseMS: { $max: { $cond: { if:
+                { "$and": [
+                    { $eq: ["$roster.position", "defense"] }
+                    ,{ $eq: ["$roster.team", "$winningTeam"] }
+                ]}
+                    , then: { $subtract: ["$endTime", "$startTime"] }, else: 0 } }
+                },
+                LongestGameAfterLossOnDefenseMS: { $max: { $cond: { if:
+                { "$and": [
+                    { $eq: ["$roster.position", "defense"] }
+                    ,{ $ne: ["$roster.team", "$winningTeam"] }
+                ]}
+                    , then: { $subtract: ["$endTime", "$startTime"] }, else: 0 } }
+                },
+                ShortestGameAfterWinOnOffenseMS: { $min: { $cond: { if:
+                { "$and": [
+                    { $eq: ["$roster.position", "offense"] }
+                    ,{ $eq: ["$roster.team", "$winningTeam"] }
+                ]}
+                    , then: { $subtract: ["$endTime", "$startTime"] }, else: null } }
+                },
+                ShortestGameAfterLossOnOffenseMS: { $min: { $cond: { if:
+                { "$and": [
+                    { $eq: ["$roster.position", "offense"] }
+                    ,{ $ne: ["$roster.team", "$winningTeam"] }
+                ]}
+                    , then: { $subtract: ["$endTime", "$startTime"] }, else: null } }
+                },
+                ShortestGameAfterWinOnDefenseMS: { $min: { $cond: { if:
+                { "$and": [
+                    { $eq: ["$roster.position", "defense"] }
+                    ,{ $eq: ["$roster.team", "$winningTeam"] }
+                ]}
+                    , then: { $subtract: ["$endTime", "$startTime"] }, else: null } }
+                },
+                ShortestGameAfterLossOnDefenseMS: { $min: { $cond: { if:
+                { "$and": [
+                    { $eq: ["$roster.position", "defense"] }
+                    ,{ $ne: ["$roster.team", "$winningTeam"] }
+                ]}
+                    , then: { $subtract: ["$endTime", "$startTime"] }, else: null } }
+                },
                 TotalOffensiveGameTimeMS: { $sum: { $cond: { if: { $eq: ["$roster.position", "offense"] }, then: { $subtract: ["$endTime", "$startTime"] }, else: 0 } } },
                 TotalOffensiveGameTimeAfterLossMS: { $sum: { $cond: { if:
                 { "$and": [
@@ -96,6 +158,20 @@ var PlayerStats = function () {
                 TotalGamesLostOnDefense: "$TotalGamesLostOnDefense",
                 TotalGamesLost: "$TotalGamesLost",
                 TotalGameTimeMS: "$TotalGameTimeMS",
+                LongestGameMS: "$LongestGameMS",
+                ShortestGameMS: "$ShortestGameMS",
+                LongestGameOnOffenseMS: "$LongestGameOnOffenseMS",
+                LongestGameOnDefenseMS: "$LongestGameOnDefenseMS",
+                ShortestGameOnOffenseMS: "$ShortestGameOnOffenseMS",
+                ShortestGameOnDefenseMS: "$ShortestGameOnDefenseMS",
+                LongestGameAfterWinOnOffenseMS: "$LongestGameAfterWinOnOffenseMS",
+                LongestGameAfterLossOnOffenseMS: "$LongestGameAfterLossOnOffenseMS",
+                LongestGameAfterWinOnDefenseMS: "$LongestGameAfterWinOnDefenseMS",
+                LongestGameAfterLossOnDefenseMS: "$LongestGameAfterLossOnDefenseMS",
+                ShortestGameAfterWinOnOffenseMS: "$ShortestGameAfterWinOnOffenseMS",
+                ShortestGameAfterLossOnOffenseMS: "$ShortestGameAfterLossOnOffenseMS",
+                ShortestGameAfterWinOnDefenseMS: "$ShortestGameAfterWinOnDefenseMS",
+                ShortestGameAfterLossOnDefenseMS: "$ShortestGameAfterLossOnDefenseMS",
                 TotalOffensiveGameTimeMS: "$TotalOffensiveGameTimeMS",
                 TotalDefensiveGameTimeMS: "$TotalDefensiveGameTimeMS",
                 TotalOffensiveGameTimeAfterLossMS: "$TotalOffensiveGameTimeAfterLossMS",
@@ -175,6 +251,7 @@ var PlayerStats = function () {
         dy = typeof dy !== 'undefined' ? dy : true;
         wk = typeof wk !== 'undefined' ? wk : true;
 
+
         var units = [
             {label:"millis",    mod:1000},
             {label:"seconds",   mod:60},
@@ -183,15 +260,13 @@ var PlayerStats = function () {
             {label:"days",      mod:7},
             {label:"weeks",     mod:52}
         ];
-
         var duration = {};
         var x = timeMillis;
         for (var i = 0; i < units.length; i++){
             var tmp = x % units[i].mod;
             duration[units[i].label] = tmp;
-            x = (x - tmp) / units[i].mod;
+            x = (x - tmp) / units[i].mod
         }
-
         var str = "";
         str += wk === true ? duration.weeks + " weeks " : "";
         str += dy === true ? duration.days + " days " : "";
@@ -203,19 +278,24 @@ var PlayerStats = function () {
     };
 
     var getPlayerResults = function (player, playerPointData, gamesCount) {
-
+        // Total Games
         player.AllGames = gamesCount;
+
+        // Total Points
         player.TotalOffensivePoints = playerPointData.TotalPointsOnOffense;
         player.TotalDefensivePoints = playerPointData.TotalPointsOnDefense;
         player.TotalPoints = player.TotalOffensivePoints + player.TotalDefensivePoints;
-
+        // Average Points
+        player.AveragePointsPerGame          = player.TotalPoints          / player.TotalGamesPlayed;
         player.AverageOffensivePointsPerGame = player.TotalOffensivePoints / player.TotalGamesPlayed;
         player.AverageDefensivePointsPerGame = player.TotalDefensivePoints / player.TotalGamesPlayed;
-        player.AveragePointsPerGame          = player.TotalPoints          / player.TotalGamesPlayed;
 
+        // Total Time Stats
         player.TotalGameTime = getDuration(player.TotalGameTimeMS, false);
         player.TotalOffensiveGameTime = getDuration(player.TotalOffensiveGameTimeMS, false);
         player.TotalDefensiveGameTime = getDuration(player.TotalDefensiveGameTimeMS, false);
+
+        // Average Time Stats
         player.AverageGameTime = getDuration(player.TotalGameTimeMS / player.TotalGamesPlayed, false, true, true, false, false, false);
         player.AverageOffensiveGameTime = getDuration(player.TotalOffensiveGameTimeMS / player.TotalGamesOnOffense, false, true, true, false, false, false);
         player.AverageDefensiveGameTime = getDuration(player.TotalDefensiveGameTimeMS / player.TotalGamesOnDefense, false, true, true, false, false, false);
@@ -223,6 +303,25 @@ var PlayerStats = function () {
         player.AverageOffensiveGameTimeAfterWin = getDuration(player.TotalOffensiveGameTimeAfterWinMS / player.TotalGamesWonOnOffense, false, true, true, false, false, false);
         player.AverageDefensiveGameTimeAfterLoss = getDuration(player.TotalDefensiveGameTimeAfterLossMS / player.TotalGamesLostOnDefense, false, true, true, false, false, false);
         player.AverageDefensiveGameTimeAfterWin = getDuration(player.TotalDefensiveGameTimeAfterWinMS / player.TotalGamesWonOnDefense, false, true, true, false, false, false);
+        // Longest and Shortest Game Time Stats
+        player.LongestGame = getDuration(player.LongestGameMS, false, true, true, false, false, false);
+        player.ShortestGame = getDuration(player.ShortestGameMS, false, true, true, false, false, false);
+        player.LongestGameOnOffense = getDuration(player.LongestGameOnOffenseMS, false, true, true, false, false, false);
+        player.LongestGameOnDefense = getDuration(player.LongestGameOnDefenseMS, false, true, true, false, false, false);
+        player.ShortestGameOnOffense = getDuration(player.ShortestGameOnOffenseMS, false, true, true, false, false, false);
+        player.ShortestGameOnDefense = getDuration(player.ShortestGameOnDefenseMS, false, true, true, false, false, false);
+
+        // Longest Game Time Stats
+        player.LongestGameAfterWinOnOffense = getDuration(player.LongestGameAfterWinOnOffenseMS, false, true, true, false, false, false);
+        player.LongestGameAfterLossOnOffense = getDuration(player.LongestGameAfterLossOnOffenseMS, false, true, true, false, false, false);
+        player.LongestGameAfterWinOnDefense = getDuration(player.LongestGameAfterWinOnDefenseMS, false, true, true, false, false, false);
+        player.LongestGameAfterLossOnDefense = getDuration(player.LongestGameAfterLossOnDefenseMS, false, true, true, false, false, false);
+
+        // Shortest Game Time Stats
+        player.ShortestGameAfterWinOnOffense = getDuration(player.ShortestGameAfterWinOnOffenseMS, false, true, true, false, false, false);
+        player.ShortestGameAfterLossOnOffense = getDuration(player.ShortestGameAfterLossOnOffenseMS, false, true, true, false, false, false);
+        player.ShortestGameAfterWinOnDefense = getDuration(player.ShortestGameAfterWinOnDefenseMS, false, true, true, false, false, false);
+        player.ShortestGameAfterLossOnDefense = getDuration(player.ShortestGameAfterLossOnDefenseMS, false, true, true, false, false, false);
 
         return player;
     };
@@ -245,10 +344,18 @@ var PlayerStats = function () {
         });
     };
 
+    var runQueryInMongo = function () {
+        var Players = db.games.aggregate(queries.playersQuery);
+        var Games = db.games.aggregate(queries.gamesQuery);
+
+        return processResults(Games.result, Players.result, db.games.count());
+    };
+
     return {
         getGamesQuery: getGamesQuery,
         getPlayersQuery: getPlayersQuery,
-        processResults: processResults
+        processResults: processResults,
+        runQueryInMongo: runQueryInMongo
     }
 };
 
