@@ -1,7 +1,7 @@
 /* ~#~#~#~#~#~# GLOBAL STYLES ~#~#~#~#~#~# */
 
 body {
-	background: url('../img/bizfoos-bg.jpg') no-repeat center;
+	background: url('../assets/bizfoos-bg.jpg') no-repeat center;
 	background-size: cover;
 	font-family: 'Source Sans Pro', sans-serif;
 }

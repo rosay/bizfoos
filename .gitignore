@@ -61,8 +61,8 @@ node_modules
 tmp
 
 # Player images (but keep dev photos)
-client/img
-#!client/img/dev-pics
+client/assets/playerpics
+!client/assets/playerpics/_*.jpg
 
 ## File-based project format:
 *.ipr
