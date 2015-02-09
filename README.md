@@ -1,25 +1,24 @@
 # Bizfoos
 
-#####This is a foosball app designed to track: player and team stats
+#####An app for tracking foosball game and player statistics.
 
 ### Technologies
 Bizfoos app made possible by using
-* [node.js]
 * [Twitter Bootstrap]
+* [Node]
 * [Express]
 * [AngularJS]
-* [Gulp]
 * [MongoDB]
 
 ### Install needed packages
-Download and install [Mongo] and [node.js]
+Download and install [Mongo] and [Node]
 
 Install bower (if needed)
 ```bash
 $ npm install -g bower
 ```
 
-Get the repository and install needed front and backend packages
+Clone the repository and install needed front and backend packages
 ```bash
 $ git clone https://github.com/rosay/bizfoos.git bizfoos
 $ cd bizfoos
@@ -32,6 +31,7 @@ The site requires mongod and node to be running. Run the start_mongo_node.sh.
 ```bash
 $ bash start_mongo_node.sh
 ```
+Note: we don't currently have scripts for starting the project in Windows. We're happy to have contributors.
 
 (Optional) Run this if it's your first time running the project or you want to clear out all existing data and repopulate
 ```bash
@@ -45,10 +45,9 @@ License
 
 MIT
 
-[node.js]:http://nodejs.org
+[Node]:http://nodejs.org
 [Twitter Bootstrap]:http://twitter.github.com/bootstrap/
 [Express]:http://expressjs.com
 [AngularJS]:http://angularjs.org
-[Gulp]:http://gulpjs.com
 [MongoDB]:http://mongodb.org
 [Mongo]:https://www.mongodb.org/downloads

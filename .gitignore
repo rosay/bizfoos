@@ -60,6 +60,10 @@ node_modules
 # Mongo Database folder
 tmp
 
+# Player images (but keep dev photos)
+client/img
+#!client/img/dev-pics
+
 ## File-based project format:
 *.ipr
 *.iws
