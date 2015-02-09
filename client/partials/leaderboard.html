@@ -15,7 +15,7 @@
 					</tr>
 					<tr ng-repeat="player in ctrl.topWinners">
 						<td>{{ $index + 1 }}</td>
-						<td>{{ player.name }}</td>
+						<td><a href="/player/{{player._id}}">{{ player.name }}</a></td>
 						<td>{{ player.TotalGamesPlayed }}</td>
 						<td>{{ player.TotalGamesWon }}</td>
 						<td>{{ player.TotalGamesPlayed - player.TotalGamesWon }}</td>
