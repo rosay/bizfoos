@@ -108,8 +108,7 @@ app.controller('GameController', ['gameService', 'rosterService', 'playerService
 			"pointsNeededToWin": configService.getScoreLimit(),
 			"roster" : rosterClone,
 			"useTTS": true,
-			"debug": false,
-
+			"debug": false
 		});
 	};
 
