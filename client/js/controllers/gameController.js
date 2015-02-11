@@ -11,6 +11,7 @@ app.controller('GameController', ['gameService', 'rosterService', 'playerService
 	var timePlayed = 0;
 	var clock = null;
 	vm.gameClock = "0:00";
+    vm.teamNames = playerService.teamNames;
     vm.players = {
         "teamBlack": {
             "offense": {},
@@ -102,13 +103,16 @@ app.controller('GameController', ['gameService', 'rosterService', 'playerService
 
 	vm.startAnnounce = function(){
 		var rosterClone = _.cloneDeep(vm.players);
+        var teamNamesClone = _.cloneDeep(vm.teamNamesClone);
 
 		// intialize the smart announcer everytime a game starts
 		announcerService.init({
 			"pointsNeededToWin": configService.getScoreLimit(),
 			"roster" : rosterClone,
 			"useTTS": true,
-			"debug": false
+			"debug": false,
+            "teamNames": vm.teamNames
+
 		});
 	};
 

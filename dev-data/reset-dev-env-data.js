@@ -8,6 +8,7 @@
 // === Clear out all data ======================================================================
 db.players.remove({});
 db.games.remove({});
+db.teams.remove({});
 
 // === Set variables ===========================================================================
 var numberOfGames = 100;
@@ -22,7 +23,15 @@ db.players.insert({ _id: "jean@xi.com", name: "Jean", pic: "assets/playerpics/_j
 db.players.insert({ _id: "scott@xi.com", name: "Scott", pic: "assets/playerpics/_scott.jpg" });
 db.players.insert({ _id: "marie@xi.com", name: "Marie", pic: "assets/playerpics/_rogue.jpg" });
 db.players.insert({ _id: "gambit@xi.com", name: "Gambit", pic: "assets/playerpics/_gambit.jpg" });
-a
+
+
+// === Players ======================================================================
+db.teams.insert({"name" : "The Avengers", "players" : [ "logan@bizstream.com", "chalres@bizstream.com"]});
+db.teams.insert({"name" : "The Dream Team","players" : ["eric@bizstream.com","jean@bizstream.com"]});
+db.teams.insert({"name" : "Team Brark","players" : ["scott@bizstream.com","marie@bizstream.com"]});
+db.teams.insert({"name" : "Team Co Co","players" : ["gambit@bizstream.com","logan@bizstream.com"]});
+
+
 // === Game Rosters ======================================================================
 var rosters = [];
 

@@ -114,11 +114,6 @@ app.factory('announcerService', [ function announcerService () {
 			$("#bgCrowdAudio").animate({ volume: 0 }, delay, callback)
 		}
 	}
-	
-	var teamNames = {
-
-	}
-
 
 	var pointHistory = [];
 	var teamScores = {};
@@ -900,19 +895,12 @@ app.factory('announcerService', [ function announcerService () {
 		return aryNames;
 	}
 
-	// TODO Add to database
-	var specialTeamNames = [
-		{ name: "The Avengers", players : ["logan@bizstream.com", "eric@bizstream.com"]},
-		{ name: "The Dream Team", players : ["jean@bizstream.com", "marie@bizstream.com"]},
-		{ name: "Team Brark", players : ["charles@bizstream.com", "gambit@bizstream.com"]},
-	];
-
 	var setTeamName = function(color, players) {
 		var pOffense = getPlayer({color: color, position: "o"});
 		var pDefense = getPlayer({color: color, position: "d"});
 
 		var returnTeamName = "The "+ color +" Team";
-		specialTeamNames.forEach(function(st) {
+        config.teamNames.forEach(function(st) {
 			if (st.players.indexOf(pOffense.playerid) >= 0 && st.players.indexOf(pDefense.playerid) >= 0) {
 				returnTeamName = st.name;
 				return;

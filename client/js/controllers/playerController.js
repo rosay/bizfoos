@@ -19,7 +19,8 @@ app.controller('PlayerController', ['gameService', 'playerService', 'configServi
 		});
 
 	vm.bullpenCount = playerService.getBullpenCount();
-	
+
+    playerService.getTeamNames();
 
 	vm.addPlayerToBullpen = function (playerId) {
 		playerService.addPlayerToBullpen(playerId);
