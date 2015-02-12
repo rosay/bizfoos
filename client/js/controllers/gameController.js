@@ -139,6 +139,8 @@ app.controller('GameController', ['gameService', 'rosterService', 'playerService
 
 		gameService.clearScores();
 
+        gameService.setStartTime();
+
 	};
 
 	vm.rematchButton = function() {
@@ -154,6 +156,8 @@ app.controller('GameController', ['gameService', 'rosterService', 'playerService
 		vm.scores[2] = gameService.getScoresCount(2);
 
 		setPlayers();
+
+        gameService.setStartTime();
 
 		vm.gameOver = false;
 
