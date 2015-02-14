@@ -1,4 +1,5 @@
 var Player = require('./models/Player');
+var Team = require('./models/Team');
 var Game = require('./models/Game');
 var async = require('async');
 
@@ -10,13 +11,23 @@ module.exports = function(app) {
 	// Routes
 	app.get('/api/players', function (req, res) {
 
-		Player.find({}).sort({name: 1}).exec(function(err, players) {
-			if (err) {
-				res.send(err);
-			}
-			res.json(players);
-		});
-	});
+        Player.find({}).sort({name: 1}).exec(function(err, players) {
+            if (err) {
+                res.send(err);
+            }
+            res.json(players);
+        });
+    });
+
+    app.get('/api/teamNames', function (req, res) {
+
+        Team.find({}).exec(function(err, teams) {
+            if (err) {
+                res.send(err);
+            }
+            res.json(teams);
+        });
+    });
 
 	app.get('/api/stats/topplayers', function (req, res) {
 		Game.aggregate([

@@ -16,6 +16,11 @@ app.factory('playerService', ['$http', function playerService ($http) {
 	 */
 	playerService.bullpenCount = 0;
 
+    /**
+     * Holds special team names
+     */
+    playerService.teamNames = [];
+
 	/**
 	 * Private function to get a players position in the players array.
 	 * @param playerId
@@ -34,25 +39,38 @@ app.factory('playerService', ['$http', function playerService ($http) {
 	};
 
 	/**
-	 * Server call to get all players from server.
-	 * @returns {*}
-	 */
-	playerService.getPlayers = function () {
-		return $http.get('/api/players')
-				.success(function (data, status, headers, config) {
-					for (var i = 0; i < data.length; i++) {
-						data[i].inBullpen = false;
-					}
+     * Server call to get all players from server.
+     * @returns {*}
+     */
+    playerService.getPlayers = function () {
+        return $http.get('/api/players')
+            .success(function (data, status, headers, config) {
+                for (var i = 0; i < data.length; i++) {
+                    data[i].inBullpen = false;
+                }
 
-					// The call above isn't necessary if the players array is already filled. TODO don't do call if player array is already full.
-					if (playerService.players.length === 0) {
-						playerService.players = data;
-					}
-				})
-				.error(function (data, status, headers, config) {
-					console.log("No players showed up! Status: " + status);
-				});
-	};
+                if (playerService.players.length === 0) {
+                    playerService.players = data;
+                }
+            })
+            .error(function (data, status, headers, config) {
+                console.log("No players showed up! Status: " + status);
+            });
+    };
+
+    /**
+     * Server call to get special team names
+     * @returns {*}
+     */
+    playerService.getTeamNames = function () {
+        return $http.get('/api/teamNames')
+            .success(function (data, status, headers, config) {
+                    playerService.teamNames = data;
+            })
+            .error(function (data, status, headers, config) {
+                console.log("No teams assigned to teamNames! Status: " + status);
+            });
+    };
 
 	/**
 	 * Add a player to bullpen
