@@ -1,17 +1,19 @@
 <div class="container">
 <div class="row">
-	<div class="green-box col-xs-12">
-		<h2>Player Page for {{ctrl.player._id}}</h2>
-		<table class="table table-striped">
-			<tr>
-				<th>Category</td>
-				<th>Stat</th>
-			</tr>
-			<tr ng-repeat="(key, value) in ctrl.player">
-				<td>{{ key }}</td>
-				<td>{{ value }}</td>
-			</tr>
-		</table>
-	</div>
+    <div class="col-lg-offset-2 col-md-offset-2 col-sm-offset-1 col-lg-8 col-md-8 col-sm-10 col-xs-12">
+        <div class="lboard-single">
+            <h2>Player Page for {{ctrl.playerid}}</h2>
+            <table class="table table-striped">
+                <tr>
+                    <th>Category</td>
+                    <th>Stat</th>
+                </tr>
+                <tr ng-repeat="stat in ctrl.player">
+                    <td>{{ stat.title }}</td>
+                    <td>{{ stat.value }}</td>
+                </tr>
+            </table>
+        </div><!-- end lboard-single -->
+    </div>
 </div>
 </div>

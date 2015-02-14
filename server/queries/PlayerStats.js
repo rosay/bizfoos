@@ -243,14 +243,7 @@ var PlayerStats = function () {
 
     // Set the ms, sc, mn, hr, dy, wk to false if you
     // don't want them in the output
-    var getDuration = function (timeMillis, ms, sc, mn, hr, dy, wk){
-        ms = typeof ms !== 'undefined' ? ms : true;
-        sc = typeof sc !== 'undefined' ? sc : true;
-        mn = typeof mn !== 'undefined' ? mn : true;
-        hr = typeof hr !== 'undefined' ? hr : true;
-        dy = typeof dy !== 'undefined' ? dy : true;
-        wk = typeof wk !== 'undefined' ? wk : true;
-
+    var getDuration = function (timeMillis){
 
         var units = [
             {label:"millis",    mod:1000},
@@ -267,14 +260,8 @@ var PlayerStats = function () {
             duration[units[i].label] = tmp;
             x = (x - tmp) / units[i].mod
         }
-        var str = "";
-        str += wk === true ? duration.weeks + " weeks " : "";
-        str += dy === true ? duration.days + " days " : "";
-        str += hr === true ? duration.hours + " hours " : "";
-        str += mn === true ? duration.minutes + " mins " : "";
-        str += sc === true ? duration.seconds + " secs " : "";
-        str += ms === true ? duration.millis + " millis" : "";
-        return str;
+
+        return duration;
     };
 
     var getPlayerResults = function (player, playerPointData, gamesCount) {
@@ -292,36 +279,36 @@ var PlayerStats = function () {
 
         // Total Time Stats
         player.TotalGameTime = getDuration(player.TotalGameTimeMS, false);
-        player.TotalOffensiveGameTime = getDuration(player.TotalOffensiveGameTimeMS, false);
-        player.TotalDefensiveGameTime = getDuration(player.TotalDefensiveGameTimeMS, false);
+        player.TotalOffensiveGameTime = getDuration(player.TotalOffensiveGameTimeMS);
+        player.TotalDefensiveGameTime = getDuration(player.TotalDefensiveGameTimeMS);
 
         // Average Time Stats
-        player.AverageGameTime = getDuration(player.TotalGameTimeMS / player.TotalGamesPlayed, false, true, true, false, false, false);
-        player.AverageOffensiveGameTime = getDuration(player.TotalOffensiveGameTimeMS / player.TotalGamesOnOffense, false, true, true, false, false, false);
-        player.AverageDefensiveGameTime = getDuration(player.TotalDefensiveGameTimeMS / player.TotalGamesOnDefense, false, true, true, false, false, false);
-        player.AverageOffensiveGameTimeAfterLoss = getDuration(player.TotalOffensiveGameTimeAfterLossMS / player.TotalGamesLostOnOffense, false, true, true, false, false, false);
-        player.AverageOffensiveGameTimeAfterWin = getDuration(player.TotalOffensiveGameTimeAfterWinMS / player.TotalGamesWonOnOffense, false, true, true, false, false, false);
-        player.AverageDefensiveGameTimeAfterLoss = getDuration(player.TotalDefensiveGameTimeAfterLossMS / player.TotalGamesLostOnDefense, false, true, true, false, false, false);
-        player.AverageDefensiveGameTimeAfterWin = getDuration(player.TotalDefensiveGameTimeAfterWinMS / player.TotalGamesWonOnDefense, false, true, true, false, false, false);
+        player.AverageGameTime = getDuration(player.TotalGameTimeMS / player.TotalGamesPlayed);
+        player.AverageOffensiveGameTime = getDuration(player.TotalOffensiveGameTimeMS / player.TotalGamesOnOffense);
+        player.AverageDefensiveGameTime = getDuration(player.TotalDefensiveGameTimeMS / player.TotalGamesOnDefense);
+        player.AverageOffensiveGameTimeAfterLoss = getDuration(player.TotalOffensiveGameTimeAfterLossMS / player.TotalGamesLostOnOffense);
+        player.AverageOffensiveGameTimeAfterWin = getDuration(player.TotalOffensiveGameTimeAfterWinMS / player.TotalGamesWonOnOffense);
+        player.AverageDefensiveGameTimeAfterLoss = getDuration(player.TotalDefensiveGameTimeAfterLossMS / player.TotalGamesLostOnDefense);
+        player.AverageDefensiveGameTimeAfterWin = getDuration(player.TotalDefensiveGameTimeAfterWinMS / player.TotalGamesWonOnDefense);
         // Longest and Shortest Game Time Stats
-        player.LongestGame = getDuration(player.LongestGameMS, false, true, true, false, false, false);
-        player.ShortestGame = getDuration(player.ShortestGameMS, false, true, true, false, false, false);
-        player.LongestGameOnOffense = getDuration(player.LongestGameOnOffenseMS, false, true, true, false, false, false);
-        player.LongestGameOnDefense = getDuration(player.LongestGameOnDefenseMS, false, true, true, false, false, false);
-        player.ShortestGameOnOffense = getDuration(player.ShortestGameOnOffenseMS, false, true, true, false, false, false);
-        player.ShortestGameOnDefense = getDuration(player.ShortestGameOnDefenseMS, false, true, true, false, false, false);
+        player.LongestGame = getDuration(player.LongestGameMS);
+        player.ShortestGame = getDuration(player.ShortestGameMS);
+        player.LongestGameOnOffense = getDuration(player.LongestGameOnOffenseMS);
+        player.LongestGameOnDefense = getDuration(player.LongestGameOnDefenseMS);
+        player.ShortestGameOnOffense = getDuration(player.ShortestGameOnOffenseMS);
+        player.ShortestGameOnDefense = getDuration(player.ShortestGameOnDefenseMS);
 
         // Longest Game Time Stats
-        player.LongestGameAfterWinOnOffense = getDuration(player.LongestGameAfterWinOnOffenseMS, false, true, true, false, false, false);
-        player.LongestGameAfterLossOnOffense = getDuration(player.LongestGameAfterLossOnOffenseMS, false, true, true, false, false, false);
-        player.LongestGameAfterWinOnDefense = getDuration(player.LongestGameAfterWinOnDefenseMS, false, true, true, false, false, false);
-        player.LongestGameAfterLossOnDefense = getDuration(player.LongestGameAfterLossOnDefenseMS, false, true, true, false, false, false);
+        player.LongestGameAfterWinOnOffense = getDuration(player.LongestGameAfterWinOnOffenseMS);
+        player.LongestGameAfterLossOnOffense = getDuration(player.LongestGameAfterLossOnOffenseMS);
+        player.LongestGameAfterWinOnDefense = getDuration(player.LongestGameAfterWinOnDefenseMS);
+        player.LongestGameAfterLossOnDefense = getDuration(player.LongestGameAfterLossOnDefenseMS);
 
         // Shortest Game Time Stats
-        player.ShortestGameAfterWinOnOffense = getDuration(player.ShortestGameAfterWinOnOffenseMS, false, true, true, false, false, false);
-        player.ShortestGameAfterLossOnOffense = getDuration(player.ShortestGameAfterLossOnOffenseMS, false, true, true, false, false, false);
-        player.ShortestGameAfterWinOnDefense = getDuration(player.ShortestGameAfterWinOnDefenseMS, false, true, true, false, false, false);
-        player.ShortestGameAfterLossOnDefense = getDuration(player.ShortestGameAfterLossOnDefenseMS, false, true, true, false, false, false);
+        player.ShortestGameAfterWinOnOffense = getDuration(player.ShortestGameAfterWinOnOffenseMS);
+        player.ShortestGameAfterLossOnOffense = getDuration(player.ShortestGameAfterLossOnOffenseMS);
+        player.ShortestGameAfterWinOnDefense = getDuration(player.ShortestGameAfterWinOnDefenseMS);
+        player.ShortestGameAfterLossOnDefense = getDuration(player.ShortestGameAfterLossOnDefenseMS);
 
         return player;
     };
