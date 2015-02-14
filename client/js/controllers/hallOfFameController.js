@@ -6,6 +6,7 @@ app.controller('HallOfFameController', ['$http', 'statisticsService', function($
     vm.title = "Hall of Fame";
     vm.playerRpi = [];
     vm.players = [];
+    vm.minGames = 10;
 
     statisticsService.getPlayerRpi()
         .then(function() {

@@ -22,7 +22,7 @@ db.players.insert({ _id: "jean@xi.com", name: "Jean", pic: "assets/playerpics/_j
 db.players.insert({ _id: "scott@xi.com", name: "Scott", pic: "assets/playerpics/_scott.jpg" });
 db.players.insert({ _id: "marie@xi.com", name: "Marie", pic: "assets/playerpics/_rogue.jpg" });
 db.players.insert({ _id: "gambit@xi.com", name: "Gambit", pic: "assets/playerpics/_gambit.jpg" });
-a
+
 // === Game Rosters ======================================================================
 var rosters = [];
 

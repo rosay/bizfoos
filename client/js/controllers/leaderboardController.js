@@ -7,6 +7,7 @@ app.controller('LeaderboardController', ['$http', 'statisticsService', function(
     vm.title = "Leaderboard";
     vm.playerRpi = [];
     vm.players = [];
+    vm.minGames = 3;
 
     statisticsService.getPlayerRpi(startOfWeek)
         .then(function() {
