@@ -10,12 +10,16 @@ app.controller('HallOfFameController', ['$http', 'statisticsService', function($
 
     statisticsService.getPlayerRpi()
         .then(function() {
-            var results = statisticsService.playerRpi;
+            var players = statisticsService.playerRpi;
 
-            for (var i = 0; i < results.length; i++) {
-                results[i].WP = (results[i].WP * 100).toFixed(2);
+            players = players.filter(function (player) {
+                return player.TotalGames >= vm.minGames;
+            });
+
+            for (var i = 0; i < players.length; i++) {
+                players[i].WP = (players[i].WP * 100).toFixed(2);
             }
 
-            vm.playerRpi = results;
+            vm.playerRpi = players;
         });
 }]);
