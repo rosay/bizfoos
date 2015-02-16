@@ -14,7 +14,7 @@ app.controller('LeaderboardController', ['$http', 'statisticsService', function(
             var players = statisticsService.playerRpi;
 
             players = players.filter(function (player) {
-                return player.TotalGames > vm.minGames;
+                return player.TotalGames >= vm.minGames;
             });
 
             for (var i = 0; i < players.length; i++) {
