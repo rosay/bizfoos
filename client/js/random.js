@@ -46,7 +46,11 @@ var random = {
     ,getItem: function(aData) {
         var returnThis = aData[ random.getIntFromRange(0, aData.length-1) ];
         var indexAlreadyUsed = this.itemsAlreadyUsed.indexOf(returnThis);
-        Debug("already used it?  "+ indexAlreadyUsed +" ... retries: "+ this.maxUniqueRetryAttempts)
+        Debug("already used it?  "+ indexAlreadyUsed +" ... retries: "+ this.maxUniqueRetryAttempts);
+        //console.log("indexAlreadyUsed >= 0", indexAlreadyUsed >= 0);
+        //console.log("this.maxUniqueRetryAttempts < 5", this.maxUniqueRetryAttempts < 5);
+        //console.log("(!returnThis.notRandom)", (!returnThis.notRandom));
+        //console.log((indexAlreadyUsed >= 0 && this.maxUniqueRetryAttempts < 5 && (!returnThis.notRandom)));
         
         if (indexAlreadyUsed >= 0 && this.maxUniqueRetryAttempts < 5 && (!returnThis.notRandom)) {
             Debug("already used it, try again...")

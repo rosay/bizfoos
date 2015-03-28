@@ -121,21 +121,6 @@ app.factory('announcerService', [function announcerService () {
 
 	var pointHistory = [];
 	var teamScores = {};
-	/*
-		soundsToMake.music.intro
-		soundsToMake.music.win
-		soundsToMake.score.point
-		soundsToMake.organ.charge
-		soundsToMake.organ.chargeLong
-		soundsToMake.organ.cheer
-		soundsToMake.background.crowd
-		soundsToMake.positiveCrowd.airhorn
-		soundsToMake.positiveCrowd.cheer
-		soundsToMake.positiveCrowd.chant
-		soundsToMake.negativeCrowd.aww
-		soundsToMake.negativeCrowd.boo
-		soundsToMake.negativeCrowd.ohno
-	*/
 
 	var sayThis_PlayerScores_Player_MultiplePointStreak = [
 	];
@@ -823,7 +808,10 @@ app.factory('announcerService', [function announcerService () {
 				}
 			}
 			// get randome Item
-			fileName = random.getItem(aryChooseFrom, true);
+			if (aryChooseFrom.length > 1)
+				fileName = random.getItem(aryChooseFrom, true);
+			else
+				fileName = aryChooseFrom[0];
 		} else {
 			switch (whichSound) {
 				// http://soundbible.com/tags-crowd.html

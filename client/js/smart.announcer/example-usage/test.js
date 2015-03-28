@@ -38,7 +38,7 @@ jQuery(function($) {
 		smartAnnouncer.init({
 			"pointsNeededToWin": 5,
 			"debug": true,
-			"skipIntro": true,
+			//"skipIntro": true,
 			
 			"roster": {
 				"teamBlack": {
