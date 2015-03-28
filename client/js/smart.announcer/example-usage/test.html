@@ -5,10 +5,15 @@
 		var app = {};
 		var smartAnnouncer;
 		app.factory = function(title, array){
+			//debugger;
+			console.log(array)
 			smartAnnouncer = array[0]();
 		}
 	</script>
 	<script type="text/javascript" src="../../util.js"></script>
+	<script type="text/javascript" src="../../random.js"></script>
+	<script type="text/javascript" src="../../data/soundData.js"></script>
+	<script type="text/javascript" src="../../data/sayThisData.js"></script>
 	<script type="text/javascript" src="../../services/announcerService.js"></script>
 	<script type="text/javascript" src="test.js"></script>
 	<style>
