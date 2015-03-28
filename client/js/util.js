@@ -20,3 +20,8 @@ function MergeRecursive(obj1, obj2) {
 
   return obj1;
 }
+
+function Debug(item){
+  // Comment this line out if you want to stop all console.logs
+  console.log(item);
+}
