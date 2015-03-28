@@ -20,6 +20,13 @@ jQuery(function($) {
 		smartAnnouncer.musicTest();
 	});
 
+
+	$("#doRandomTest").click(function() {
+		addToLog(smartAnnouncer.randomTest());
+	});
+
+	
+
 	
 
 	$("#stopGame").click(function() {
@@ -31,7 +38,7 @@ jQuery(function($) {
 		smartAnnouncer.init({
 			"pointsNeededToWin": 5,
 			"debug": true,
-			"skipIntro": false,
+			"skipIntro": true,
 			
 			"roster": {
 				"teamBlack": {
@@ -64,6 +71,13 @@ jQuery(function($) {
 					}
 				}
 			}
+			,teamNames: [{
+				name: "The Avengers",
+				players: ["sheibeck@bizstream.com", "mschmidt@bizstream.com"]
+			},{
+				name: "The Dream Team",
+				players: ["areece@bizstream.com", "ahovingh@bizstream.com"]
+			}] 
 
 			/*
 			"teams" : [

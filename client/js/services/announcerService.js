@@ -25,12 +25,12 @@ app.factory('announcerService', [ function announcerService () {
 	var soundRootPath = "sounds/"
 	if (window.location.protocol == "file:") soundRootPath = "../../../sounds/";
 		
-	var config = {
+	var 	config = {
 		"pointsNeededToWin": 5,
 		"series:": 1,
 		"useTTS": true,
 		"skipIntro": false,
-		"playMusic": false,
+		"playMusic": true,
 		"debug": false
 	};
 
@@ -107,7 +107,7 @@ app.factory('announcerService', [ function announcerService () {
 			//var adjustTo = (Math.random() - .4) * .1; // add a random value between -.04 to +.06 (technically, should always be moving up...)
 			// make the crowd change less
 			//var adjustTo = ((Math.random() - .4) * .1) / 2; // add a random value between -.02 to +.03 (technically, should always be moving up...)
-		 	var adjustTo = ((Math.random() - .4) * .01) / 2; // add a random value between -.002 to +.003 (technically, should always be moving up...)
+		 	var adjustTo =  random.getFromRange(-.002, .003); // add a random value between -.002 to +.003 (technically, should always be moving up...)
 		 	crowdControl.adjustVolume(adjustTo);
 		},
 		fadeOut: function(delay, callback) {
@@ -541,7 +541,7 @@ app.factory('announcerService', [ function announcerService () {
 	var sayThis_PlayerScores_Team_ApporachingShutOutMoreThan2Points = [
 		 "{{team}} {{team{is|are}}} {putting the hurt on {{other-team}}/gaining a solid lead/working on a shut out/sticking it to {{other-team}}}"
 		 ,"{Ouch/Snap/Dang/Hey Now/Oh man/Wow/Look Out/It's On now}, {{other-team}} {{other-team{is|are}}} {in the danger zone now/on their way to a shut out/in need of some points}"
-		 ,"{Ouch/Snap/Dang/Hey Now/Oh man/Wow/Look Out/It's On now}, {{other-team}} {need{{other-team{s|}}} to catch up/need{{other-team{s|}}} to make up some points/need{{other-team{s|}}} their first point/is way behind now/is falling behind}"
+		 ,"{Ouch/Snap/Dang/Hey Now/Oh man/Wow/Look Out/It's On now}, {{other-team}} {need{{other-team{s|}}} to catch up/need{{other-team{s|}}} to make up some points/need{{other-team{s|}}} their first point/{{other-team{is|are}}} way behind now/{{other-team{is|are}}} falling behind}"
 		 ,"{{other-team}} {{other-team{has|have}}} some {catching up to do/work to do}"
 	];
 
@@ -711,9 +711,9 @@ app.factory('announcerService', [ function announcerService () {
 		// cold
 		// if both have a value...
 		if (temp != "" && cond != "") {
-			if (Math.random() > .5)
+			if (random.chance(.5))
 				return (temp + cond);
-			else if (Math.random() > .5)
+			else if (random.chance(.5))
 				return (temp);
 			else  
 				return (cond);
@@ -728,7 +728,7 @@ app.factory('announcerService', [ function announcerService () {
 		var teamName;
 		var otherTeamName;
 		try {
-			playerName = getRandomItem(oValues.oPlayer.names);
+			playerName = random.getItem(oValues.oPlayer.names);
 			teamName =  oValues.oTeam.team;
 			otherTeamName =  oValues.oOtherTeam.team;
 		} catch(err) {
@@ -782,7 +782,7 @@ app.factory('announcerService', [ function announcerService () {
 			aRandomReplacements.forEach(function(item) {
 				var replacements = item.replace("{", "").replace("}", "").split("/");
 				debug('Replacement Messages: ' + replacements)
-				msg = msg.replace(item, replacements[Math.floor(Math.random() * replacements.length) ]);
+				msg = msg.replace(item, replacements[ random.getIntFromRange(0, replacements.length-1) ]);
 			});
 		}
 
@@ -807,25 +807,69 @@ app.factory('announcerService', [ function announcerService () {
 		debug(config.players);
 	}
 
-	var itemsAlreadyUsed = [];
-	var maxUniqueRetryAttempts = 0;
-	var getRandomItem = function(aData) {
-		var returnThis = aData[Math.floor(Math.random()*aData.length)];
-		var indexAlreadyUsed = itemsAlreadyUsed.indexOf(returnThis);
-		debug("already used it?  "+ indexAlreadyUsed +" ... retries: "+ maxUniqueRetryAttempts)
-		
-		if (indexAlreadyUsed >= 0 && maxUniqueRetryAttempts < 5 && (!returnThis.notRandom)) {
-			debug("already used it, try again...")
-			debug(returnThis);
-			// call it again
-			maxUniqueRetryAttempts++;
-			return getRandomItem(aData);
-		} else {
-			maxUniqueRetryAttempts = 0;
-			itemsAlreadyUsed.push(returnThis);
-			return returnThis;
+	var random = {
+		// https://www.random.org/integers/?num=1&min=1&max=100000&col=1&base=10&format=plain&rnd=new
+		 itemsAlreadyUsed : []
+		,maxUniqueRetryAttempts : 0
+
+		/*
+		var seed = 1;
+		function random() {
+		    var x = Math.sin(seed++) * 10000;
+		    return x - Math.floor(x);
+		}
+		*/
+		,seed: -1
+		,init: function() {
+			$.get("https://www.random.org/integers/", {num: "1", col: "1", min: "1", max: "1000000000", base: "10", format: "plain", rnd: "new"}, function(randNum) {
+      			random.seed = randNum;
+      			console.log("random.seed", random.seed);
+    		});
+		}
+		,rnd : function() {
+			var r;
+			if (this.seed == -1) { // not seeded yet (no return from random.org)
+				r = Math.random();
+			} else {
+				var r = Math.sin(this.seed++) * 10000;
+			    r = r - Math.floor(r);
+			}
+		    console.log("rnd():", this.seed, r);
+			return r;
+		}
+		,reset: function () {
+		 	this.itemsAlreadyUsed = [];
+			this.maxUniqueRetryAttempts = 0;
+		}
+		,chance: function(oddsOfBeingTrue) {
+			// return true or false. chance(.333) returns true 33.3% of the time
+			return (random.rnd() <= oddsOfBeingTrue); 
+		}
+		,getFromRange: function(min, max) {
+			return (random.rnd() * (min - max) + max);
+		}
+		,getIntFromRange: function(min, max) {
+			return Math.floor(random.rnd() * (max - min + 1)) + min;
+		}
+		,getItem: function(aData) {
+			var returnThis = aData[ random.getIntFromRange(0, aData.length-1) ];
+			var indexAlreadyUsed = this.itemsAlreadyUsed.indexOf(returnThis);
+			debug("already used it?  "+ indexAlreadyUsed +" ... retries: "+ this.maxUniqueRetryAttempts)
+			
+			if (indexAlreadyUsed >= 0 && this.maxUniqueRetryAttempts < 5 && (!returnThis.notRandom)) {
+				debug("already used it, try again...")
+				debug(returnThis);
+				// call it again
+				this.maxUniqueRetryAttempts++;
+				return this.getItem(aData);
+			} else {
+				this.maxUniqueRetryAttempts = 0;
+				this.itemsAlreadyUsed.push(returnThis);
+				return returnThis;
+			}
 		}
 	}
+
 
 	var initPlayersAndTeamViaRoster = function () {
 		//TODO: Cody, there may be some fixing needed here to get the roster lined up properly
@@ -900,12 +944,14 @@ app.factory('announcerService', [ function announcerService () {
 		var pDefense = getPlayer({color: color, position: "d"});
 
 		var returnTeamName = "The "+ color +" Team";
-        config.teamNames.forEach(function(st) {
-			if (st.players.indexOf(pOffense.playerid) >= 0 && st.players.indexOf(pDefense.playerid) >= 0) {
-				returnTeamName = st.name;
-				return;
-			}
-		});
+        if (config.teamNames) {
+	        config.teamNames.forEach(function(st) {
+				if (st.players.indexOf(pOffense.playerid) >= 0 && st.players.indexOf(pDefense.playerid) >= 0) {
+					returnTeamName = st.name;
+					return;
+				}
+			});
+   	 	}
 
 		return returnTeamName;
 	}
@@ -937,12 +983,13 @@ app.factory('announcerService', [ function announcerService () {
 		//window.speechSynthesis.pause();
 
 		//reset "get random item array"
-		itemsAlreadyUsed = [];
-		maxUniqueRetryAttempts = 0;
+		
+		random.reset();
 		debug("GAME OVER!!!!!!!!!!!!!");
 	}
 
 	var resetGame = function() {
+		random.init();
 		stopGame();
 
 		config.gameStartTime = new Date();
@@ -986,7 +1033,7 @@ app.factory('announcerService', [ function announcerService () {
 		crowdControl.startCrowd();
 		
 		// 1/3 of the time.
-		if (Math.random() < .333) {
+		if (random.chance(.333)) {
 			// this will play until the first thing is said...
 			playSound(soundsToMake.music.letsGetReadyToRumble);
 			//after 15-30 seconds drop the volume
@@ -1001,7 +1048,7 @@ app.factory('announcerService', [ function announcerService () {
 				if (stadiumSounds.intro.isPlaying) { // if intro is still playing...
 					$(stadiumSounds.intro.audioElement).animate({volume: 0.1}, 3000);
 				}
-			}, 15000 + (Math.random() * 15000));
+			}, random.getFromRange(15000, 30000));
 			stadiumTimers.startGameTimerSoon = setTimeout(startGameUpdateTimer, 10000);
 		} else {
 			if (!config.skipIntro)
@@ -1021,21 +1068,21 @@ app.factory('announcerService', [ function announcerService () {
 		// can't make the welcome announcement until we load the weather data
 		updateLocalEnviromentInfo(function(){
 			// when all of the local enviroment info is updated, now we can start the game
-			var message = getRandomItem(thingsToSay.newGame.intro);
+			var message = random.getItem(thingsToSay.newGame.intro);
 			message     = updateMessageReplacements(message, {})
 			sayThis(message);
 
 			//todo, also announce player positions and team names and colors/sides
-			message = getRandomItem(thingsToSay.newGame.teamsAndPlayersIntro);
+			message = random.getItem(thingsToSay.newGame.teamsAndPlayersIntro);
 			debug(getPlayer({"color": "yellow", "position": "o"}))
 			message = updateMessageReplacements(message, {
 				// yellow-team, black-team, yellow-d, yellow-o, black-d, black-o
 				"yellow-team": getTeam("yellow").team,
-				"yellow-o": getRandomItem(getPlayer({"color": "yellow", "position": "o"}).names),
-				"yellow-d": getRandomItem(getPlayer({"color": "yellow", "position": "d"}).names),
+				"yellow-o": random.getItem(getPlayer({"color": "yellow", "position": "o"}).names),
+				"yellow-d": random.getItem(getPlayer({"color": "yellow", "position": "d"}).names),
 				"black-team": getTeam("black").team,
-				"black-o": getRandomItem(getPlayer({"color": "black", "position": "o"}).names),
-				"black-d": getRandomItem(getPlayer({"color": "black", "position": "d"}).names),
+				"black-o": random.getItem(getPlayer({"color": "black", "position": "o"}).names),
+				"black-d": random.getItem(getPlayer({"color": "black", "position": "d"}).names),
 			});
 
 			// split by ". " 
@@ -1079,10 +1126,10 @@ app.factory('announcerService', [ function announcerService () {
 			}
 			if (sayThisOptions && sayThisOptions.length > 0) {
 				
-				if (bLetSeeSomeAction && Math.random() > .2) {
+				if (bLetSeeSomeAction && random.chance(.8)) {
 					// don't do it every single time
-					if (Math.random() > .6) {
-						if (Math.random() > .4) {
+					if (random.chance(.4)) {
+						if (random.chance(.6)) {
 							// play charge sound
 							playChargeSound(bLetSeeSomeActionAllowBoos, false);
 						} else {
@@ -1091,7 +1138,7 @@ app.factory('announcerService', [ function announcerService () {
 						}
 					}
 				} else {
-					var msg = getRandomItem(sayThisOptions);
+					var msg = random.getItem(sayThisOptions);
 					msg = updateMessageReplacements(msg, {
 						 "winning-score": config.teams[0].score
 						,"losing-score": config.teams[0].score
@@ -1149,7 +1196,7 @@ app.factory('announcerService', [ function announcerService () {
 				}
 			}
 			// get randome Item
-			fileName = getRandomItem(aryChooseFrom, true);
+			fileName = random.getItem(aryChooseFrom, true);
 		} else {
 			switch (whichSound) {
 				// http://soundbible.com/tags-crowd.html
@@ -1215,18 +1262,31 @@ app.factory('announcerService', [ function announcerService () {
 				this.stop(sound);
 			}
 		}
+}
+
+	var SoundSettings = function() {
+		this.file = "";
+		this.fade = false;
+		this.volstart = 0;
+		this.vol = 1;
+		this.start = 0;
+		this.end = null;
+
+		this.getEndOfSong = function() {
+			if (this.end == 0) return 0;
+			var endAfter = this.end;
+			// put a little variation into it
+			if (endAfter > 10000) // if more than 10 seconds, let's make the length variable
+				endAfter = endAfter + random.getFromRange(-1000, 6000); //So, we are going to -1 or +6 seconds
+			return endAfter;
+		}
 	}
 
 	var playSound = function(soundType, settingsParam) {
 		var playThisFile = getSoundFile(soundType);
-		var settings = {
-			file: "",
-			fade: false,
-			volstart: 0,
-			vol: 1,
-			start: 0,
-			end: null,
-		}
+
+		var settings = new SoundSettings();
+
 		//debug("playThisFile:");
 		//debug(playThisFile);
 		if (typeof playThisFile == "string") {
@@ -1256,7 +1316,7 @@ app.factory('announcerService', [ function announcerService () {
 		if (settings.type) {
 			if (stadiumSounds[settings.type].allowMultiple) {
 				var aId = ['a','b','c','d','e','f',0,1,2,3,4,5,6,7,8,9]
-				settings.audioId = "audio_"+ settings.type + "_"+ getRandomItem(aId) + getRandomItem(aId);
+				settings.audioId = "audio_"+ settings.type + "_"+ random.getItem(aId) + random.getItem(aId);
 			} else {
 				settings.audioId = "audio_"+ settings.type;
 				if (stadiumSounds[settings.type].isPlaying) {
@@ -1266,7 +1326,7 @@ app.factory('announcerService', [ function announcerService () {
 					if (stadiumSounds[settings.type].audioElement.currentTime > 10) {
 						debug("NOT GOING TO PLAY THIS SONG... busy playing something else...")
 						// try again in 4 seconds? This is questionable, Not sure if I want to do this, might get out of control
-						stadiumTimers.queueSongForLater = setTimeout(function() { playSound(soundType) }, 2000);
+						//stadiumTimers.queueSongForLater = setTimeout(function() { playSound(soundType) }, 2000);
 					}
 					return false;
 				}
@@ -1288,7 +1348,7 @@ app.factory('announcerService', [ function announcerService () {
 		if (settings.fade) {
 			sound.volume = (settings.volstart ? settings.volstart : 0);
 			sound.play();
-			$(sound).animate({volume: settings.vol}, 750 + (Math.random() * 2000));
+			$(sound).animate({volume: settings.vol}, random.getFromRange(750, 2750));
 		} else {
 			sound.volume = settings.vol;
 			sound.play();
@@ -1312,15 +1372,11 @@ app.factory('announcerService', [ function announcerService () {
 			stadiumSounds[settings.type].audioElement = sound;
 		}
 
-		if (settings.end > 0) {
-
-			var endAfter = settings.end;
-			// put a little variation into it
-			if (endAfter > 10000) // if more than 10 seconds, let's make the length variable
-				endAfter = (endAfter - 1000) + (Math.random() * 7000); //So, we are going to -1 or +6 seconds
-
+		var endAfter = settings.getEndOfSong();
+		console.log("endAfter", endAfter)
+		if (endAfter > 0) {
 			setTimeout(function() { 
-				stadiumSounds.fadeOut(settings.type, 1000 + (Math.random() * 2000));
+				stadiumSounds.fadeOut(settings.type, random.getFromRange(1000, 3000));
 			},  endAfter);
 		}
 
@@ -1330,6 +1386,7 @@ app.factory('announcerService', [ function announcerService () {
 //		} else {
 			$("body").append(sound);
 //		}
+
 	}
 
 
@@ -1345,7 +1402,7 @@ app.factory('announcerService', [ function announcerService () {
 			playSound(soundList);			
 		}
 		if (delayIt)
-			stadiumTimers.queueChargeForLater = setTimeout(playCharge, (5000 + (Math.random() * 15000)));
+			stadiumTimers.queueChargeForLater = setTimeout(playCharge, random.getFromRange(5000, 20000));
 		else
 			playCharge();
 	}
@@ -1365,7 +1422,7 @@ app.factory('announcerService', [ function announcerService () {
 
 		// fake a random volumne
 		var gameCompleteMessageDelay = 0;
-		var shotPowerLevel = crowdControl.ensureSafeVolume(crowdControl.getPercentOfMaxVolume(.25 + Math.random()), crowdControl.audioElement.volume)
+		var shotPowerLevel = crowdControl.ensureSafeVolume(crowdControl.getPercentOfMaxVolume( random.getFromRange(.25, 1) ), crowdControl.audioElement.volume)
 		debug(shotPowerLevel)
 
 		// points for shut out warning...
@@ -1400,9 +1457,9 @@ app.factory('announcerService', [ function announcerService () {
 				turnScrowdUpBy = crowdControl.getPercentOfMaxVolume(0.1);
 
 				// occasionally, play another random sound
-				if (Math.random() <.2) {
+				if (random.chance(.2)) {
 					//10 to 20 secnds in the future
-					stadiumTimers.queuePositiveCrowd = setTimeout(function() { playSound(soundsToMake.positiveCrowd) }, 10000 + (Math.random() * 10000));
+					stadiumTimers.queuePositiveCrowd = setTimeout(function() { playSound(soundsToMake.positiveCrowd) }, random.getFromRange(10000, 20000));
 				}
 			} else { // if you are the away team/black
 				crowdControl.playApplause(soundsToMake.negativeCrowd, shotPowerLevel); //FUTURE: Pass level 0-1 based on strength of shot
@@ -1557,7 +1614,7 @@ app.factory('announcerService', [ function announcerService () {
 		// if there is music to play AND doThisAfterwards IS NOT ALREADY SET (end of game)
 		if (playMusicAfterTalking && !doThisAfterwards) {
 			doThisAfterwards = function() {
-				playSound(getRandomItem(playMusicAfterTalking));
+				playSound(random.getItem(playMusicAfterTalking));
 			}
 		}
 
@@ -1585,11 +1642,11 @@ app.factory('announcerService', [ function announcerService () {
 			sayThisOptions = sayThisOptions.concat(sayThis_PlayerScores_Team_ScoresPoint);
 		}
 
-		var message = getRandomItem(sayThisOptions);
+		var message = random.getItem(sayThisOptions);
 		var alsoMessage;
 		//debug("sayThisAlsoOptions.length: "+ sayThisAlsoOptions.length)
 		if (sayThisAlsoOptions && sayThisAlsoOptions.length > 0) {
-			alsoMessage = getRandomItem(sayThisAlsoOptions);			
+			alsoMessage = random.getItem(sayThisAlsoOptions);			
 		}
 		var returnMessage
 		message     = updateMessageReplacements(message,     { oPlayer : oPlayer, oTeam : oTeam, oOtherTeam : oOtherTeam })
@@ -1616,7 +1673,7 @@ app.factory('announcerService', [ function announcerService () {
 		var aMusic = soundsToMake.music.afterAwesomeGoalScored;
 		//mTest++;
 		// var playThis = aMusic[mTest]; // go in order
-		var playThis = getRandomItem(aMusic);
+		var playThis = random.getItem(aMusic);
 		var wait = playThis.end || 30000;
 		console.log(playThis);
 		playSound(playThis)
@@ -1633,6 +1690,31 @@ app.factory('announcerService', [ function announcerService () {
 		sayThis("Nick Beukema");
 		sayThis("The Sterl");
 		sayThis("The Ninja");
+	}
+
+	var randomTest = function() {
+		var returnVal = "randomTest";
+		random.init();
+		setTimeout(function() {
+			var testRange = 10;
+
+			var counts = new Array(testRange);
+			var r = 0;
+			for(var x = 0; x < 1000; x++) {
+				r = random.getIntFromRange(1,testRange);
+				//r = Math.floor(random.getFromRange(1,100) / 10);
+				if (!counts[r-1]) counts[r-1] = 0;
+				counts[r-1]++;
+				console.log(r);			
+			}
+			for (var i = 0; i < counts.length; ++i) {
+			    console.log(i+1, counts[i]);
+			}
+
+		}, 3000);
+
+
+		return returnVal;
 	}
 
 	var doWordFixes = function(msg) {
@@ -1674,7 +1756,7 @@ app.factory('announcerService', [ function announcerService () {
 					if (stadiumSounds.music.isPlaying && stadiumSounds.music.audioElement) {
 						var $music = $(stadiumSounds.music.audioElement);
 						if ($music.attr("data-allow-volume-change") == 1) {
-							$music.animate({volume: 1}, 100 + (Math.random() * 400));
+							$music.animate({volume: 1}, random.getFromRange(100, 500));
 						}
 					}
 					// restore cheers
@@ -1687,7 +1769,7 @@ app.factory('announcerService', [ function announcerService () {
 
 			// if the intro music is still playing, KILL IT
 			if (stadiumSounds.intro.isPlaying && stadiumSounds.intro.audioElement) {
-				$(stadiumSounds.intro.audioElement).animate({volume: 0}, 100 + (Math.random() * 400), function() {
+				$(stadiumSounds.intro.audioElement).animate({volume: 0},  random.getFromRange(100, 500), function() {
 					stadiumSounds.stop("intro");
 				});
 			}
@@ -1751,11 +1833,12 @@ app.factory('announcerService', [ function announcerService () {
 		//getTeam: getTeam,
 		//updateMessageReplacements: updateMessageReplacements,
 		//updateStreaks: updateStreaks,
-		//getRandomItem: getRandomItem,
+		//random.getItem: random.getItem,
 		//sayThis: sayThis,
 		scorePoint: scorePoint,
 		voiceTest: voiceTest,
 		musicTest: musicTest,
+		randomTest: randomTest,
 		textExport: textExport,
 		stop: stopGame,
 		init: init
