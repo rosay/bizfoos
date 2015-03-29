@@ -23,19 +23,15 @@ var sayThisData = {
 			,"{{team}} break{{team{s|}}} the ice with a 1 to 0 lead. {Great/excellent/nice} {shot/goal/point/score} {by/from} {{name}}."
 			,"{{name}} breaks the ice with a 1 to 0 lead"
 			,"And now {{team}} {{team{is|are}}} in the lead thanks to {{name}} with the first point"
-			//,"wav:and_another_one.wav"
 		],
 		ofTheTeam : [
 			"And now {{team}} {{team{is|are}}} on the board with 1 point by {{name}}"
 			,"{{name}} with the first goal for {{team}}"
 			,"{{name}} puts {{team}} on the {score/}board"
-			//,"wav:and_another_one.wav"
 		],
 		ofThePlayer : [
 			"And now {{name}} is scoring points for {{team}}"
 			,"{{name}} {has put in/with/puts in/scores/drops/sinks} his first goal for {{team}}"
-			,"{{name}} puts {{team}} on the {score/}board"
-			//,"wav:and_another_one.wav"
 		]
 	},
 	playerStreak : {
@@ -197,14 +193,14 @@ var sayThisData = {
 		]
 	},
 
-	finalPoint: {
+	finalScore: {
 		generic: [
 			"{{name}} {puts in/with/drops in/knocks in/scores/sinks} the final {point/score/goal} against {{other-team}} giving {{team}} yet another {victory/win} with a final score of {{team-score}} to {{other-team-score}}."
 			,"And {that ends/that is the end of} the game for {{other-team}}, giving {{team}} yet another {victory/win}. The final score is {{team-score}} to {{other-team-score}}."
 			,"{And that is the end of the game/And that's all folks/And that brings this game to a conclusion}. {{other-team}} {{other-team{has|have}}} been {beaten/defeated} by {{team}} with a {{team-score}} to {{other-team-score}} {victory/win}."
 			//,"wav:and_another_one.wav"
 		],
-		closeGame: [
+		close: [
 			"And the {final/last/winning} {point/goal/score} by {{name}} finishes out {a close game/a nail-biter/an intense match-up} defeating {{other-team}}"
 			,"{And that is the end of the game/And that's all folks/And that brings this game to a conclusion}. {{other-team}} {{other-team{has|have}}} been {beaten/defeated} by {{team}} in a {very close match/tight game/close match/very close game} with a {{team-score}} to {{other-team-score}} {victory/win}."
 			,"{And that is the end of the game/And that's all folks/And that brings this game to a conclusion}. {{team}} {{team{has|have}}} {beaten/defeated/won over} {{other-team}} in a {very close match/tight game/close match/very close game} with a {{team-score}} to {{other-team-score}} {victory/win}."
@@ -212,10 +208,13 @@ var sayThisData = {
 			//,"And the {final/last/winning} {point/goal/score} by {{name}} finishes out {a close game/a nail-biter/an intense match-up} defeating {{other-team}}"
 			//,"wav:and_another_one.wav"
 		],
-		shutOut: [
+		shutout: [
+			"{{name}} with the final {nail in the coffin/score/goal} against the {{other-team}} gives {{team}} yet another {blow out/crushing victory/devastating victory}."
+			,"{And that is the end of the game/And that's all folks/And that brings this game to a conclusion}. {{other-team}} {{other-team{has|have}}} been {crushed/annihilated/demolished} by {{team}}"
+		],
+		shutout: [
 			"{{name}} with the final {nail in the coffin/score/goal} against the {{other-team}} gives {{team}} yet another {shut out/crushing 5 to 0 victory/devastating 5 and O victory}."
 			,"{And that is the end of the game/And that's all folks/And that brings this game to a conclusion}. {{other-team}} {{other-team{has|have}}} been {shut out/blanked/crushed/annihilated/demolished} by {{team}}"
-			//,"wav:and_another_one.wav"
 		],
 	},
 

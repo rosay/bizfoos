@@ -825,7 +825,7 @@ app.factory('announcerService', [function announcerService () {
 		}
 
 		sound.addEventListener('ended', function() {
-			stadiumSounds[settings.type].isPlaying = false;
+			if (stadiumSounds[settings.type].isPlaying) stadiumSounds[settings.type].isPlaying = false;
 		});
 
 		debug("volume = "+ sound.volume);
@@ -877,6 +877,156 @@ app.factory('announcerService', [function announcerService () {
 			playCharge();
 	}
 
+	var setPointScoredActions = function(oPlayer, oTeam, oOtherTeam) {
+		// create default action structure
+		var actions = {
+			player: {
+				score: false,
+				onfire: false,
+				firstPoint: false,
+				streak : 0,
+				timeSinceLastPoint: {
+					shortTime: false
+				}
+			},
+			team: {
+				home: false, 
+				away: false, 
+				winning: false,
+				losing: false,
+				score: false,
+				firstPoint: false,
+				nextPointWins: false,
+				onfire: false,
+				streak : 0,
+				shutout: {
+					approaching: false,
+					alert: false
+				},
+				comeback: {
+					cacthup: false
+
+				},
+				tie: {
+					broken: false
+				},
+				timeSinceLastPoint: {
+					longTime: false,
+					shortTime: false
+				}
+			},
+			otherTeam: {
+				nextPointWins: false
+			},
+			game: {
+				firstPoint: false
+				,over: false
+				,stillGoing: false
+				,middleOfGame: false
+				,tied: false
+				,nextPointWins: false
+				,finalScore: {
+					 shutout: false
+					,blowout: false
+					,close: false
+				}
+			},
+		}
+
+		// Time to set the actions based on the data
+		// points for shut out warning...
+		var closeMatchPoints = (config.pointsNeededToWin - 1); // eventually should be a percentage
+
+		// use the last score time
+		var timeSinceLastGoalTeam   = getSecondSince(oTeam.timeLastGoalWasScored)
+		var timeSinceLastGoalPlayer = getSecondSince(oPlayer.timeLastGoalWasScored)
+
+		if (timeSinceLastGoalTeam < 20)  actions.team.timeSinceLastPoint.shortTime = true;
+		if (timeSinceLastGoalTeam > 120) actions.team.timeSinceLastPoint.longTime = true;
+		if (timeSinceLastGoalPlayer < 20)  actions.player.timeSinceLastPoint.shortTime = true;
+
+		if (oTeam.color == "yellow") actions.team.home = true;
+		if (oTeam.color == "black")  actions.team.away = true;
+
+		actions.game.over       = (oTeam.score == config.pointsNeededToWin); 
+		actions.game.stillGoing = (oTeam.score < config.pointsNeededToWin); 
+
+		actions.player.streak = oPlayer.pointStreak;
+		actions.team.streak   = oTeam.pointStreak;
+
+		debug("Scores: " + oTeam.score + ", " + oOtherTeam.score)
+		if (actions.game.over) {
+			if (oOtherTeam.score == 0) {
+				actions.game.finalScore.shutout = true;
+			} else if (oOtherTeam.score == closeMatchPoints) {
+				actions.game.finalScore.close = true;
+			} else if (oOtherTeam.score <= 2) { // eventually a percentage (less than half)
+				actions.game.finalScore.blowout = true;
+			}
+		}
+
+
+		if (oOtherTeam.score + oTeam.score >= 3) {
+			actions.game.middleOfGame = true;
+		}
+
+		if (oTeam.score == closeMatchPoints) actions.team.nextPointWins = true;
+		if (oOtherTeam.score == closeMatchPoints) actions.otherTeam.nextPointWins = true;
+
+		// score is tied up
+		debug("oOtherTeam.score == oTeam.score =>", oOtherTeam.score == oTeam.score)
+		// if it is tied up
+		if (oOtherTeam.score == oTeam.score) {
+			actions.game.tied = true;
+			if (oOtherTeam.score == closeMatchPoints) actions.game.nextPointWins = true;
+		} else if (oTeam.score > oOtherTeam.score) {
+			actions.team.winning = true;
+		} else {
+			actions.team.losing = true;
+		}
+
+		// 2 quick points by the same player
+		if (actions.player.streak >= 2 && actions.player.timeSinceLastPoint.shortTime) {
+			actions.player.onfire = true;
+		}
+
+		// 2 quick points by the same team
+		if (actions.team.streak >= 2 && actions.team.timeSinceLastPoint.shortTime) {
+			actions.team.onfire = true;
+		}
+		if (oOtherTeam.score == 0) {
+			if (actions.team.nextPointWins) {
+				actions.team.shutout.alert = true;
+			} else if (oTeam.score >= 2) {
+				// 2 - 0 or more, working on a shut out
+				actions.team.shutout.approaching = true;
+			} 
+		}
+
+		// if the home team just score, yet still behind...
+		if (actions.team.home && oTeam.score < oOtherTeam.score) {
+			actions.team.comeback.cacthup = true;
+		} 
+
+		if (oOtherTeam.score != 0 && oOtherTeam.score == (oTeam.score + 1)) {
+			actions.team.tie.broken = true;
+		}
+
+		// if this is the first point of the team or game
+		if (oTeam.score == 1) {
+			if (oOtherTeam.score == 0) {
+				actions.game.firstPoint = true;
+			} else {
+				actions.team.firstPoint = true;
+			}
+			if (oPlayer.score == 1) {
+				actions.player.firstPoint = true;
+			}
+		}
+
+		return actions;
+	}
+
 	var scorePoint = function(oPlayer, gameTime) {
 		var oPlayer    = getPlayer(oPlayer);
 		var oTeam      = getTeam(oPlayer.color);
@@ -885,223 +1035,193 @@ app.factory('announcerService', [function announcerService () {
 		oTeam.score++;   // update team score
 		oPlayer.score++; // update player score
 
+
 		updateStreaks(oPlayer, oTeam, oOtherTeam);
 
 		var doThisAfterwards;
 
 		// fake a random volumne
-		var gameCompleteMessageDelay = 0;
+		//var gameCompleteMessageDelay = 0;
 		var shotPowerLevel = crowdControl.ensureSafeVolume(crowdControl.getPercentOfMaxVolume( random.getFromRange(.25, 1) ), crowdControl.audioElement.volume)
 		debug(shotPowerLevel)
 
-		// points for shut out warning...
-		var closeMatchPoints = (config.pointsNeededToWin - 1); // eventually should be a percentage
+		//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		var actions = setPointScoredActions(oPlayer, oTeam, oOtherTeam);
 
-		// did the game finish?
-		// play a sound effect
-		/* TUrn crowd up or down */
-			if (oTeam.score == config.pointsNeededToWin) {
-				playSound(soundsToMake.fx.win);
-				crowdControl.playApplause(soundsToMake.positiveCrowd, shotPowerLevel); //FUTURE: Pass level 0-1 based on strength of shot
-				crowdControl.adjustVolume(crowdControl.maxVolume);
-
-				// fade out any music that is playing right now ...
-				// make sure you can here who the winners were, then play the winning music
-				stadiumSounds.fadeOut("music");
-
-				doThisAfterwards = function() {
-					debug("end of game!");
-					endGame();
-				}
-
-			} else {
-				var turnCrowdUpBy = 0;
-				playSound(soundsToMake.fx.score);
-				
-				
-				// if you are the home team/yellow
-				//if (Math.random() >.3) {
-				if (oTeam.color == "yellow") {
-					crowdControl.playApplause(soundsToMake.positiveCrowd, shotPowerLevel); //FUTURE: Pass level 0-1 based on strength of shot
-
-					turnCrowdUpBy = crowdControl.getPercentOfMaxVolume(0.1);
-
-					// occasionally, play another random sound
-					if (random.chance(.2)) {
-						//10 to 20 secnds in the future
-						stadiumTimers.queuePositiveCrowd = setTimeout(function() { playSound(soundsToMake.positiveCrowd) }, random.getFromRange(10000, 20000));
-					}
-				} else { // if you are the away team/black
-					crowdControl.playApplause(soundsToMake.negativeCrowd, shotPowerLevel); //FUTURE: Pass level 0-1 based on strength of shot
-					turnCrowdUpBy = crowdControl.getPercentOfMaxVolume(0.05); // half as much as when the home team scores
-				}
-
-				if (oTeam.score == oOtherTeam.score) {
-					turnCrowdUpBy += crowdControl.getPercentOfMaxVolume(0.075); // tie game, bump it up
-				}
-
-				if (oTeam.score == closeMatchPoints) {
-					turnCrowdUpBy += crowdControl.getPercentOfMaxVolume(0.05); // home team needs one more point to win
-				}
-				if (oOtherTeam.score == closeMatchPoints) {
-					turnCrowdUpBy += crowdControl.getPercentOfMaxVolume(0.05); // away team needs one more point to win
-				}
-
-				crowdControl.adjustVolume(turnCrowdUpBy);
-				gameCompleteMessageDelay = shotPowerLevel;
-			}
-
-
-		// array to be used to load random options of messages
-		var sayThisOptions = [];
-		var sayThisAlsoOptions = [];
-
-		// only play awesome goal music for the home team
-		// if (oTeam.color == "yellow")		
-
-		var playMusicAfterTalking;
-		if (oTeam.pointStreak >= 3 && oTeam.score < config.pointsNeededToWin) {
-			// if it is more than a 3 point streak
-			if (oTeam.color == "yellow") playMusicAfterTalking = soundsToMake.music.afterAwesomeGoalScored;
-		} else if (oPlayer.pointStreak >= 2 && getSecondSince(oTeam.timeLastGoalWasScored) < 20) {
-			// 2 points in a quick about of time by the same team
-			sayThisOptions = thingsToSay.playerStreak.onfire;
-			// Wow, another one, rapid fire...
-			if (oTeam.color == "yellow") playMusicAfterTalking = soundsToMake.music.afterAwesomeGoalScored;
-		} else if (oTeam.pointStreak >= 2 && getSecondSince(oTeam.timeLastGoalWasScored) < 20) {
-			// 2 points in a quick about of time by the same team
-			if (oTeam.color == "yellow") playMusicAfterTalking = soundsToMake.music.afterAwesomeGoalScored;
-		} else if (oTeam.score >= 2 && oOtherTeam.score == 0) {
-			// 2 - 0 or more, working on a shut out
-			playMusicAfterTalking = soundsToMake.music.afterAwesomeGoalScored;
-		} else if (getSecondSince(oTeam.timeLastGoalWasScored) > 120) {
-			// if it took a ridiculously long time to score ...
-			// TODO: IF THe score took more than 120 seconds
-			// FINALLY SOMEONE SCORED, even if it is the black team, it's ok, ...
-			playMusicAfterTalking = soundsToMake.music.afterAwesomeGoalScored;
-		} else if (oTeam.color == "yellow" && oTeam.score < oOtherTeam.score && Math.random() > .5) {
-			// if the home team just score, yet still behind, ... and don't do it every time
-			playMusicAfterTalking = soundsToMake.music.startingAComeback;
-		} 
-
-		if (oTeam.color == "black" && oOtherTeam.score == (oTeam.score + 1)) {
-			// if the away team JUST passed the home team
-			playMusicAfterTalking = soundsToMake.music.awayGoal;
-		}
-
-
-
-
+		// now we can reset the last score time
 		config.timeLastGoalWasScored = new Date(); // update last point
 		oTeam.timeLastGoalWasScored = config.timeLastGoalWasScored;
 		oPlayer.timeLastGoalWasScored = config.timeLastGoalWasScored;
 
+		// add to point history array
+		pointHistory.push({ "player": oPlayer, "time": gameTime});
 
+		//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		// array to be used to load random options of messages
+		var sayThisOptions = [];
+		var sayThisAlsoOptions = [];
+		var playMusicAfterTalking;
 
+		var playAwesomeMusic = true;
+		if (actions.team.timeSinceLastPoint.longTime) {
+			// FINALLY SOMEONE SCORED, even if it is the away team, it's ok, ...
+			playAwesomeMusic = true;
+		} 
 
+		// TODO: weighted random.... I'd like to weight On fires heavier, then do random based on that
+		if (actions.game.stillGoing) {
+			var turnCrowdUpBy = 0;
+			playSound(soundsToMake.fx.score);
 
+			if (actions.team.home) {
+				crowdControl.playApplause(soundsToMake.positiveCrowd, shotPowerLevel); //FUTURE: Pass level 0-1 based on strength of shot
+				turnCrowdUpBy = crowdControl.getPercentOfMaxVolume(0.1);
+				// occasionally, play another random sound
+				if (random.chance(.2)) {
+					//10 to 20 seconds in the future. Eventually I want this to work with loud hits againts the wall, but for now, random FTW
+					stadiumTimers.queuePositiveCrowd = setTimeout(function() { playSound(soundsToMake.positiveCrowd) }, random.getFromRange(10000, 20000));
+				}
+			} else { // if you are the away team/black
+				crowdControl.playApplause(soundsToMake.negativeCrowd, shotPowerLevel); //FUTURE: Pass level 0-1 based on strength of shot
+				turnCrowdUpBy = crowdControl.getPercentOfMaxVolume(0.05); // half as much as when the home team scores
+			}
 
+			if (actions.game.tied) {
+				turnCrowdUpBy += crowdControl.getPercentOfMaxVolume(0.075); // tie game, bump it up
+			} else if (actions.team.nextPointWins) {
+				turnCrowdUpBy += crowdControl.getPercentOfMaxVolume(0.05); // home team needs one more point to win
+			} else if (actions.otherTeam.nextPointWins) {
+				turnCrowdUpBy += crowdControl.getPercentOfMaxVolume(0.05); // away team needs one more point to win
+			}
 
+			crowdControl.adjustVolume(turnCrowdUpBy);
+			//gameCompleteMessageDelay = shotPowerLevel;
 
-		// if this is the first point of the team or game
-		if (oTeam.score == 1) {
-			if (oOtherTeam.score == 0) {
+			// only play awesome goal music for the home team
+			if (actions.player.onfire) {
+				sayThisOptions = sayThisOptions.concat(thingsToSay.playerStreak.onfire);
+				if (actions.team.home) playAwesomeMusic = true;
+			} else if (actions.team.onfire) {
+				sayThisOptions = sayThisOptions.concat(thingsToSay.teamStreak.onfire);
+				if (actions.team.home) playAwesomeMusic = true;
+			} else if (actions.team.streak >= 3) {
+				if (actions.team.home) playAwesomeMusic = true;
+			} else if (actions.team.shutout.approaching) {
+				if (actions.team.home) playAwesomeMusic = true;
+			}
+			if (actions.team.away) {
+				if (actions.team.tie.broken) {
+					// if the away team JUST passed the home team
+					playMusicAfterTalking = soundsToMake.music.awayGoal; // it doesn't matter!
+				}
+			}
+
+			if (actions.team.comeback.cacthup) {
+				if (random.chance(.5)) playMusicAfterTalking = soundsToMake.music.startingAComeback; // only do it 50% of the time
+			}
+
+			if (playAwesomeMusic) playMusicAfterTalking = soundsToMake.music.afterAwesomeGoalScored;
+
+			// if this is the first point of the game, team or player
+			if (actions.game.firstPoint) {
 				sayThisOptions = sayThisOptions.concat(thingsToSay.firstPoint.ofTheGame);
-			} else {
+			} else if (actions.team.firstPoint) {
 				sayThisOptions = sayThisOptions.concat(thingsToSay.firstPoint.ofTheTeam);
+			} else if (actions.player.firstPoint) {
+				sayThisOptions = sayThisOptions.concat(thingsToSay.firstPoint.ofThePlayer);
 			}
-		}
 
-		// STREAKS!!!
-		// If a player is streaking, note that FIRST
-		if (oPlayer.pointStreak >= 2) {
-
-			if (oPlayer.pointStreak >= 5) {
-				sayThisOptions = sayThisOptions.concat(thingsToSay.playerStreak.fivePoints);
-			} else if (oPlayer.pointStreak >= 4) {
-				sayThisOptions = sayThisOptions.concat(thingsToSay.playerStreak.fourPoints);
-			} else if (oPlayer.pointStreak >= 3) {
-				sayThisOptions = sayThisOptions.concat(thingsToSay.playerStreak.threePoints);
-			} else {
-				sayThisOptions = sayThisOptions.concat(thingsToSay.playerStreak.twoPoints);
+			// STREAKS!!!
+			// If a player is streaking, note that FIRST
+			if (actions.player.streak >= 2) {
 				sayThisOptions = sayThisOptions.concat(thingsToSay.playerStreak.multiplePoints);
-			}
-		} else 
-		// If a teams is streaking, note that SECONDARILY
-		if (oTeam.pointStreak >= 2) {
-
-			if (oTeam.pointStreak >= 5) {
-				sayThisOptions = sayThisOptions.concat(thingsToSay.teamStreak.fivePoints);
-			} else if (oTeam.pointStreak >= 4) {
-				sayThisOptions = sayThisOptions.concat(thingsToSay.teamStreak.fourPoints);
-			} else if (oTeam.pointStreak >= 3) {
-				sayThisOptions = sayThisOptions.concat(thingsToSay.teamStreak.threePoints);
-			} else {
-				sayThisOptions = sayThisOptions.concat(thingsToSay.teamStreak.twoPoints);
+				if (actions.player.streak >= 5) {
+					sayThisOptions = sayThisOptions.concat(thingsToSay.playerStreak.fivePoints);
+				} else if (actions.player.streak >= 4) {
+					sayThisOptions = sayThisOptions.concat(thingsToSay.playerStreak.fourPoints);
+				} else if (actions.player.streak >= 3) {
+					sayThisOptions = sayThisOptions.concat(thingsToSay.playerStreak.threePoints);
+				} else {
+					sayThisOptions = sayThisOptions.concat(thingsToSay.playerStreak.twoPoints);
+				}
+			} else 
+			// If a teams is streaking, note that SECONDARILY
+			if (actions.team.streak >= 2) {
 				sayThisOptions = sayThisOptions.concat(thingsToSay.teamStreak.multiplePoints);
+				if (actions.team.streak >= 5) {
+					sayThisOptions = sayThisOptions.concat(thingsToSay.teamStreak.fivePoints);
+				} else if (actions.team.streak >= 4) {
+					sayThisOptions = sayThisOptions.concat(thingsToSay.teamStreak.fourPoints);
+				} else if (actions.team.streak >= 3) {
+					sayThisOptions = sayThisOptions.concat(thingsToSay.teamStreak.threePoints);
+				} else {
+					sayThisOptions = sayThisOptions.concat(thingsToSay.teamStreak.twoPoints);
+				}
 			}
-		}
 
-		debug("Scores: " + oTeam.score + ", " + oOtherTeam.score)
-
-		if (oOtherTeam.score == 0) {
-			if (oTeam.score == closeMatchPoints) {
-				// empty any previous entries, this is imporant :)
+			// shut out warning/alerts
+			if (actions.team.shutout.alert) {
 				sayThisOptions = thingsToSay.team.shutOutAlert;
-				
 				playMusicAfterTalking = soundsToMake.music.shutOutAlert;
-
-				//playChargeSound(false, true);
-			} else if (oTeam.score >= 2) {
+			} else if (actions.team.shutout.approaching) {
 				sayThisOptions = thingsToSay.team.approachingShutOutAlert;
 			}
-		} else if (oOtherTeam.score + oTeam.score >= 3) {
+
 			// let's also announce the score
-			// score is tied up
-			debug("oOtherTeam.score == oTeam.score =>", oOtherTeam.score == oTeam.score)
-			// if it is tied up
-			if (oOtherTeam.score == oTeam.score) {
-				if (oOtherTeam.score == closeMatchPoints) {
-					sayThisAlsoOptions = thingsToSay.reportScore.tiedScoreNextPointWins;
-					playChargeSound(false, true);
+			if (actions.game.middleOfGame) {
+				if (actions.game.tied) {
+					if (actions.game.nextPointWins) {
+						sayThisAlsoOptions = thingsToSay.reportScore.tiedScoreNextPointWins;
+						playChargeSound(false, true);
+					} else {
+						sayThisAlsoOptions = thingsToSay.reportScore.tiedScore;
+					}
 				} else {
-					sayThisAlsoOptions = thingsToSay.reportScore.tiedScore;
-				}
-			} else {
-				sayThisAlsoOptions = thingsToSay.reportScore.generic;
-				if (oTeam.score > oOtherTeam.score)
-				{
-					sayThisAlsoOptions = sayThisAlsoOptions.concat(thingsToSay.reportScore.teamWinning);
-				} else {
-					sayThisAlsoOptions = sayThisAlsoOptions.concat(thingsToSay.reportScore.teamLosing);
+					sayThisAlsoOptions = thingsToSay.reportScore.generic;
+					if (actions.team.winning) {
+						sayThisAlsoOptions = sayThisAlsoOptions.concat(thingsToSay.reportScore.teamWinning);
+					} else {
+						sayThisAlsoOptions = sayThisAlsoOptions.concat(thingsToSay.reportScore.teamLosing);
+					}
 				}
 			}
-		}
 
-		// if there is music to play AND doThisAfterwards IS NOT ALREADY SET (end of game)
-		if (playMusicAfterTalking && !doThisAfterwards) {
+			// if there is music to play AND doThisAfterwards IS NOT ALREADY SET (end of game)
+			if (playMusicAfterTalking && !doThisAfterwards) {
+				doThisAfterwards = function() {
+					playSound(random.getItem(playMusicAfterTalking));
+				}
+			}
+
+		 // END: if (actions.game.stillGoing)
+		} else if (actions.game.over) {
+
+			playSound(soundsToMake.fx.win);
+			crowdControl.playApplause(soundsToMake.positiveCrowd, shotPowerLevel); //FUTURE: Pass level 0-1 based on strength of shot
+			crowdControl.adjustVolume(crowdControl.maxVolume);
+
+			// fade out any music that is playing right now ...
+			// make sure you can here who the winners were, then play the winning music
+			stadiumSounds.fadeOut("music");
+
 			doThisAfterwards = function() {
-				playSound(random.getItem(playMusicAfterTalking));
+				debug("end of game!");
+				endGame();
 			}
-		}
-
-
-
-		// FINAL POINT
-		//console.log(oTeam.score,config.pointsNeededToWin)
-		if (oTeam.score == config.pointsNeededToWin) {
 
 			// clear original arrays
 			sayThisAlsoOptions = [];
-			if (oOtherTeam.score == closeMatchPoints) {
-				sayThisOptions = thingsToSay.finalPoint.closeGame;
-			} else if (oOtherTeam.score == 0) {
-				sayThisOptions = thingsToSay.finalPoint.shutOut;
+			if (actions.game.finalScore.shutout) {
+				sayThisOptions = thingsToSay.finalScore.shutout;
+			} else if (actions.game.finalScore.blowout) {
+				sayThisOptions = thingsToSay.finalScore.blowout;
+			} else if (actions.game.finalScore.close) {
+				sayThisOptions = thingsToSay.finalScore.close;
 			} else {
-				sayThisOptions = thingsToSay.finalPoint.generic;
+				sayThisOptions = thingsToSay.finalScore.generic;
 			}
-		}
 
+		}
 
 		// if there is nothing else, use the defaults
 		if (sayThisOptions.length == 0) {
@@ -1109,6 +1229,7 @@ app.factory('announcerService', [function announcerService () {
 			sayThisOptions = sayThisOptions.concat(thingsToSay.team.score);
 		}
 
+		//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		var message = random.getItem(sayThisOptions);
 		var alsoMessage;
 		//debug("sayThisAlsoOptions.length: "+ sayThisAlsoOptions.length)
@@ -1116,15 +1237,13 @@ app.factory('announcerService', [function announcerService () {
 			alsoMessage = random.getItem(sayThisAlsoOptions);			
 		}
 		var returnMessage
-		message     = updateMessageReplacements(message,     { oPlayer : oPlayer, oTeam : oTeam, oOtherTeam : oOtherTeam })
+		var oReplacementValues = { oPlayer : oPlayer, oTeam : oTeam, oOtherTeam : oOtherTeam };
+		message     = updateMessageReplacements(message, oReplacementValues);
 		returnMessage = message;
 		if (alsoMessage) {
-			alsoMessage = updateMessageReplacements(alsoMessage, { oPlayer : oPlayer, oTeam : oTeam, oOtherTeam : oOtherTeam })
+			alsoMessage = updateMessageReplacements(alsoMessage, oReplacementValues);
 			returnMessage = returnMessage +". "+ alsoMessage; 
 		}
-
-		// add to point history array
-		pointHistory.push({ "player": oPlayer, "time": gameTime});
 
 		// put a slight delay on the announcement
 		stadiumTimers.pointScoredAnnouncement = setTimeout(function() {
