@@ -1,5 +1,112 @@
 jQuery(function($) {
 
+	var gameSettings = {
+		"pointsNeededToWin": 5,
+		"debug": true,
+		//"skipIntro": true,
+		
+		"roster": {
+			"teamBlack": {
+				"offense": {
+					"_id": "ahovingh@bizstream.com",
+					"name": "Albert Hovingh",
+					"nicknames": "Bert, Al, The Trash Man",
+					"pic": ""
+				},
+				"defense": {
+					"_id": "areece@bizstream.com",
+					"name": "Adam Reece",
+					"pic": ""
+				}
+			},
+			"teamOrange": {
+				"offense": {
+					"_id": "mschmidt@bizstream.com",
+					"name": "Mark Schmidt",
+					"firstName": "Mark",
+					"lastName": "Schmidt",
+					"nicknames": "Schmidty",
+					"pic": ""
+				},
+				"defense": {
+					"_id": "sheibeck@bizstream.com",
+					"name": "Sterling Heibeck",
+					"nicknames": "The Ninja",
+					"pic": ""
+				}
+			}
+		}
+		,teamNames: [{
+			name: "The Avengers",
+			players: ["sheibeck@bizstream.com", "mschmidt@bizstream.com"]
+		},{
+			name: "The Dream Team",
+			players: ["areece@bizstream.com", "ahovingh@bizstream.com"]
+		}] 
+
+		/*
+		"teams" : [
+			{
+				"color": "black",
+				"team": "The Dream Team"
+				//"probabilty": .80
+			},
+			{
+				"color": "yellow",
+				"team": "The Avengers"
+				//"probabilty": .20
+			}
+		],
+		"players" : [
+			{	//0
+				"playerid": "ahovingh@bizstream.com",
+				"color": "black",
+				"position": "o",
+				"team": "The Dream Team",
+				"names": [
+					"Albert",
+					"Bert",
+					"Hovingh",
+					"The Trash man"
+				]
+			},
+			{	//1
+				"playerid": "areece@bizstream.com",
+				"color": "black",
+				"position": "d",
+				"team": "The Dream Team",
+				"names": [
+					"Adam",
+					"Reece"
+				]
+			},
+			{	//2
+				"playerid": "mschmidt@bizstream.com",
+				"color": "yellow",
+				"position": "o",
+				"team": "The Avengers",
+				"names": [
+					"Mark",
+					"Schmidt",
+					"Schmidty"
+				]
+			},
+			{	//3
+				"playerid": "sheibeck@bizstream.com",
+				"color": "yellow",
+				"position": "d",
+				"team": "The Avengers",
+				"names": [
+					"Sterling",
+					"Heibeck",
+					//"The Sterl",
+					"The Ninja"
+				]
+			}
+		] // end array of peole
+		*/
+	};
+
 	var gameSpeedSimulator = 1;// 5 times faster
 
 	var gameSeconds = 0;
@@ -20,12 +127,13 @@ jQuery(function($) {
 		smartAnnouncer.musicTest();
 	});
 
-
 	$("#doRandomTest").click(function() {
 		addToLog(smartAnnouncer.randomTest());
 	});
 
-	
+	$("#doStringTest").click(function() {
+		addToLog(smartAnnouncer.stringTest(gameSettings));
+	});
 
 	
 
@@ -35,112 +143,7 @@ jQuery(function($) {
 	$("#newGame").click(function() {
 		gameSeconds = 0;
 		addToLog("New Game Started");
-		smartAnnouncer.init({
-			"pointsNeededToWin": 5,
-			"debug": true,
-			//"skipIntro": true,
-			
-			"roster": {
-				"teamBlack": {
-					"offense": {
-						"_id": "ahovingh@bizstream.com",
-						"name": "Albert Hovingh",
-						"nicknames": "Bert, Al, The Trash Man",
-						"pic": ""
-					},
-					"defense": {
-						"_id": "areece@bizstream.com",
-						"name": "Adam Reece",
-						"pic": ""
-					}
-				},
-				"teamOrange": {
-					"offense": {
-						"_id": "mschmidt@bizstream.com",
-						"name": "Mark Schmidt",
-						"firstName": "Mark",
-						"lastName": "Schmidt",
-						"nicknames": "Schmidty",
-						"pic": ""
-					},
-					"defense": {
-						"_id": "sheibeck@bizstream.com",
-						"name": "Sterling Heibeck",
-						"nicknames": "The Ninja",
-						"pic": ""
-					}
-				}
-			}
-			,teamNames: [{
-				name: "The Avengers",
-				players: ["sheibeck@bizstream.com", "mschmidt@bizstream.com"]
-			},{
-				name: "The Dream Team",
-				players: ["areece@bizstream.com", "ahovingh@bizstream.com"]
-			}] 
-
-			/*
-			"teams" : [
-				{
-					"color": "black",
-					"team": "The Dream Team"
-					//"probabilty": .80
-				},
-				{
-					"color": "yellow",
-					"team": "The Avengers"
-					//"probabilty": .20
-				}
-			],
-			"players" : [
-				{	//0
-					"playerid": "ahovingh@bizstream.com",
-					"color": "black",
-					"position": "o",
-					"team": "The Dream Team",
-					"names": [
-						"Albert",
-						"Bert",
-						"Hovingh",
-						"The Trash man"
-					]
-				},
-				{	//1
-					"playerid": "areece@bizstream.com",
-					"color": "black",
-					"position": "d",
-					"team": "The Dream Team",
-					"names": [
-						"Adam",
-						"Reece"
-					]
-				},
-				{	//2
-					"playerid": "mschmidt@bizstream.com",
-					"color": "yellow",
-					"position": "o",
-					"team": "The Avengers",
-					"names": [
-						"Mark",
-						"Schmidt",
-						"Schmidty"
-					]
-				},
-				{	//3
-					"playerid": "sheibeck@bizstream.com",
-					"color": "yellow",
-					"position": "d",
-					"team": "The Avengers",
-					"names": [
-						"Sterling",
-						"Heibeck",
-						//"The Sterl",
-						"The Ninja"
-					]
-				}
-			] // end array of peole
-			*/
-		}); // end config, end initalize of SmartAnnouncer
+		smartAnnouncer.init(gameSettings); // end config, end initalize of SmartAnnouncer
 
 		// start game clock
 		clearInterval(tmrGameClock);

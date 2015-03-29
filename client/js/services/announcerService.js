@@ -122,165 +122,6 @@ app.factory('announcerService', [function announcerService () {
 	var pointHistory = [];
 	var teamScores = {};
 
-	var sayThis_PlayerScores_Player_MultiplePointStreak = [
-	];
-
-	var sayThis_PlayerScores_Player_2PointStreak = [
-	];
-
-    var sayThis_PlayerScores_Player_3PointStreak = [
-        "That's three in a row by {{name}}"
-        ,"{{name}} with another goal. 3 point streak."
-		,"And he sinks another one. Three in a row by {{name}}"
-		//,"wav:and_another_one.wav"
-	];
-
-	var sayThis_PlayerScores_Player_4PointStreak = [
-		"{{name}} is going streaking! That's a quad-point streak."
-		,"{{name}} with another point. That's a 4 goals streak!"
-		//,"wav:and_another_one.wav"
-	];
-
-	var sayThis_PlayerScores_Player_5PointStreak = []
-
-	// TEAM STREAKS:
-	var sayThis_PlayerScores_Team_MultiplePointStreak = [
-		"And another goal by {{team}}"
-		,"{{team}} with another goal"
-		,"{{team}} sink{{team{s|}}} another one"
-		,"{{team}} drop{{team{s|}}} another one"
-	]
-
-	var sayThis_PlayerScores_Team_2PointStreak = [
-		 "That's two in a row by {{team}}"
-		 ,"{{team}} {{team{is|are}}} on a roll"
-		//,"wav:and_another_one.wav"
-	];
-
-	var sayThis_PlayerScores_Team_3PointStreak = [
-		"That's three in a row by {{team}}"
-		,"{{team}} with another goal. 3 point streak."
-		,"And they sink another one. Three in a row by {{team}}"
-		//,"wav:and_another_one.wav"
-	];
-
-	var sayThis_PlayerScores_Team_4PointStreak = []
-	var sayThis_PlayerScores_Team_5PointStreak = []
-
-
-	// "catch-all"/generic
-	var sayThis_PlayerScores_Player_ScoresPoint = [
-		 "{{name}} scores a goal"
-		,"{{name}} puts one in"
-		,"{{name}} sinks one"
-		//,"wav:and_another_one.wav"
-	];
-
-	// "catch-all"/generic
-	var sayThis_PlayerScores_Team_ScoresPoint = [
-		 "{{team}} score{{team{s|}}} a goal"
-		,"{{team}} put{{team{s|}}} one in"
-		,"{{team}} sink{{team{s|}}} one"
-		//,"wav:and_another_one.wav"
-	];
-
-	// "catch-all"/generic
-	var sayThis_PlayerScores_Team_ShutOutAlert = [
-		 "And we have a shut out alert for {{other-team}}"
-		//,"wav:shut_out_alert.wav"
-	];
-
-
-	// power value high
-	//"Power Shot by {{name}}"
-	//"{{name}} slams one in"
-	//"{{name}} puts one right down the throat of [[defender]]"
-	var sayThis_PlayerScores_Player_HighPowerShot = [
-		,"Power Shot from {{name}}"
-		,"{{name}} slams one in"
-		,"{{name}} slams one down {{other-team-defense}}'s throat"
-	]
-
-	var sayThis_PlayerScores_Player_DefensiveScoreHighPowerShot = [
-		,"It's {{name}}! from down town"
-		,"{{name}} pounds on {{other-team-defense}} from {the back/the d-fense}"
-		,"d-fense, d-fense, d-fense with the score!"
-	];
-
-	//TODO
-	//	if you are putting in all the points, talk about carrying your team mate
-
-	//  weak "dribble in" shots
-
-	//  it would be really nice to know about fooses
-
-	var sayThis_PlayerScores_Team_ApporachingShutOutMoreThan2Points = [
-		 "{{team}} {{team{is|are}}} {putting the hurt on {{other-team}}/gaining a solid lead/working on a shut out/sticking it to {{other-team}}}"
-		 ,"{Ouch/Snap/Dang/Hey Now/Oh man/Wow/Look Out/It's On now}, {{other-team}} {{other-team{is|are}}} {in the danger zone now/on their way to a shut out/in need of some points}"
-		 ,"{Ouch/Snap/Dang/Hey Now/Oh man/Wow/Look Out/It's On now}, {{other-team}} {need{{other-team{s|}}} to catch up/need{{other-team{s|}}} to make up some points/need{{other-team{s|}}} their first point/{{other-team{is|are}}} way behind now/{{other-team{is|are}}} falling behind}"
-		 ,"{{other-team}} {{other-team{has|have}}} some {catching up to do/work to do}"
-	];
-
-	var sayThis_PlayerScores_ReportScore = [
-		 "{We have/Score is} {{team}} with {{team-score}} and {{other-team}} with {{other-team-score}}"
-	];
-
-	var sayThis_PlayerScores_ReportScoreTeamWinning = [
-		 "{{team}} {{team{is|are}}} winning {{team-score}} to {{other-team-score}}"
-		 ,"It's {{team}} over {{other-team}} with a {{team-score}} to {{other-team-score}} lead."
-		 ,"{The Score is/We are at/And it is/We're at/The Score board says} {{team-score}} to {{other-team-score}} with {{team}} {leading the drive/on top/out in front}."
-	];
-
-	var sayThis_PlayerScores_ReportScoreTeamLosing = [
-		 "{{team}} {{team{is|are}}} losing {{team-score}} to {{other-team-score}}"
-		 ,"It's {{other-team}} over {{team}} with a {{other-team-score}} to {{team-score}} lead."
-		 ,"{The Score is/We are at/And it is/We're at/The Score board says} {{other-team-score}} to {{team-score}} with {{other-team}} {leading the drive/on top/out in front}."
-		 ,"{The Score is/We are at/And it is/We're at/The Score board says} {{other-team-score}} to {{team-score}} with {{team}} {trailing behind/at the bottom/trying to catch up/needing to gain some points}."
-	];
-
-	var sayThis_PlayerScores_ReportTiedScore = [
-		 "Score is {tied/all tied} up at {{team-score}} to {{other-team-score}}"
-		 ,"{And we are/The scores are/It's all} tied up at {{team-score}} to {{other-team-score}}"
-		 ,"And the scores are at {{team-score}} and {{other-team-score}}"
-		 ,"{All tied up at/we're even with a score of/It's anyones game with a score of} {{team-score}} and {{other-team-score}}"
-	];
-
-	var sayThis_PlayerScores_ReportTiedScoreNextPointWins = [
-		"{And now/OK boys and girls,} it just got real {{team-score}} to {{other-team-score}}"
-		,"{We have/And now it's} fours all around, next point wins"
-		,"It's on. It's on like donkey kong. The Next {point/score/goal} ends {the game/this battle}."
-		,"And fours all around, next point wins"
-	]
-
-	// Final POINT
-	var sayThis_PlayerScores_Game_FinalPoint_CloseGame = [
-		"And the {final/last/winning} {point/goal/score} by {{name}} finishes out {a close game/a nail-biter/an intense match-up} defeating {{other-team}}"
-		,"{And that is the end of the game/And that's all folks/And that brings this game to a conclusion}. {{other-team}} {{other-team{has|have}}} been {beaten/defeated} by {{team}} in a {very close match/tight game/close match/very close game} with a {{team-score}} to {{other-team-score}} {victory/win}."
-		,"{And that is the end of the game/And that's all folks/And that brings this game to a conclusion}. {{team}} {{team{has|have}}} {beaten/defeated/won over} {{other-team}} in a {very close match/tight game/close match/very close game} with a {{team-score}} to {{other-team-score}} {victory/win}."
-		,"{And that is the end of the game/And that's all folks/And that brings this game to a conclusion}. {{team}} {{team{has|have}}} won in a {very close match/tight game/close match/very close game} with a {{team-score}} to {{other-team-score}} {victory/win} over {{other-team}}."
-		//,"And the {final/last/winning} {point/goal/score} by {{name}} finishes out {a close game/a nail-biter/an intense match-up} defeating {{other-team}}"
-		//,"wav:and_another_one.wav"
-	];
-
-	var sayThis_PlayerScores_Game_FinalPoint_Other = [
-		"{{name}} {puts in/with/drops in/knocks in/scores/sinks} the final {point/score/goal} against {{other-team}} giving {{team}} yet another {victory/win} with a final score of {{team-score}} to {{other-team-score}}."
-		,"And {that ends/that is the end of} the game for {{other-team}}, giving {{team}} yet another {victory/win}. The final score is {{team-score}} to {{other-team-score}}."
-		,"{And that is the end of the game/And that's all folks/And that brings this game to a conclusion}. {{other-team}} {{other-team{has|have}}} been {beaten/defeated} by {{team}} with a {{team-score}} to {{other-team-score}} {victory/win}."
-		//,"wav:and_another_one.wav"
-	];
-
-	var sayThis_PlayerScores_Game_FinalPoint_ShutOut = [
-		"{{name}} with the final {nail in the coffin/score/goal} against the {{other-team}} gives {{team}} yet another {shut out/crushing 5 to 0 victory/devastating 5 and O victory}."
-		,"{And that is the end of the game/And that's all folks/And that brings this game to a conclusion}. {{other-team}} {{other-team{has|have}}} been {shut out/blanked/crushed/annihilated/demolished} by {{team}}"
-		//,"wav:and_another_one.wav"
-	];
-	//END Final Point
-
-	// player scores and it took over 2 minutes
-	// "Wow, that point took some effort"
-	// "That point took some time, {{name}} should get extra points for that shot"
-
-
 	// Functions
 
 	var getPlayer = function(oFilter) {
@@ -377,7 +218,7 @@ app.factory('announcerService', [function announcerService () {
 				else if (/thunderstorm/.test(c.description)) cond.push("stormy");
 			});
 
-			debug(cond)
+			//debug(cond)
 			cond = "{"+ cond.join("/") +"}";
 		}
 		if (cond != "") cond = ", "+ cond;
@@ -404,7 +245,7 @@ app.factory('announcerService', [function announcerService () {
 		var teamName;
 		var otherTeamName;
 		try {
-			playerName = random.getItem(oValues.oPlayer.names);
+			playerName = random.getItem(oValues.oPlayer.names, false);
 			teamName =  oValues.oTeam.team;
 			otherTeamName =  oValues.oOtherTeam.team;
 		} catch(err) {
@@ -418,8 +259,8 @@ app.factory('announcerService', [function announcerService () {
 		var teamEndsInS = (teamName.substr(-1,1) == "s");
 		var otherTeamEndsInS = (otherTeamName.substr(-1,1) == "s");
 
-		debug(teamName, teamName.substr(-1,1), teamEndsInS);
-		debug(otherTeamName, otherTeamName.substr(-1,1), otherTeamEndsInS);
+		//debug(teamName, teamName.substr(-1,1), teamEndsInS);
+		//debug(otherTeamName, otherTeamName.substr(-1,1), otherTeamEndsInS);
 
 		var msg = originalMessage
 			.replace(/{{winning\-score}}/g, oValues["winning-score"])
@@ -451,18 +292,18 @@ app.factory('announcerService', [function announcerService () {
 			msg = msg.replace(/{{day\-description}}/g, getMessageDayDescription());
 		}
 
-		debug('Prefiltered Message: ' + msg)
+		//debug('Prefiltered Message: ' + msg)
 		// find each set of curly braces
 		var aRandomReplacements = msg.match(/{(.*?)}/g);
 		if (aRandomReplacements && aRandomReplacements.length > 0) {
 			aRandomReplacements.forEach(function(item) {
 				var replacements = item.replace("{", "").replace("}", "").split("/");
-				debug('Replacement Messages: ' + replacements)
+				//debug('Replacement Messages: ' + replacements)
 				msg = msg.replace(item, replacements[ random.getIntFromRange(0, replacements.length-1) ]);
 			});
 		}
 
-		debug('Message: ' + msg)
+		//debug('Message: ' + msg)
 
 
 
@@ -607,6 +448,7 @@ app.factory('announcerService', [function announcerService () {
 		config.gameStartTime = new Date();
 		config.timeLastGoalWasScored = config.gameStartTime;
 		config.timeLastAnnouncementWasMade = config.gameStartTime;
+		config.timeLastSongWasPlayed = config.gameStartTime;
 
 		resetPlayersAndTeams();
 
@@ -929,6 +771,19 @@ app.factory('announcerService', [function announcerService () {
 		//debug(stadiumSounds.intro);
 		//debug(settings.type +" = "+ stadiumSounds[settings.type]);
 		if (settings.type) {
+
+			if (settings.type == "music") {
+				var secondsSince = getSecondSince(config.timeLastSongWasPlayed);
+				if (secondsSince < 90) {
+					console.log("Music was played too recently, bail!!!", secondsSince);
+					return; /// don't play music if a song was played within the last 90 seconds
+				}
+
+				config.timeLastSongWasPlayed = new Date();
+				console.log("config.timeLastSongWasPlayed", config.timeLastSongWasPlayed)
+			}
+
+
 			if (stadiumSounds[settings.type].allowMultiple) {
 				var aId = ['a','b','c','d','e','f',0,1,2,3,4,5,6,7,8,9]
 				settings.audioId = "audio_"+ settings.type + "_"+ random.getItem(aId) + random.getItem(aId);
@@ -1030,7 +885,6 @@ app.factory('announcerService', [function announcerService () {
 		oTeam.score++;   // update team score
 		oPlayer.score++; // update player score
 
-
 		updateStreaks(oPlayer, oTeam, oOtherTeam);
 
 		var doThisAfterwards;
@@ -1045,59 +899,58 @@ app.factory('announcerService', [function announcerService () {
 
 		// did the game finish?
 		// play a sound effect
-		if (oTeam.score == config.pointsNeededToWin) {
-			playSound(soundsToMake.fx.win);
-			crowdControl.playApplause(soundsToMake.positiveCrowd, shotPowerLevel); //FUTURE: Pass level 0-1 based on strength of shot
-			crowdControl.adjustVolume(crowdControl.maxVolume);
-
-			// fade out any music that is playing right now ...
-			// make sure you can here who the winners were, then play the winning music
-			stadiumSounds.fadeOut("music");
-
-			doThisAfterwards = function() {
-				debug("end of game!");
-				endGame();
-			}
-
-		} else {
-			var turnScrowdUpBy = 0;
-			playSound(soundsToMake.fx.score);
-			
-			
-			// if you are the home team/yellow
-			//if (Math.random() >.3) {
-			if (oTeam.color == "yellow") {
+		/* TUrn crowd up or down */
+			if (oTeam.score == config.pointsNeededToWin) {
+				playSound(soundsToMake.fx.win);
 				crowdControl.playApplause(soundsToMake.positiveCrowd, shotPowerLevel); //FUTURE: Pass level 0-1 based on strength of shot
+				crowdControl.adjustVolume(crowdControl.maxVolume);
 
-				turnScrowdUpBy = crowdControl.getPercentOfMaxVolume(0.1);
+				// fade out any music that is playing right now ...
+				// make sure you can here who the winners were, then play the winning music
+				stadiumSounds.fadeOut("music");
 
-				// occasionally, play another random sound
-				if (random.chance(.2)) {
-					//10 to 20 secnds in the future
-					stadiumTimers.queuePositiveCrowd = setTimeout(function() { playSound(soundsToMake.positiveCrowd) }, random.getFromRange(10000, 20000));
+				doThisAfterwards = function() {
+					debug("end of game!");
+					endGame();
 				}
-			} else { // if you are the away team/black
-				crowdControl.playApplause(soundsToMake.negativeCrowd, shotPowerLevel); //FUTURE: Pass level 0-1 based on strength of shot
-				turnScrowdUpBy = crowdControl.getPercentOfMaxVolume(0.05); // half as much as when the home team scores
+
+			} else {
+				var turnCrowdUpBy = 0;
+				playSound(soundsToMake.fx.score);
+				
+				
+				// if you are the home team/yellow
+				//if (Math.random() >.3) {
+				if (oTeam.color == "yellow") {
+					crowdControl.playApplause(soundsToMake.positiveCrowd, shotPowerLevel); //FUTURE: Pass level 0-1 based on strength of shot
+
+					turnCrowdUpBy = crowdControl.getPercentOfMaxVolume(0.1);
+
+					// occasionally, play another random sound
+					if (random.chance(.2)) {
+						//10 to 20 secnds in the future
+						stadiumTimers.queuePositiveCrowd = setTimeout(function() { playSound(soundsToMake.positiveCrowd) }, random.getFromRange(10000, 20000));
+					}
+				} else { // if you are the away team/black
+					crowdControl.playApplause(soundsToMake.negativeCrowd, shotPowerLevel); //FUTURE: Pass level 0-1 based on strength of shot
+					turnCrowdUpBy = crowdControl.getPercentOfMaxVolume(0.05); // half as much as when the home team scores
+				}
+
+				if (oTeam.score == oOtherTeam.score) {
+					turnCrowdUpBy += crowdControl.getPercentOfMaxVolume(0.075); // tie game, bump it up
+				}
+
+				if (oTeam.score == closeMatchPoints) {
+					turnCrowdUpBy += crowdControl.getPercentOfMaxVolume(0.05); // home team needs one more point to win
+				}
+				if (oOtherTeam.score == closeMatchPoints) {
+					turnCrowdUpBy += crowdControl.getPercentOfMaxVolume(0.05); // away team needs one more point to win
+				}
+
+				crowdControl.adjustVolume(turnCrowdUpBy);
+				gameCompleteMessageDelay = shotPowerLevel;
 			}
 
-			if (oTeam.score == oOtherTeam.score) {
-				turnScrowdUpBy += crowdControl.getPercentOfMaxVolume(0.075); // tie game, bump it up
-			}
-
-			if (oTeam.score == closeMatchPoints) {
-				turnScrowdUpBy += crowdControl.getPercentOfMaxVolume(0.05); // home team needs one more point to win
-			}
-			if (oOtherTeam.score == closeMatchPoints) {
-				turnScrowdUpBy += crowdControl.getPercentOfMaxVolume(0.05); // away team needs one more point to win
-			}
-
-			crowdControl.adjustVolume(turnScrowdUpBy);
-			gameCompleteMessageDelay = shotPowerLevel;
-		}
-
-
-		
 
 		// array to be used to load random options of messages
 		var sayThisOptions = [];
@@ -1105,7 +958,6 @@ app.factory('announcerService', [function announcerService () {
 
 		// only play awesome goal music for the home team
 		// if (oTeam.color == "yellow")		
-
 
 		var playMusicAfterTalking;
 		if (oTeam.pointStreak >= 3 && oTeam.score < config.pointsNeededToWin) {
@@ -1165,28 +1017,28 @@ app.factory('announcerService', [function announcerService () {
 		if (oPlayer.pointStreak >= 2) {
 
 			if (oPlayer.pointStreak >= 5) {
-				sayThisOptions = sayThisOptions.concat(sayThis_PlayerScores_Player_5PointStreak);
+				sayThisOptions = sayThisOptions.concat(thingsToSay.playerStreak.fivePoints);
 			} else if (oPlayer.pointStreak >= 4) {
-				sayThisOptions = sayThisOptions.concat(sayThis_PlayerScores_Player_4PointStreak);
+				sayThisOptions = sayThisOptions.concat(thingsToSay.playerStreak.fourPoints);
 			} else if (oPlayer.pointStreak >= 3) {
-				sayThisOptions = sayThisOptions.concat(sayThis_PlayerScores_Player_3PointStreak);
+				sayThisOptions = sayThisOptions.concat(thingsToSay.playerStreak.threePoints);
 			} else {
-				sayThisOptions = sayThisOptions.concat(sayThis_PlayerScores_Player_2PointStreak);
-				sayThisOptions = sayThisOptions.concat(sayThis_PlayerScores_Player_MultiplePointStreak);
+				sayThisOptions = sayThisOptions.concat(thingsToSay.playerStreak.twoPoints);
+				sayThisOptions = sayThisOptions.concat(thingsToSay.playerStreak.multiplePoints);
 			}
 		} else 
 		// If a teams is streaking, note that SECONDARILY
 		if (oTeam.pointStreak >= 2) {
 
 			if (oTeam.pointStreak >= 5) {
-				sayThisOptions = sayThisOptions.concat(sayThis_PlayerScores_Team_5PointStreak);
+				sayThisOptions = sayThisOptions.concat(thingsToSay.teamStreak.fivePoints);
 			} else if (oTeam.pointStreak >= 4) {
-				sayThisOptions = sayThisOptions.concat(sayThis_PlayerScores_Team_4PointStreak);
+				sayThisOptions = sayThisOptions.concat(thingsToSay.teamStreak.fourPoints);
 			} else if (oTeam.pointStreak >= 3) {
-				sayThisOptions = sayThisOptions.concat(sayThis_PlayerScores_Team_3PointStreak);
+				sayThisOptions = sayThisOptions.concat(thingsToSay.teamStreak.threePoints);
 			} else {
-				sayThisOptions = sayThisOptions.concat(sayThis_PlayerScores_Team_2PointStreak);
-				sayThisOptions = sayThisOptions.concat(sayThis_PlayerScores_Team_MultiplePointStreak);
+				sayThisOptions = sayThisOptions.concat(thingsToSay.teamStreak.twoPoints);
+				sayThisOptions = sayThisOptions.concat(thingsToSay.teamStreak.multiplePoints);
 			}
 		}
 
@@ -1195,13 +1047,13 @@ app.factory('announcerService', [function announcerService () {
 		if (oOtherTeam.score == 0) {
 			if (oTeam.score == closeMatchPoints) {
 				// empty any previous entries, this is imporant :)
-				sayThisOptions = sayThis_PlayerScores_Team_ShutOutAlert;
+				sayThisOptions = thingsToSay.team.shutOutAlert;
 				
 				playMusicAfterTalking = soundsToMake.music.shutOutAlert;
 
 				//playChargeSound(false, true);
 			} else if (oTeam.score >= 2) {
-				sayThisOptions = sayThis_PlayerScores_Team_ApporachingShutOutMoreThan2Points;
+				sayThisOptions = thingsToSay.team.approachingShutOutAlert;
 			}
 		} else if (oOtherTeam.score + oTeam.score >= 3) {
 			// let's also announce the score
@@ -1210,18 +1062,18 @@ app.factory('announcerService', [function announcerService () {
 			// if it is tied up
 			if (oOtherTeam.score == oTeam.score) {
 				if (oOtherTeam.score == closeMatchPoints) {
-					sayThisAlsoOptions = sayThis_PlayerScores_ReportTiedScoreNextPointWins;
+					sayThisAlsoOptions = thingsToSay.reportScore.tiedScoreNextPointWins;
 					playChargeSound(false, true);
 				} else {
-					sayThisAlsoOptions = this.sayThis_PlayerScores_ReportTiedScore;
+					sayThisAlsoOptions = thingsToSay.reportScore.tiedScore;
 				}
 			} else {
-				sayThisAlsoOptions = sayThis_PlayerScores_ReportScore;
+				sayThisAlsoOptions = thingsToSay.reportScore.generic;
 				if (oTeam.score > oOtherTeam.score)
 				{
-					sayThisAlsoOptions = sayThisAlsoOptions.concat(sayThis_PlayerScores_ReportScoreTeamWinning);
+					sayThisAlsoOptions = sayThisAlsoOptions.concat(thingsToSay.reportScore.teamWinning);
 				} else {
-					sayThisAlsoOptions = sayThisAlsoOptions.concat(sayThis_PlayerScores_ReportScoreTeamLosing);
+					sayThisAlsoOptions = sayThisAlsoOptions.concat(thingsToSay.reportScore.teamLosing);
 				}
 			}
 		}
@@ -1242,19 +1094,19 @@ app.factory('announcerService', [function announcerService () {
 			// clear original arrays
 			sayThisAlsoOptions = [];
 			if (oOtherTeam.score == closeMatchPoints) {
-				sayThisOptions = sayThis_PlayerScores_Game_FinalPoint_CloseGame;
+				sayThisOptions = thingsToSay.finalPoint.closeGame;
 			} else if (oOtherTeam.score == 0) {
-				sayThisOptions = sayThis_PlayerScores_Game_FinalPoint_ShutOut;
+				sayThisOptions = thingsToSay.finalPoint.shutOut;
 			} else {
-				sayThisOptions = sayThis_PlayerScores_Game_FinalPoint_Other;
+				sayThisOptions = thingsToSay.finalPoint.generic;
 			}
 		}
 
 
 		// if there is nothing else, use the defaults
 		if (sayThisOptions.length == 0) {
-			sayThisOptions = sayThisOptions.concat(sayThis_PlayerScores_Player_ScoresPoint);
-			sayThisOptions = sayThisOptions.concat(sayThis_PlayerScores_Team_ScoresPoint);
+			sayThisOptions = sayThisOptions.concat(thingsToSay.player.score);
+			sayThisOptions = sayThisOptions.concat(thingsToSay.team.score);
 		}
 
 		var message = random.getItem(sayThisOptions);
@@ -1330,6 +1182,64 @@ app.factory('announcerService', [function announcerService () {
 
 
 		return returnVal;
+	}
+
+	var stringTest = function(c) {
+		
+		config = MergeRecursive(config, c);
+		initPlayersAndTeamViaRoster();
+		resetPlayersAndTeams();
+
+		var arrayUniqueString = [];
+		var randString;
+		var oT1 = getTeam("black");oT1.score = 4;
+		var oT2 = getTeam("yellow");oT2.score = 3;
+		var oValues = {
+			"winning-score": 4,
+			"losing-score": 3,
+			"yellow-team": oT2,
+			"yellow-o": random.getItem(getPlayer({"color": "yellow", "position": "o"}).names),
+			"yellow-d": random.getItem(getPlayer({"color": "yellow", "position": "d"}).names),
+			"black-team": oT1,
+			"black-o": random.getItem(getPlayer({"color": "black", "position": "o"}).names),
+			"black-d": random.getItem(getPlayer({"color": "black", "position": "d"}).names),
+			oPlayer : getPlayer({"color": "black", "position": "o"}), 
+			oTeam : oT1, 
+			oOtherTeam : oT2
+		};
+
+		updateLocalEnviromentInfo(function() {
+
+			for (var category in thingsToSay) {
+				for (var subCategory in thingsToSay[category]) {
+					thingsToSay[category][subCategory].forEach(function(item) {
+						console.log(item);
+						var thisItemCount = 0;
+						var badTries = 0;
+						var idxFound = -1;
+						while(badTries <= 100) {
+							randString = updateMessageReplacements(item, oValues) 
+							idxFound = arrayUniqueString.indexOf(randString)
+
+							if (idxFound == -1) {
+								console.log(thisItemCount++, randString);
+								arrayUniqueString.push(randString);
+							} else {
+								badTries++;
+							}
+						}
+					});
+				}
+			}
+
+			console.log("arrayUniqueString.length", arrayUniqueString.length);
+			var i = 1;
+			arrayUniqueString.sort();
+			console.log("arrayUniqueString.sorted");
+			arrayUniqueString.forEach(function(item) {
+				console.log(i++, item);
+			});
+		}); // end weather update function
 	}
 
 	var doWordFixes = function(msg) {
@@ -1454,6 +1364,7 @@ app.factory('announcerService', [function announcerService () {
 		voiceTest: voiceTest,
 		musicTest: musicTest,
 		randomTest: randomTest,
+		stringTest: stringTest,
 		textExport: textExport,
 		stop: stopGame,
 		init: init

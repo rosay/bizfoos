@@ -26,7 +26,7 @@ var random = {
             var r = Math.sin(this.seed++) * 10000;
             r = r - Math.floor(r);
         }
-        console.log("rnd():", this.seed, r);
+        //console.log("rnd():", this.seed, r);
         return r;
     }
     ,reset: function () {
@@ -43,25 +43,32 @@ var random = {
     ,getIntFromRange: function(min, max) {
         return Math.floor(random.rnd() * (max - min + 1)) + min;
     }
-    ,getItem: function(aData) {
+    ,getItem: function(aData, bMustBeUnique) {
+    	if (bMustBeUnique == undefined) bMustBeUnique = true;
+    	//console.log("bMustBeUnique", bMustBeUnique)
         var returnThis = aData[ random.getIntFromRange(0, aData.length-1) ];
         var indexAlreadyUsed = this.itemsAlreadyUsed.indexOf(returnThis);
-        Debug("already used it?  "+ indexAlreadyUsed +" ... retries: "+ this.maxUniqueRetryAttempts);
-        //console.log("indexAlreadyUsed >= 0", indexAlreadyUsed >= 0);
-        //console.log("this.maxUniqueRetryAttempts < 5", this.maxUniqueRetryAttempts < 5);
-        //console.log("(!returnThis.notRandom)", (!returnThis.notRandom));
-        //console.log((indexAlreadyUsed >= 0 && this.maxUniqueRetryAttempts < 5 && (!returnThis.notRandom)));
-        
-        if (indexAlreadyUsed >= 0 && this.maxUniqueRetryAttempts < 5 && (!returnThis.notRandom)) {
-            Debug("already used it, try again...")
-            Debug(returnThis);
-            // call it again
-            this.maxUniqueRetryAttempts++;
-            return this.getItem(aData);
-        } else {
-            this.maxUniqueRetryAttempts = 0;
-            this.itemsAlreadyUsed.push(returnThis);
+        if (!bMustBeUnique) {
+            if (indexAlreadyUsed >= 0) this.itemsAlreadyUsed.push(returnThis);
             return returnThis;
-        }
+        } else {
+	        Debug("already used it?  "+ indexAlreadyUsed +" ... retries: "+ this.maxUniqueRetryAttempts);
+	        //console.log("indexAlreadyUsed >= 0", indexAlreadyUsed >= 0);
+	        //console.log("this.maxUniqueRetryAttempts < 5", this.maxUniqueRetryAttempts < 5);
+	        //console.log("(!returnThis.notRandom)", (!returnThis.notRandom));
+	        //console.log((indexAlreadyUsed >= 0 && this.maxUniqueRetryAttempts < 5 && (!returnThis.notRandom)));
+	        
+	        if (indexAlreadyUsed >= 0 && this.maxUniqueRetryAttempts < 5 && (!returnThis.notRandom)) {
+	            Debug("already used it, try again...")
+	            Debug(returnThis);
+	            // call it again
+	            this.maxUniqueRetryAttempts++;
+	            return this.getItem(aData);
+	        } else {
+	            this.maxUniqueRetryAttempts = 0;
+	            this.itemsAlreadyUsed.push(returnThis);
+	            return returnThis;
+	        }
+	    }
     }
 }
