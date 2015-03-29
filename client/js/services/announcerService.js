@@ -807,13 +807,14 @@ app.factory('announcerService', [function announcerService () {
 
 		//set defaults
 		settings.vol = (settings.vol ? settings.vol : 1);
-		debug(settings);
+		console.log("settings.file", settings.file);
+		console.log(settings);
 
 		//var sound = new Audio(playThisFile);
 		var sound = document.createElement('audio');
 		sound.src = settings.file;
 		if (settings.start > 0) {
-			sound.currentTime = settings.start;
+			sound.currentTime = (settings.start/1000);
 		}
 		if (settings.fade) {
 			sound.volume = (settings.volstart ? settings.volstart : 0);
@@ -1049,9 +1050,9 @@ app.factory('announcerService', [function announcerService () {
 		}
 
 		this.getRandomOption = function() {
-			this.optionList.sort().forEach(function(item) {
-				console.log(item);
-			})
+			//this.optionList.sort().forEach(function(item) {
+			//	console.log(item);
+			//});
 			return random.getItem(this.optionList);
 		}
 
@@ -1299,10 +1300,12 @@ app.factory('announcerService', [function announcerService () {
 
 	var mTest = -1;
 	var musicTest = function() {
-		var aMusic = soundsToMake.music.afterAwesomeGoalScored;
+		//var aMusic = soundsToMake.music.afterAwesomeGoalScored;
+		var aMusic = soundsToMake.music.someoneDoSomethingNow;
 		//mTest++;
 		// var playThis = aMusic[mTest]; // go in order
 		var playThis = random.getItem(aMusic);
+		//var playThis = soundsToMake.music.afterAwesomeGoalScored[0];
 		var wait = playThis.end || 30000;
 		console.log(playThis);
 		playSound(playThis)

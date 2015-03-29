@@ -46,6 +46,9 @@ var soundData = {
 			// Everything I do It's Magic, Magic Weezer
 
 
+			{ type: "music", vol: 0.4, fade: true,  start:  11000, end: 14100, file: "music/lets-get-ready-to-rumble-88035-f4d7d1a6-dd49-435a-955e-de52157812be.mp3" /* intro-ish */  },
+			{ type: "music", fade: true,  vol: 0.4, start: 137500, end: 7200, file: "music/lets-get-ready-to-rumble-88035-f4d7d1a6-dd49-435a-955e-de52157812be.mp3" /* hey, hey you.. put you away */  },
+			{ type: "music", fade: true,  vol: 0.4, start: 118500, end: 11300, file: "music/lets-get-ready-to-rumble-88035-f4d7d1a6-dd49-435a-955e-de52157812be.mp3" /* whoomp there it is */  },
 			{ type: "music", fade: true,  start: 0, end: 13000, file: "music/Best Goal Song Ever215099-4cb8905f-a537-4486-8808-a3c6bebe64ae.mp3" },
 			{ type: "music", fade: true,  start: 0, end: 17000, file: "music/Survivor - Eye of the Tiger215099-056b6ddb-3fe7-4e8c-981e-d9891fdf3d96.mp3" },
 			{ type: "music", fade: true,  start: 0, end: 15000, file: "music/Oh Yeah (music track)215099-a10d5348-5d2a-4393-b54f-f9da2907d820.mp3" },
@@ -109,10 +112,13 @@ var soundData = {
 			//{ type: "music", fade: true,  start: 0, end: 15000, file: "music/" },
 		],
 		someoneDoSomethingNow : [
+			{ type: "music", vol: 0.4, fade: true,  start: 144800, end: 28000, file: "music/lets-get-ready-to-rumble-88035-f4d7d1a6-dd49-435a-955e-de52157812be.mp3" /* action, action we want action*/  },
+			{ type: "music", vol: 0.4, fade: true,  start:  70000, end:  8000, file: "music/lets-get-ready-to-rumble-88035-f4d7d1a6-dd49-435a-955e-de52157812be.mp3" /* action, action we want action*/  },
+			{ type: "music", vol: 0.4, fade: true,  start:  55600, end: 15500, file: "music/lets-get-ready-to-rumble-88035-f4d7d1a6-dd49-435a-955e-de52157812be.mp3" /* defense, defense, defense */  },
+			{ type: "music", vol: 0.4, fade: true,  start:  94600, end: 15000, file: "music/lets-get-ready-to-rumble-88035-f4d7d1a6-dd49-435a-955e-de52157812be.mp3" /* get your booty on the floor */  },
 			{ type: "music", vol: 0.4, fade: true,  start: 0, end: 16500, file: "music/Pump The Crowd - Get Ready For This215099-120fa195-6fa0-463f-b003-9fb4d99dc5f3.mp3"},
 			{ type: "music", vol: 0.4, fade: true,  start: 0, end: 19000, file: "music/everybody-dance-now-NzQ3NDQ5NTQ3NDc1MjM_c28jQ4MF8M0.mp3" },
 			{ type: "music", vol: 0.2, fade: true,  start: 0, end: 19500, file: "music/SIP - Blitzkrieg Bop217844-4c64f818-88bc-4cc1-b6b7-dc77ba241e81.mp3" },
-			{ type: "music", vol: 0.4, fade: true,  start: 0, end: 19500, file: "music/lets-get-ready-to-rumble-88035-f4d7d1a6-dd49-435a-955e-de52157812be.mp3" }
 		],
 		shutOutAlert : [
 			{ type: "fx", fade: true,  colstart: 1, start: 0, end: 10000, file: "music/air-raid-94635-0a641a78-6ba9-4821-83ce-9226b4807edc.mp3" },
