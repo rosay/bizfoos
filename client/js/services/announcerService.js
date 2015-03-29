@@ -1038,7 +1038,7 @@ app.factory('announcerService', [function announcerService () {
 		this.addOptions = function(weight, arrayOfOptions) {
 			// based on the weight, it will add it to the array that many times
 			for (var x = 0; x < weight; x++) {
-				if (arrayOfOptions.length > 0) {
+				if (arrayOfOptions && arrayOfOptions.length > 0) {
 					this.optionList = this.optionList.concat(arrayOfOptions);
 				}
 			}
