@@ -46,9 +46,9 @@ var sayThisData = {
 			//,"wav:and_another_one.wav"
 		],
 		threePoints : [
-			"That's three in a row by {{team}}"
-			,"{{team}} with another goal. 3 point streak."
-			,"And they sink another one. Three in a row by {{team}}"
+			"That's three in a row by {{name}}"
+			,"{{name}} with another goal. 3 point streak."
+			,"And they sink another one. Three in a row by {{name}}"
 			//,"wav:and_another_one.wav"
 		],
 		fourPoints : [
@@ -140,8 +140,8 @@ var sayThisData = {
 		noScoreFor60Seconds : [
 			"Someone {needs to/has to/should try to} get a {goal/point/score} in"
 			,"Let's see {some action/a point/a goal/someone score/someone put the ball in the hole}"
-			,"sound:boo"
-			,"sound:airhorn.wav"
+			// ,"sound:boo" // moved to music
+			// ,"sound:airhorn.wav"// moved to music
 		],
 
 		noScoreFor120Seconds : [

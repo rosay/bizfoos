@@ -35,7 +35,8 @@ app.factory('announcerService', [function announcerService () {
 		"useTTS": true,
 		"skipIntro": false,
 		"playMusic": true,
-		"debug": false
+		"delayBetweenSongs": 90, // 90 seocnds
+		"debug": false		
 	};
 
 	var weather = {
@@ -411,7 +412,11 @@ app.factory('announcerService', [function announcerService () {
 
 	var endGame = function() {
 		crowdControl.setVolume(.1)
-		playSound(soundsToMake.music.finalPoint, {vol: 1});
+		var secsSinceLastSongPlayed = getSecondSince(config.timeLastSongWasPlayed);
+		console.log("MUSIC: secsSinceLastSongPlayed = ", secsSinceLastSongPlayed, 45);
+		if (secsSinceLastSongPlayed > 45) {
+			playSound(soundsToMake.music.finalPoint, {vol: 1});
+		}
 		stadiumTimers.endGame1 = setTimeout(function() { playSound([soundsToMake.positiveCrowd.cheer, soundsToMake.positiveCrowd.chant]); }, 1000);
 		//stadiumTimers.endGame2 = setTimeout(function() { playSound([soundsToMake.positiveCrowd.cheer, soundsToMake.positiveCrowd.chant]); }, 8000);
 		stadiumTimers.endGame3 = setTimeout(function() {
@@ -563,22 +568,23 @@ app.factory('announcerService', [function announcerService () {
 		if (secondsSinceLastAnnouncement > 15) {
 			var secondsSinceLastScore = getSecondSince(config.timeLastGoalWasScored);
 			debug("seconds since last goal: "+ secondsSinceLastScore);
-			var sayThisOptions = [];
-			var bLetSeeSomeAction = (secondsSinceLastScore > 60);
+			
+			var say = new WeightedOptions();
+			var bLetSeeSomeAction          = (secondsSinceLastScore > 60);
 			var bLetSeeSomeActionAllowBoos = (secondsSinceLastScore > 120);
 
 			if (config.teams[0].score == config.teams[1].score && secondsSinceLastAnnouncement > 60) {
 				// all tied up
 				//TODO: Make this happen
-				sayThisOptions = sayThisOptions.concat(thingsToSay.gameUpdates.stillTiedUp);
+				say.addOptions(1, thingsToSay.gameUpdates.stillTiedUp);
 			}
 
 			if (secondsSinceLastScore > 120)  {
-				sayThisOptions = sayThisOptions.concat(thingsToSay.gameUpdates.noScoreFor120Seconds);
+				say.addOptions(1, thingsToSay.gameUpdates.noScoreFor120Seconds);
 			} else if (secondsSinceLastScore > 60)  {
-				sayThisOptions = sayThisOptions.concat(thingsToSay.gameUpdates.noScoreFor60Seconds);
+				say.addOptions(1, thingsToSay.gameUpdates.noScoreFor60Seconds);
 			}
-			if (sayThisOptions && sayThisOptions.length > 0) {
+			if (say.hasOptions()) {
 				
 				if (bLetSeeSomeAction && random.chance(.8)) {
 					// don't do it every single time
@@ -592,7 +598,7 @@ app.factory('announcerService', [function announcerService () {
 						}
 					}
 				} else {
-					var msg = random.getItem(sayThisOptions);
+					var msg = say.getRandomOption();;
 					msg = updateMessageReplacements(msg, {
 						 "winning-score": config.teams[0].score
 						,"losing-score": config.teams[0].score
@@ -733,7 +739,7 @@ app.factory('announcerService', [function announcerService () {
 			if (this.end == 0) return 0;
 			var endAfter = this.end;
 			// put a little variation into it
-			if (endAfter > 10000) // if more than 10 seconds, let's make the length variable
+			if (endAfter > 10000 && endAfter < 20000) // if between 10-20 seconds, let's make the length variable
 				endAfter = endAfter + random.getFromRange(-1000, 6000); //So, we are going to -1 or +6 seconds
 			return endAfter;
 		}
@@ -773,12 +779,6 @@ app.factory('announcerService', [function announcerService () {
 		if (settings.type) {
 
 			if (settings.type == "music") {
-				var secondsSince = getSecondSince(config.timeLastSongWasPlayed);
-				if (secondsSince < 90) {
-					console.log("Music was played too recently, bail!!!", secondsSince);
-					return; /// don't play music if a song was played within the last 90 seconds
-				}
-
 				config.timeLastSongWasPlayed = new Date();
 				console.log("config.timeLastSongWasPlayed", config.timeLastSongWasPlayed)
 			}
@@ -824,9 +824,12 @@ app.factory('announcerService', [function announcerService () {
 			sound.play();
 		}
 
-		sound.addEventListener('ended', function() {
-			if (stadiumSounds[settings.type].isPlaying) stadiumSounds[settings.type].isPlaying = false;
-		});
+		// if NOT allowMultiple, then manage the isPlaying Bit
+		if (!stadiumSounds[settings.type].allowMultiple) {
+			sound.addEventListener('ended', function() {
+				stadiumSounds[settings.type].isPlaying = false;
+			});
+		}
 
 		debug("volume = "+ sound.volume);
 
@@ -1027,6 +1030,36 @@ app.factory('announcerService', [function announcerService () {
 		return actions;
 	}
 
+	var WeightedOptions = function() {
+		this.self = this;
+		this.optionList = [];
+		
+		this.addOptions = function(weight, arrayOfOptions) {
+			// based on the weight, it will add it to the array that many times
+			for (var x = 0; x < weight; x++) {
+				if (arrayOfOptions.length > 0) {
+					this.optionList = this.optionList.concat(arrayOfOptions);
+				}
+			}
+		}
+
+		this.hasOptions = function() {
+			if (this.optionList.length > 0) return true;
+			return false;
+		}
+
+		this.getRandomOption = function() {
+			this.optionList.sort().forEach(function(item) {
+				console.log(item);
+			})
+			return random.getItem(this.optionList);
+		}
+
+		this.clearOptions = function() {
+			this.optionList = [];
+		}
+	}
+
 	var scorePoint = function(oPlayer, gameTime) {
 		var oPlayer    = getPlayer(oPlayer);
 		var oTeam      = getTeam(oPlayer.color);
@@ -1058,9 +1091,11 @@ app.factory('announcerService', [function announcerService () {
 
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// array to be used to load random options of messages
-		var sayThisOptions = [];
-		var sayThisAlsoOptions = [];
 		var playMusicAfterTalking;
+		var delayBetweenSongs = config.delayBetweenSongs;
+
+		var say = new WeightedOptions();
+		var sayAlso = new WeightedOptions();
 
 		var playAwesomeMusic = true;
 		if (actions.team.timeSinceLastPoint.longTime) {
@@ -1099,10 +1134,10 @@ app.factory('announcerService', [function announcerService () {
 
 			// only play awesome goal music for the home team
 			if (actions.player.onfire) {
-				sayThisOptions = sayThisOptions.concat(thingsToSay.playerStreak.onfire);
+				say.addOptions(6, thingsToSay.playerStreak.onfire);
 				if (actions.team.home) playAwesomeMusic = true;
 			} else if (actions.team.onfire) {
-				sayThisOptions = sayThisOptions.concat(thingsToSay.teamStreak.onfire);
+				say.addOptions(6, thingsToSay.teamStreak.onfire);
 				if (actions.team.home) playAwesomeMusic = true;
 			} else if (actions.team.streak >= 3) {
 				if (actions.team.home) playAwesomeMusic = true;
@@ -1124,73 +1159,81 @@ app.factory('announcerService', [function announcerService () {
 
 			// if this is the first point of the game, team or player
 			if (actions.game.firstPoint) {
-				sayThisOptions = sayThisOptions.concat(thingsToSay.firstPoint.ofTheGame);
+				say.addOptions(1, thingsToSay.firstPoint.ofTheGame);
 			} else if (actions.team.firstPoint) {
-				sayThisOptions = sayThisOptions.concat(thingsToSay.firstPoint.ofTheTeam);
+				say.addOptions(1, thingsToSay.firstPoint.ofTheTeam);
 			} else if (actions.player.firstPoint) {
-				sayThisOptions = sayThisOptions.concat(thingsToSay.firstPoint.ofThePlayer);
+				say.addOptions(1, thingsToSay.firstPoint.ofThePlayer);
 			}
 
 			// STREAKS!!!
 			// If a player is streaking, note that FIRST
 			if (actions.player.streak >= 2) {
-				sayThisOptions = sayThisOptions.concat(thingsToSay.playerStreak.multiplePoints);
+				say.addOptions(1, thingsToSay.playerStreak.multiplePoints);
 				if (actions.player.streak >= 5) {
-					sayThisOptions = sayThisOptions.concat(thingsToSay.playerStreak.fivePoints);
+					say.addOptions(5, thingsToSay.playerStreak.fivePoints);
 				} else if (actions.player.streak >= 4) {
-					sayThisOptions = sayThisOptions.concat(thingsToSay.playerStreak.fourPoints);
+					say.addOptions(20, thingsToSay.playerStreak.fourPoints);
 				} else if (actions.player.streak >= 3) {
-					sayThisOptions = sayThisOptions.concat(thingsToSay.playerStreak.threePoints);
+					say.addOptions(10, thingsToSay.playerStreak.threePoints);
 				} else {
-					sayThisOptions = sayThisOptions.concat(thingsToSay.playerStreak.twoPoints);
+					say.addOptions(6, thingsToSay.playerStreak.twoPoints);
 				}
 			} else 
 			// If a teams is streaking, note that SECONDARILY
 			if (actions.team.streak >= 2) {
-				sayThisOptions = sayThisOptions.concat(thingsToSay.teamStreak.multiplePoints);
+				say.addOptions(1, thingsToSay.teamStreak.multiplePoints);
 				if (actions.team.streak >= 5) {
-					sayThisOptions = sayThisOptions.concat(thingsToSay.teamStreak.fivePoints);
+					say.addOptions(10, thingsToSay.teamStreak.fivePoints);
 				} else if (actions.team.streak >= 4) {
-					sayThisOptions = sayThisOptions.concat(thingsToSay.teamStreak.fourPoints);
+					say.addOptions(4, thingsToSay.teamStreak.fourPoints);
 				} else if (actions.team.streak >= 3) {
-					sayThisOptions = sayThisOptions.concat(thingsToSay.teamStreak.threePoints);
+					say.addOptions(4, thingsToSay.teamStreak.threePoints);
 				} else {
-					sayThisOptions = sayThisOptions.concat(thingsToSay.teamStreak.twoPoints);
+					say.addOptions(2, thingsToSay.teamStreak.twoPoints);
 				}
 			}
 
 			// shut out warning/alerts
 			if (actions.team.shutout.alert) {
-				sayThisOptions = thingsToSay.team.shutOutAlert;
+				say.addOptions(10, thingsToSay.team.shutOutAlert);
 				playMusicAfterTalking = soundsToMake.music.shutOutAlert;
+				delayBetweenSongs = 20; // shut out alerts are important
 			} else if (actions.team.shutout.approaching) {
-				sayThisOptions = thingsToSay.team.approachingShutOutAlert;
+				say.addOptions(3, thingsToSay.team.approachingShutOutAlert);
 			}
 
 			// let's also announce the score
 			if (actions.game.middleOfGame) {
 				if (actions.game.tied) {
 					if (actions.game.nextPointWins) {
-						sayThisAlsoOptions = thingsToSay.reportScore.tiedScoreNextPointWins;
+						sayAlso.addOptions(1, thingsToSay.reportScore.tiedScoreNextPointWins);
 						playChargeSound(false, true);
 					} else {
-						sayThisAlsoOptions = thingsToSay.reportScore.tiedScore;
+						sayAlso.addOptions(1, thingsToSay.reportScore.tiedScore);
 					}
 				} else {
-					sayThisAlsoOptions = thingsToSay.reportScore.generic;
+					sayAlso.addOptions(1, thingsToSay.reportScore.generic);
 					if (actions.team.winning) {
-						sayThisAlsoOptions = sayThisAlsoOptions.concat(thingsToSay.reportScore.teamWinning);
+						sayAlso.addOptions(3, thingsToSay.reportScore.teamWinning);
 					} else {
-						sayThisAlsoOptions = sayThisAlsoOptions.concat(thingsToSay.reportScore.teamLosing);
+						sayAlso.addOptions(2, thingsToSay.reportScore.teamLosing);
 					}
 				}
 			}
 
 			// if there is music to play AND doThisAfterwards IS NOT ALREADY SET (end of game)
-			if (playMusicAfterTalking && !doThisAfterwards) {
-				doThisAfterwards = function() {
-					playSound(random.getItem(playMusicAfterTalking));
+			
+			var secsSinceLastSongPlayed = getSecondSince(config.timeLastSongWasPlayed);
+			console.log("MUSIC: secsSinceLastSongPlayed = ", secsSinceLastSongPlayed);
+			if (secsSinceLastSongPlayed > delayBetweenSongs) {
+				if (playMusicAfterTalking && !doThisAfterwards) {
+					doThisAfterwards = function() {
+						playSound(random.getItem(playMusicAfterTalking));
+					}
 				}
+			} else {
+				console.log("MUSIC was played too recently, bail!!!", secsSinceLastSongPlayed);
 			}
 
 		 // END: if (actions.game.stillGoing)
@@ -1210,36 +1253,36 @@ app.factory('announcerService', [function announcerService () {
 			}
 
 			// clear original arrays
-			sayThisAlsoOptions = [];
+			say.clearOptions();
+			sayAlso.clearOptions();
 			if (actions.game.finalScore.shutout) {
-				sayThisOptions = thingsToSay.finalScore.shutout;
+				say.addOptions(1, thingsToSay.finalScore.shutout);
 			} else if (actions.game.finalScore.blowout) {
-				sayThisOptions = thingsToSay.finalScore.blowout;
+				say.addOptions(1, thingsToSay.finalScore.blowout);
 			} else if (actions.game.finalScore.close) {
-				sayThisOptions = thingsToSay.finalScore.close;
+				say.addOptions(1, thingsToSay.finalScore.close);
 			} else {
-				sayThisOptions = thingsToSay.finalScore.generic;
+				say.addOptions(1, thingsToSay.finalScore.generic);
 			}
 
 		}
 
 		// if there is nothing else, use the defaults
-		if (sayThisOptions.length == 0) {
-			sayThisOptions = sayThisOptions.concat(thingsToSay.player.score);
-			sayThisOptions = sayThisOptions.concat(thingsToSay.team.score);
+		if (!say.hasOptions()) {
+			say.addOptions(1, thingsToSay.player.score);
+			say.addOptions(1, thingsToSay.team.score);
 		}
 
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		var message = random.getItem(sayThisOptions);
-		var alsoMessage;
-		//debug("sayThisAlsoOptions.length: "+ sayThisAlsoOptions.length)
-		if (sayThisAlsoOptions && sayThisAlsoOptions.length > 0) {
-			alsoMessage = random.getItem(sayThisAlsoOptions);			
-		}
 		var returnMessage
 		var oReplacementValues = { oPlayer : oPlayer, oTeam : oTeam, oOtherTeam : oOtherTeam };
-		message     = updateMessageReplacements(message, oReplacementValues);
+
+		var message =  say.getRandomOption();
+		message      = updateMessageReplacements(message, oReplacementValues);
 		returnMessage = message;
+		
+		var alsoMessage;
+		if (sayAlso.hasOptions()) alsoMessage = sayAlso.getRandomOption();			
 		if (alsoMessage) {
 			alsoMessage = updateMessageReplacements(alsoMessage, oReplacementValues);
 			returnMessage = returnMessage +". "+ alsoMessage; 
