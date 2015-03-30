@@ -13,7 +13,7 @@
 				<li ng-repeat="player in filteredPlayers = (ctrl.players | filter:searchPlayers:strict)">
 					<button ng-disabled="player.inBullpen == true" type="button" class="player-button" ng-click="ctrl.addPlayerToBullpen(player._id); searchPlayers.name = ''">
 						<span class="img-bg"></span>
-						<img src="{{ player.pic }}" />{{ player.name }}
+						<img ng-src="{{ player.pic }}" />{{ player.name }}
 					</button>
 				</li>
 			</ul>
@@ -30,7 +30,7 @@
 					<li ng-repeat="player in ctrl.players | filter : { inBullpen: true }">
 						<button type="button" class="player-button" ng-click="ctrl.removePlayerFromBullpen(player._id)">
 							<span class="img-bg"></span>
-							<img src="{{ player.pic }}" />{{ player.name }}
+							<img ng-src="{{ player.pic }}" />{{ player.name }}
 						</button>
 					</li>
 				</ul>
