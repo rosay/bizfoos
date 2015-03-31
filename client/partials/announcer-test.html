@@ -1,0 +1,31 @@
+<div class="container">
+    <div class="row">
+        <div class="col-lg-offset-2 col-md-offset-2 col-sm-offset-1 col-lg-8 col-md-8 col-sm-10 col-xs-12">
+
+            <button ng-click="ctrl.newGame()" style="font:700 16pt Arial;color:darkgreen">New Game</button>
+            <button ng-click="ctrl.stopGame()" style="font:700 16pt Arial;color:red">Stop Game</button>
+
+            <div style="font:700 26pt Arial;">0:00</div>
+
+            <button class="player-score" ng-click="ctrl.playerScore('ahovingh@bizstream.com')" data-color="black" data-position="o" style="font:700 16pt Arial;background-color:black;color:white">Albert Score: Offense</button>
+            <button class="player-score" ng-click="ctrl.playerScore('areece@bizstream.com')" data-color="black" data-position="d"style="font:700 16pt Arial;background-color:black;color:white">Adam Score: Defense</button>
+            <br/>
+            <br/>
+            <br/>
+            <button class="player-score" ng-click="ctrl.playerScore('sheibeck@bizstream.com')" data-color="yellow" data-position="d" style="font:700 16pt Arial;background-color:yellow;color:black">Sterling Score: Defense</button>
+            <button class="player-score" ng-click="ctrl.playerScore('mschmidt@bizstream.com')" data-color="yellow" data-position="o" style="font:700 16pt Arial;background-color:yellow;color:black">Mark Score: Offense</button>
+            <br/>
+            <br/>
+            <button ng-click="ctrl.doVoiceTest" style="font:700 16pt Arial;">Do a VOICE Test</button>
+            <button ng-click="ctrl.doMusicTest" style="font:700 16pt Arial;">Do a MUSIC Test</button>
+            <button ng-click="ctrl.doRandomTest" style="font:700 16pt Arial;">Do a RANDOM Test</button>
+            <button ng-click="ctrl.doStringTest" style="font:700 16pt Arial;">Do a STRING Test</button>
+
+            <h1 style="color:white;">Game Log</h1>
+            <ul>
+                <li style="color:white;" ng-repeat="entry in ctrl.log">{{ entry }}</li>
+            </ul>
+
+        </div>
+    </div>
+</div>

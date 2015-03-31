@@ -33,6 +33,11 @@
                         controller: 'HallOfFameController',
                         controllerAs: 'ctrl'
                     }).
+                    when('/test', {
+                        templateUrl: 'partials/announcer-test.html',
+                        controller: 'AnnouncerTestController',
+                        controllerAs: 'ctrl'
+                    }).
 					otherwise({
 						redirectTo: '/player'
 					});

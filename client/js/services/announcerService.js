@@ -16,15 +16,15 @@
 //     FIX: we should NOT restore the volume of a fading out song.
 
 //app.factory('announcerService', ['randomService', function announcerService (random) {
-//app.factory('announcerService', ['random', 'soundData', function announcerService (random, soundsToMake) {
-app.factory('announcerService', [function announcerService () {
+//app.factory('announcerService', ['random', 'soundDataService', function announcerService (random, soundsToMake) {
+app.factory('announcerService', ['sayThisDataService', 'soundDataService', function announcerService (sayThisDataService, soundDataService) {
 	"use strict";
 
 	var GAME_UPDATE_CHECK_EVERY_X_MILIS = 7000;
 
 	// todo: treat these as a service, along with random, talk to Cody
-	var soundsToMake = soundData;
-	var thingsToSay = sayThisData;
+	var soundsToMake = soundDataService;
+	var thingsToSay = sayThisDataService;
 
 	var soundRootPath = "sounds/"
 	if (window.location.protocol == "file:") soundRootPath = "../../../sounds/";
