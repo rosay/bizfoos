@@ -355,18 +355,18 @@ app.factory('announcerService', [function announcerService () {
 				"names": createNameList(config.roster.teamBlack.defense)
 			},
 			{	//2
-				"playerid": config.roster.teamOrange.offense._id,
+				"playerid": config.roster.teamYellow.offense._id,
 				"color": "yellow",
 				"position": "o",
 				"team": "The Yellow Team",
-				"names": createNameList(config.roster.teamOrange.offense)
+				"names": createNameList(config.roster.teamYellow.offense)
 			},
 			{	//3
-				"playerid": config.roster.teamOrange.defense._id,
+				"playerid": config.roster.teamYellow.defense._id,
 				"color": "yellow",
 				"position": "d",
 				"team": "The Yellow Team",
-				"names": createNameList(config.roster.teamOrange.defense)
+				"names": createNameList(config.roster.teamYellow.defense)
 			}
 		] // end array of peole
 	}

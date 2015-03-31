@@ -19,7 +19,7 @@ jQuery(function($) {
 					"pic": ""
 				}
 			},
-			"teamOrange": {
+			"teamYellow": {
 				"offense": {
 					"_id": "mschmidt@bizstream.com",
 					"name": "Mark Schmidt",

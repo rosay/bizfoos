@@ -17,7 +17,7 @@ app.controller('GameController', ['gameService', 'rosterService', 'playerService
             "offense": {},
             "defense": {}
         },
-        "teamOrange": {
+        "teamYellow": {
             "offense": {},
             "defense": {}
         }
@@ -27,8 +27,8 @@ app.controller('GameController', ['gameService', 'rosterService', 'playerService
 		vm.players.teamBlack.offense = rosterService.getPlayer(1, "offense");
 		vm.players.teamBlack.defense = rosterService.getPlayer(1, "defense");
 
-		vm.players.teamOrange.offense = rosterService.getPlayer(2, "offense");
-		vm.players.teamOrange.defense = rosterService.getPlayer(2, "defense");
+		vm.players.teamYellow.offense = rosterService.getPlayer(2, "offense");
+		vm.players.teamYellow.defense = rosterService.getPlayer(2, "defense");
 	};
 
 	var startClock = function () {
@@ -75,15 +75,15 @@ app.controller('GameController', ['gameService', 'rosterService', 'playerService
 		vm.gameOver = gameService.isGameOver();
 	};
 
-	$document.unbind('keypress').bind('keypress', function(event){
+	$document.unbind('keypress').bind('keypress', function(event) {
 
 		var kc = event.keyCode;
 
 		$scope.$apply(function(){
 			if(kc === 113){ // Keypress "q" for Orange D
-				vm.addScore(vm.players.teamOrange.defense._id);
+				vm.addScore(vm.players.teamYellow.defense._id);
 			}else if(kc === 97){ // Keypress "a" for Orange O
-				vm.addScore(vm.players.teamOrange.offense._id);
+				vm.addScore(vm.players.teamYellow.offense._id);
 			}else if(kc === 119){ // Keypress "w" for Black O
 				vm.addScore(vm.players.teamBlack.offense._id);
 			}else if(kc === 115){ // Keypress "s" for Black D
