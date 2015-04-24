@@ -7,14 +7,16 @@ var PlayerRpi = function () {
     ];
 
     var gameQuery = [
-        { $unwind: "$roster" }
-       ,{ $group:
+        { $match: { dateCreated: { "$gt": new Date(0) }}},
+        { $match: { dateCreated: { "$lt": new Date() }}},
+        { $unwind: "$roster" },
+        { $group:
             {
                 _id: "$_id" ,
                 Teammates: { $push:  { player_id: "$roster.player_id", team: "$roster.team", winningteam: "$winningTeam" } }
             }
-        }
-       ,{ $project:
+        },
+        { $project:
             {
                 Players: "$Teammates"
             }
@@ -25,11 +27,14 @@ var PlayerRpi = function () {
         return Player.aggregate(playerQuery);
     };
 
-    var getGameQuery = function (fromDate) {
-        fromDate = fromDate || null;
-
-        if (fromDate) {
-            gameQuery.splice(0, 0, { $match: { dateCreated: { "$gt": new Date(fromDate) }} });
+    var getGameQuery = function (dateRange) {
+        if (dateRange) {
+            if (dateRange.fromDate) {
+                gameQuery["0"].$match.dateCreated.$gt = new Date(dateRange.fromDate);
+            }
+            if (dateRange.toDate) {
+                gameQuery["1"].$match.dateCreated.$lt = new Date(dateRange.toDate);
+            }
         }
 
         return Game.aggregate(gameQuery);

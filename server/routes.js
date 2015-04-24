@@ -58,24 +58,27 @@ module.exports = function(app) {
 	});
 
 	app.post('/api/stats/rpi', function (req, res) {
+		var dateRange = { fromDate: req.body.fromDate, toDate: req.body.toDate };
 
-        var fromDate = req.body.fromDate;
+		if (dateRange.fromDate && dateRange.toDate) {
+			var rpi = Rpi();
 
-		var rpi = Rpi();
+			async.parallel({
+				player: function(callback) {
+					rpi.getPlayerQuery().exec(callback);
+				},
+				games: function(callback) {
+					rpi.getGameQuery(dateRange).exec(callback);
+				}
+			}, function (err, results) {
 
-		async.parallel({
-			player: function(callback) {
-				rpi.getPlayerQuery().exec(callback);
-			},
-			games: function(callback) {
-				rpi.getGameQuery(fromDate).exec(callback);
-			}
-		}, function (err, results) {
+				var rpiResults = rpi.processResults(results.games, results.player);
 
-			var rpiResults = rpi.processResults(results.games, results.player);
-
-			res.send(rpiResults);
-		});
+				res.send(rpiResults);
+			});
+		} else {
+			res.status(500).send("Missing To or From date");
+		}
 	});
 
 	app.get('/api/stats/players', function (req, res) {
@@ -142,7 +145,7 @@ module.exports = function(app) {
 			});
 		} else {
 			res.status(500).send(err);
-		}
+	}
 	});
 
 	app.get('*', function(req, res) {

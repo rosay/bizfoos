@@ -8,7 +8,7 @@ app.controller('HallOfFameController', ['$http', 'statisticsService', function($
     vm.players = [];
     vm.minGames = 10;
 
-    statisticsService.getPlayerRpi()
+    statisticsService.getPlayerRpi({ fromDate: new Date(0), toDate: new Date() })
         .then(function() {
             var players = statisticsService.playerRpi;
 

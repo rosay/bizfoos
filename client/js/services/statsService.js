@@ -15,7 +15,7 @@ app.factory('statisticsService', ['$rootScope', '$http', function statisticsServ
 				statisticsService.topPlayers = data;
 			})
 			.error(function (data, status, headers, config) {
-				console.log("No players showed up! Status: " + status);
+				console.log(data + " Status: " + status);
 			});
 	};
 
@@ -23,13 +23,13 @@ app.factory('statisticsService', ['$rootScope', '$http', function statisticsServ
 	 * Gets player RPI
 	 * @returns {*}
 	 */
-	statisticsService.getPlayerRpi = function (fromDate) {
-		return $http.post('/api/stats/rpi', { "fromDate": fromDate })
+	statisticsService.getPlayerRpi = function (dateRange) {
+		return $http.post('/api/stats/rpi', dateRange)
 			.success(function (data, status, headers, config) {
 				statisticsService.playerRpi = data;
 			})
 			.error(function (data, status, headers, config) {
-				console.log("No players showed up! Status: " + status);
+				console.log(data + " Status: " + status);
 			});
 	};
 
